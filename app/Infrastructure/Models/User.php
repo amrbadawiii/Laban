@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,9 +17,16 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
     protected $fillable = [
         'name',
         'email',
+        'warehouse_id',
+        'user_type',
         'password',
     ];
 
@@ -41,7 +48,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
