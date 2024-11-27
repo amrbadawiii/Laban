@@ -1,3 +1,8 @@
-@props(['disabled' => false])
+@props(['name', 'label', 'value' => '', 'required' => false, 'type' => 'text'])
 
-<input {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm']) !!}>
+<div>
+    <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+    <input type="{{ $type }}" name="{{ $name }}" value="{{ $value }}"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        {{ $required ? 'required' : '' }}>
+</div>

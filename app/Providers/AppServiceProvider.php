@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Application\Interfaces\AuthServiceInterface;
 use App\Application\Interfaces\UserServiceInterface;
-use App\Application\Services\Implementations\UserService;
+use App\Application\Services\AuthService;
+use App\Application\Services\UserService;
 use App\Infrastructure\Interfaces\UserRepositoryInterface;
+use App\Infrastructure\Interfaces\WarehouseRepositoryInterface;
+use App\Infrastructure\Repositories\WarehouseRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Infrastructure\Repositories\UserRepository;
 
@@ -15,11 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Bind UserRepository interface to its Eloquent implementation
+        // Repository Bindings
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(WarehouseRepositoryInterface::class, WarehouseRepository::class);
 
-        // Bind UserService interface to its concrete implementation
+        // Service Bindings
         $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(AuthServiceInterface::class, AuthService::class);
     }
 
     /**

@@ -1,50 +1,52 @@
 <?php
 
-namespace App\Application\Services\Implementations;
+namespace App\Application\Services;
 
 use App\Application\Interfaces\UserServiceInterface;
-use App\Domain\Models\User;
-use App\Infrastructure\Repositories\UserRepository;
+use App\Infrastructure\Interfaces\UserRepositoryInterface;
 use App\Domain\Enums\UserType;
+use App\Domain\Models\User;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserService implements UserServiceInterface
 {
-    private UserRepository $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function createAdmin(string $name, string $email, string $password, int $warehouseId): User
+    /**
+     * Retrieve all registered users.
+     *
+     * @return Collection
+     */
+    public function getAllUsers(): Collection
     {
-        $user = new User(
-            id: 0, // ID will be assigned when saved
-            name: $name,
-            email: $email,
-            password: bcrypt($password),
-            warehouseId: $warehouseId,
-            userType: UserType::Admin
-        );
-
-        $this->userRepository->save($user);
-
-        return $user;
+        return $this->userRepository->all();
     }
 
-    public function createUser(string $name, string $email, string $password, int $warehouseId): User
+    /**
+     * Create a new user.
+     *
+     * @param array $data
+     * @return User
+     */
+    public function createUser(array $data): User
     {
-        $user = new User(
-            id: 0,
-            name: $name,
-            email: $email,
-            password: bcrypt($password),
-            warehouseId: $warehouseId,
-            userType: UserType::User
-        );
+        // Ensure the authenticated user is an admin
+        $authenticatedUser = Auth::users();
+        if (!$authenticatedUser || $authenticatedUser->user_type !== UserType::Admin->value) {
+            abort(403, 'Unauthorized action.');
+        }
 
-        $this->userRepository->save($user);
+        // Hash the password
+        $data['password'] = Hash::make($data['password']);
 
-        return $user;
+        // Create the user via repository
+        return $this->userRepository->create($data);
     }
 }

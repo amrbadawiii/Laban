@@ -6,6 +6,7 @@ use App\Domain\Models\User as DomainUser;
 use App\Infrastructure\Interfaces\UserRepositoryInterface;
 use App\Infrastructure\Models\User as EloquentUser;
 use App\Domain\Enums\UserType;
+use Illuminate\Support\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -39,6 +40,30 @@ class UserRepository implements UserRepositoryInterface
     public function delete(int $id): void
     {
         EloquentUser::destroy($id);
+    }
+
+    /**
+     * Retrieve all users.
+     *
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return EloquentUser::all()->map(function ($eloquentUser) {
+            return $this->toDomainModel($eloquentUser);
+        });
+    }
+
+    /**
+     * Create a new user.
+     *
+     * @param array $data
+     * @return DomainUser
+     */
+    public function create(array $data): DomainUser
+    {
+        $eloquentUser = EloquentUser::create($data);
+        return $this->toDomainModel($eloquentUser);
     }
 
     private function toDomainModel(EloquentUser $eloquentUser): DomainUser
