@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Repositories;
 
-use App\Domain\Models\User as DomainUser;
+use App\Application\Models\User as DomainUser;
 use App\Infrastructure\Interfaces\UserRepositoryInterface;
-use App\Infrastructure\Models\User as EloquentUser;
+use App\Domain\Models\User as EloquentUser;
 use App\Domain\Enums\UserType;
 use Illuminate\Support\Collection;
 

@@ -2,51 +2,36 @@
 
 namespace App\Infrastructure\Repositories;
 
-use App\Infrastructure\Interfaces\WarehouseRepositoryInterface;
-use App\Infrastructure\Models\Warehouse as EloquentWarehouse;
-use App\Domain\Models\Warehouse as DomainWarehouse;
-use Illuminate\Support\Collection;
+use App\Infrastructure\Interfaces\IWarehouseRepository;
+use App\Domain\Models\Warehouse as EloquentWarehouse;
 
-class WarehouseRepository implements WarehouseRepositoryInterface
+class WarehouseRepository implements IWarehouseRepository
 {
-    public function all(): Collection
+    public function getAll()
     {
-        return EloquentWarehouse::all()->map(function ($eloquentWarehouse) {
-            return $this->toDomainModel($eloquentWarehouse);
-        });
+        return EloquentWarehouse::paginate(10); // Return raw Eloquent collection
     }
 
-    public function findById(int $id): ?DomainWarehouse
+    public function getById($id)
     {
-        $eloquentWarehouse = EloquentWarehouse::find($id);
-        return $eloquentWarehouse ? $this->toDomainModel($eloquentWarehouse) : null;
+        return EloquentWarehouse::findOrFail($id); // Return raw Eloquent model
     }
 
-    public function create(array $data): DomainWarehouse
+    public function create(array $data)
     {
-        $eloquentWarehouse = EloquentWarehouse::create($data);
-        return $this->toDomainModel($eloquentWarehouse);
+        return EloquentWarehouse::create($data); // Return raw Eloquent model
     }
 
-    public function update(DomainWarehouse $warehouse): void
+    public function update($id, array $data)
     {
-        $eloquentWarehouse = EloquentWarehouse::findOrFail($warehouse->getId());
-        $eloquentWarehouse->name = $warehouse->getName();
-        $eloquentWarehouse->location = $warehouse->getLocation();
-        $eloquentWarehouse->save();
+        $warehouse = EloquentWarehouse::findOrFail($id);
+        $warehouse->update($data);
+        return $warehouse; // Return raw Eloquent model
     }
 
-    public function delete(int $id): void
+    public function delete($id)
     {
-        EloquentWarehouse::destroy($id);
-    }
-
-    private function toDomainModel(EloquentWarehouse $eloquentWarehouse): DomainWarehouse
-    {
-        return new DomainWarehouse(
-            id: $eloquentWarehouse->id,
-            name: $eloquentWarehouse->name,
-            location: $eloquentWarehouse->location
-        );
+        $warehouse = EloquentWarehouse::findOrFail($id);
+        return $warehouse->delete();
     }
 }

@@ -5,7 +5,7 @@ namespace App\Application\Services;
 use App\Application\Interfaces\UserServiceInterface;
 use App\Infrastructure\Interfaces\UserRepositoryInterface;
 use App\Domain\Enums\UserType;
-use App\Domain\Models\User;
+use App\Application\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;

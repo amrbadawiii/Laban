@@ -2,73 +2,53 @@
 
 namespace App\Domain\Models;
 
-use App\Domain\Enums\UserType;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User
+class User extends Authenticatable
 {
-    private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
-    private int $warehouseId;
-    private UserType $userType;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
 
-    public function __construct(
-        int $id,
-        string $name,
-        string $email,
-        string $password,
-        int $warehouseId,
-        UserType $userType
-    ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
-        $this->warehouseId = $warehouseId;
-        $this->userType = $userType;
-    }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
 
-    // Getters
-    public function getId(): int
+    protected static function newFactory()
     {
-        return $this->id;
+        return \Database\Factories\UserFactory::new();
     }
+    protected $fillable = [
+        'name',
+        'email',
+        'warehouse_id',
+        'user_type',
+        'password',
+    ];
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-    public function getEmail(): string
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        return $this->email;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function getWarehouseId(): int
-    {
-        return $this->warehouseId;
-    }
-
-    public function getUserType(): UserType
-    {
-        return $this->userType;
-    }
-
-    // Business logic
-    public function isAdmin(): bool
-    {
-        return $this->userType === UserType::Admin;
-    }
-
-    public function changePassword(string $newPassword): void
-    {
-        // Add any necessary validation rules for password changes
-        $this->password = $newPassword;
+        return [
+            'password' => 'hashed',
+        ];
     }
 }

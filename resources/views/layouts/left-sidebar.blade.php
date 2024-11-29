@@ -15,7 +15,7 @@
 
             <!-- Warehouse Management Section -->
             <x-sidebar-section id="warehouse-toggle" icon="fas fa-warehouse" :text="__('messages.warehouse_management')">
-                <x-sidebar-subitem href="#" icon="fas fa-list" :text="__('messages.warehouse_list')" />
+                <x-sidebar-subitem href="{{ route('warehouses.index') }}" icon="fas fa-list" :text="__('messages.warehouse_list')" />
                 <x-sidebar-subitem href="#" icon="fas fa-boxes" :text="__('messages.item_list')" />
                 <x-sidebar-subitem href="#" icon="fas fa-truck-loading" :text="__('messages.inbound')" />
             </x-sidebar-section>

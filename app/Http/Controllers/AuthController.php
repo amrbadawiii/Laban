@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Application\Interfaces\AuthServiceInterface;
+use App\Application\Interfaces\IWarehouseService;
 use App\Application\Interfaces\UserServiceInterface;
+use App\Infrastructure\Interfaces\IWarehouseRepository;
 use App\Infrastructure\Interfaces\WarehouseRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Domain\Enums\UserType;
@@ -12,12 +14,12 @@ class AuthController extends Controller
 {
     protected AuthServiceInterface $authService;
     protected UserServiceInterface $userService;
-    protected WarehouseRepositoryInterface $warehouseRepository;
+    protected IWarehouseService $warehouseService;
 
     public function __construct(
         AuthServiceInterface $authService,
         UserServiceInterface $userService,
-        WarehouseRepositoryInterface $warehouseRepository
+        IWarehouseService $warehouseRepository
     ) {
         $this->authService = $authService;
         $this->userService = $userService;
@@ -55,7 +57,7 @@ class AuthController extends Controller
     {
         $this->authorizeAdmin();
 
-        $warehouses = $this->warehouseRepository->all();
+        $warehouses = $this->warehouseService->getAllWarehouses();
         $userTypes = UserType::reverse();
 
         return view('auth.create-user', compact('warehouses', 'userTypes'));

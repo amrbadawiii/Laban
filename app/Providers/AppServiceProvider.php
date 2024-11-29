@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Application\Interfaces\AuthServiceInterface;
+use App\Application\Interfaces\IWarehouseService;
 use App\Application\Interfaces\UserServiceInterface;
 use App\Application\Services\AuthService;
 use App\Application\Services\UserService;
+use App\Application\Services\WarehouseService;
+use App\Infrastructure\Interfaces\IWarehouseRepository;
 use App\Infrastructure\Interfaces\UserRepositoryInterface;
 use App\Infrastructure\Interfaces\WarehouseRepositoryInterface;
 use App\Infrastructure\Repositories\WarehouseRepository;
@@ -21,11 +24,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Repository Bindings
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(WarehouseRepositoryInterface::class, WarehouseRepository::class);
+        $this->app->bind(IWarehouseRepository::class, WarehouseRepository::class);
 
         // Service Bindings
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
+        $this->app->bind(IWarehouseService::class, WarehouseService::class);
     }
 
     /**

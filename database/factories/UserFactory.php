@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Domain\Enums\UserType;
-use App\Infrastructure\Models\User;
-use App\Infrastructure\Models\Warehouse;
+use App\Domain\Models\User;
+use App\Domain\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 

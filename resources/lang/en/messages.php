@@ -44,8 +44,13 @@ return [
     'user' => 'Users',
 
     'add_new' => 'Add New',
+    'create' => 'Create',
+    'update' => 'Update',
     'search' => 'Search',
     'edit' => 'Edit',
-    'delete' => 'Delete'
+    'delete' => 'Delete',
+    'actions' => 'Actions',
+    'details' => 'Details',
+    'back' => 'Back'
     // Add other translations here
 ];

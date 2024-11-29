@@ -2,7 +2,7 @@
 
 namespace App\Application\Interfaces;
 
-use App\Domain\Models\User;
+use App\Application\Models\User;
 use Illuminate\Support\Collection;
 
 interface UserServiceInterface
