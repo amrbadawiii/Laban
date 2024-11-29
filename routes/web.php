@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -27,6 +30,9 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
         Route::get('/users/create', [AuthController::class, 'showCreateUserForm'])->name('users.create');
         Route::post('/users/create', [AuthController::class, 'createUser'])->name('users.store');
         Route::resource('warehouses', WarehouseController::class);
+        Route::resource('companies', CompanyController::class);
+        Route::resource('customers', CustomerController::class);
+        Route::resource('suppliers', SupplierController::class);
     });
 
     // User-Specific Routes

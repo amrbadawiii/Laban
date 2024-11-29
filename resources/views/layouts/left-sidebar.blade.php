@@ -22,9 +22,9 @@
 
             <!-- Contacts Section -->
             <x-sidebar-section id="crm-toggle" icon="fas fa-chart-line" :text="__('messages.contacts')">
-                <x-sidebar-subitem href="#" icon="fas fa-user-friends" :text="__('messages.customer')" />
-                <x-sidebar-subitem href="#" icon="fas fa-building" :text="__('messages.company')" />
-                <x-sidebar-subitem href="#" icon="fas fa-receipt" :text="__('messages.supplier')" />
+                <x-sidebar-subitem href="{{ route('customers.index') }}" icon="fas fa-user-friends" :text="__('messages.customer')" />
+                <x-sidebar-subitem href="{{ route('companies.index') }}" icon="fas fa-building" :text="__('messages.company')" />
+                <x-sidebar-subitem href="{{ route('suppliers.index') }}" icon="fas fa-receipt" :text="__('messages.supplier')" />
             </x-sidebar-section>
 
             <!-- Inventory Management Section -->
