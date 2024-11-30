@@ -5,7 +5,7 @@ namespace App\Domain\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Warehouse extends Model
+class MeasurementUnit extends Model
 {
     use HasFactory;
 
@@ -16,25 +16,23 @@ class Warehouse extends Model
      */
     protected static function newFactory()
     {
-        return \Database\Factories\WarehouseFactory::new();
+        return \Database\Factories\MeasurementUnitFactory::new();
     }
 
     protected $fillable = [
-        'name',
-        'location',
+        'name_en',
+        'name_ar',
+        'abbreviation'
     ];
 
     public function stocks()
     {
         return $this->hasMany(Stock::class);
     }
+
     public function inbounds()
     {
         return $this->hasMany(Inbound::class);
     }
 
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 }

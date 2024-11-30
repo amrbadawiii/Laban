@@ -16,7 +16,6 @@
             <!-- Warehouse Management Section -->
             <x-sidebar-section id="warehouse-toggle" icon="fas fa-warehouse" :text="__('messages.warehouse_management')">
                 <x-sidebar-subitem href="{{ route('warehouses.index') }}" icon="fas fa-list" :text="__('messages.warehouse_list')" />
-                <x-sidebar-subitem href="#" icon="fas fa-boxes" :text="__('messages.item_list')" />
                 <x-sidebar-subitem href="#" icon="fas fa-truck-loading" :text="__('messages.inbound')" />
             </x-sidebar-section>
 
@@ -29,13 +28,10 @@
 
             <!-- Inventory Management Section -->
             <x-sidebar-section id="inventory-toggle" icon="fas fa-boxes" :text="__('messages.inventory_management')">
-                <x-sidebar-subitem href="#" icon="fas fa-boxes" :text="__('messages.category')" />
-                <x-sidebar-section id="measure-toggle" icon="fas fa-ruler" :text="__('messages.measurement')">
-                    <x-sidebar-subitem href="#" icon="fas fa-ruler" :text="__('messages.measurement_unit')" />
-                    <x-sidebar-subitem href="#" icon="fas fa-code" :text="__('messages.measurement_code')" />
-                </x-sidebar-section>
+                <x-sidebar-subitem href="{{ route('products.index') }}" icon="fas fa-boxes" :text="__('messages.item_list')" />
+                <x-sidebar-subitem href="{{ route('measurementUnits.index') }}" icon="fas fa-ruler"
+                    :text="__('messages.measurementUnit')" />
                 <x-sidebar-subitem href="#" icon="fas fa-boxes" :text="__('messages.stock_list')" />
-                <x-sidebar-subitem href="#" icon="fas fa-warehouse" :text="__('messages.stock_tracking')" />
             </x-sidebar-section>
 
             <!-- Manufacture Management Section -->

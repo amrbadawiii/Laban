@@ -5,7 +5,7 @@ namespace App\Domain\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Warehouse extends Model
+class Product extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,19 @@ class Warehouse extends Model
      */
     protected static function newFactory()
     {
-        return \Database\Factories\WarehouseFactory::new();
+        return \Database\Factories\ProductFactory::new();
     }
 
     protected $fillable = [
         'name',
-        'location',
+        'type',
     ];
+
+    // Accessor for the "type" attribute
+    public function getTypeAttribute($value)
+    {
+        return ucfirst($value);
+    }
 
     public function stocks()
     {
@@ -31,10 +37,5 @@ class Warehouse extends Model
     public function inbounds()
     {
         return $this->hasMany(Inbound::class);
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
     }
 }

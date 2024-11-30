@@ -22,8 +22,8 @@ return [
     'inventory_management' => 'Inventory Management',
     'category' => 'Category',
     'measurement' => 'Measurement',
-    'measurement_unit' => 'Measurement Unit',
-    'measurement_code' => 'Measurement Code',
+    'measurementUnit' => 'Measurement Unit',
+    'product' => 'Product',
 
     'stock_list' => 'Stock List',
     'stock_tracking' => 'Stock Tracking',

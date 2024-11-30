@@ -27,4 +27,9 @@ class Supplier extends Model
         'city',
         'is_active'
     ];
+
+    public function inbounds()
+    {
+        return $this->hasMany(Inbound::class);
+    }
 }
