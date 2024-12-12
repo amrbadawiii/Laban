@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InboundController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MeasurementUnitController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +39,10 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
         Route::resource('suppliers', SupplierController::class);
         Route::resource('measurementUnits', MeasurementUnitController::class);
         Route::resource('products', ProductController::class);
+        Route::resource('inbounds', InboundController::class);
+        Route::resource('stocks', StockController::class);
+        Route::post('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
+
 
     });
 

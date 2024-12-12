@@ -5,33 +5,12 @@ namespace App\Infrastructure\Repositories;
 use App\Domain\Models\MeasurementUnit;
 use App\Infrastructure\Interfaces\IMeasurementUnitRepository;
 
-class MeasurementUnitRepository implements IMeasurementUnitRepository
+class MeasurementUnitRepository extends BaseRepository implements IMeasurementUnitRepository
 {
-    public function getAll()
+    public function __construct(MeasurementUnit $model)
     {
-        return MeasurementUnit::paginate(10); // Return raw Eloquent collection
+        parent::__construct($model);
     }
 
-    public function getById($id)
-    {
-        return MeasurementUnit::findOrFail($id); // Return raw Eloquent model
-    }
-
-    public function create(array $data)
-    {
-        return MeasurementUnit::create($data); // Return raw Eloquent model
-    }
-
-    public function update($id, array $data)
-    {
-        $warehouse = MeasurementUnit::findOrFail($id);
-        $warehouse->update($data);
-        return $warehouse; // Return raw Eloquent model
-    }
-
-    public function delete($id)
-    {
-        $warehouse = MeasurementUnit::findOrFail($id);
-        return $warehouse->delete();
-    }
+    // Add custom methods specific to Company here if needed
 }

@@ -2,11 +2,7 @@
 
 namespace App\Application\Interfaces;
 
-interface IProductService
+interface IProductService extends IBaseService
 {
-    public function getAllProducts();
-    public function getProductById($id);
-    public function createProduct(array $data);
-    public function updateProduct($id, array $data);
-    public function deleteProduct($id);
+    // Add specific methods for warehouse if needed
 }

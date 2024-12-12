@@ -3,17 +3,17 @@
 @section('title', __('messages.edit'))
 
 @section('subContent')
-    <form action="{{ route('customers.update', $customer->getId()) }}" method="POST">
+    <form action="{{ route('customers.update', $customer['id']) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="first_name" label="{{ __('customer.firstName') }}" :value="$customer->getFirstName()" required />
-            <x-text-input name="last_name" label="{{ __('customer.lastName') }}" :value="$customer->getLastName()" required />
-            <x-text-input name="email" label="{{ __('customer.email') }}" :value="$customer->getEmail()" required />
-            <x-text-input name="phone" label="{{ __('customer.phone') }}" :value="$customer->getPhone()" />
-            <x-text-input name="address" label="{{ __('customer.address') }}" :value="$customer->getAddress()" />
-            <x-text-input name="city" label="{{ __('customer.city') }}" :value="$customer->getCity()" />
+            <x-text-input name="first_name" label="{{ __('customer.firstName') }}" :value="$customer['first_name']" required />
+            <x-text-input name="last_name" label="{{ __('customer.lastName') }}" :value="$customer['last_name']" required />
+            <x-text-input name="email" label="{{ __('customer.email') }}" :value="$customer['email']" required />
+            <x-text-input name="phone" label="{{ __('customer.phone') }}" :value="$customer['phone']" />
+            <x-text-input name="address" label="{{ __('customer.address') }}" :value="$customer['address']" />
+            <x-text-input name="city" label="{{ __('customer.city') }}" :value="$customer['city']" />
         </div>
 
         <div class="mt-6">

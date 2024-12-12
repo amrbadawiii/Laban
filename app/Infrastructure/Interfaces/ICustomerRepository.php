@@ -1,12 +1,7 @@
 <?php
-
 namespace App\Infrastructure\Interfaces;
 
-interface ICustomerRepository
+interface ICustomerRepository extends IBaseRepository
 {
-    public function getAll();
-    public function getById($id);
-    public function create(array $data);
-    public function update($id, array $data);
-    public function delete($id);
+    // Add custom methods specific to Inbound, if needed
 }

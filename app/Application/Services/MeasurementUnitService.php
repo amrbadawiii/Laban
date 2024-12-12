@@ -3,56 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IMeasurementUnitService;
-use App\Application\Models\MeasurementUnit;
 use App\Infrastructure\Interfaces\IMeasurementUnitRepository;
 
 class MeasurementUnitService implements IMeasurementUnitService
 {
-    private IMeasurementUnitRepository $measurementUnitRepository;
+    protected IMeasurementUnitRepository $repository;
 
-    public function __construct(IMeasurementUnitRepository $measurementUnitRepository)
+    public function __construct(IMeasurementUnitRepository $repository)
     {
-        $this->measurementUnitRepository = $measurementUnitRepository;
+        $this->repository = $repository;
     }
 
-    public function getAllMeasurementUnits()
+    public function getAll(array $columns = ['*'], array $relations = []): iterable
     {
-        $units = $this->measurementUnitRepository->getAll();
-        // Transform the collection but keep pagination intact
-        $units->getCollection()->transform(function ($unit) {
-            return $this->mapToDomainModel($unit);
-        });
-        return $units;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getMeasurementUnitById($id)
+    public function getById(int $id, array $relations = []): object
     {
-        $unit = $this->measurementUnitRepository->getById($id);
-        return $this->mapToDomainModel($unit);
+        return $this->repository->find($id, $relations);
     }
 
-    public function createMeasurementUnit(array $data)
+    public function create(array $data): object
     {
-        return $this->measurementUnitRepository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function updateMeasurementUnit($id, array $data)
+    public function update(int $id, array $data): object
     {
-        return $this->measurementUnitRepository->update($id, $data);
+        return $this->repository->update($id, $data);
     }
 
-    public function deleteMeasurementUnit($id)
+    public function delete(int $id): bool
     {
-        return $this->measurementUnitRepository->delete($id);
-    }
-
-    private function mapToDomainModel($eloquentMeasurementUnit)
-    {
-        return new MeasurementUnit(
-            $eloquentMeasurementUnit->id,
-            $eloquentMeasurementUnit->name_en,
-            $eloquentMeasurementUnit->name_ar,
-            $eloquentMeasurementUnit->abbreviation,
-        );
+        return $this->repository->delete($id);
     }
 }

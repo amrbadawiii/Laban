@@ -15,22 +15,6 @@ class Warehouse
         $this->location = $location;
     }
 
-    // Magic method to dynamically access private properties
-    public function __get(string $property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
-
-        throw new \Exception("Property '{$property}' does not exist on " . static::class);
-    }
-
-    // Magic method to check if a property exists
-    public function __isset(string $property): bool
-    {
-        return property_exists($this, $property);
-    }
-
     // Getters
     public function getId(): int
     {
@@ -45,5 +29,13 @@ class Warehouse
     public function getLocation(): string
     {
         return $this->location;
+    }
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'location' => $this->location
+        ];
     }
 }

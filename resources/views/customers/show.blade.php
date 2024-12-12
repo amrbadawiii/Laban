@@ -7,12 +7,12 @@
         <div class="bg-white p-4 shadow rounded-lg">
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
 
-            <x-key-value label="{{ __('customer.firstName') }}" :value="$customer->getFirstName()" />
-            <x-key-value label="{{ __('customer.lastName') }}" :value="$customer->getLastName()" />
-            <x-key-value label="{{ __('customer.email') }}" :value="$customer->getEmail()" />
-            <x-key-value label="{{ __('customer.phone') }}" :value="$customer->getPhone()" />
-            <x-key-value label="{{ __('customer.address') }}" :value="$customer->getAddress()" />
-            <x-key-value label="{{ __('customer.city') }}" :value="$customer->getCity()" />
+            <x-key-value label="{{ __('customer.firstName') }}" :value="$customer['first_name']" />
+            <x-key-value label="{{ __('customer.lastName') }}" :value="$customer['last_name']" />
+            <x-key-value label="{{ __('customer.email') }}" :value="$customer['email']" />
+            <x-key-value label="{{ __('customer.phone') }}" :value="$customer['phone']" />
+            <x-key-value label="{{ __('customer.address') }}" :value="$customer['address']" />
+            <x-key-value label="{{ __('customer.city') }}" :value="$customer['city']" />
         </div>
     </div>
 

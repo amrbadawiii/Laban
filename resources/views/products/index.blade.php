@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $product)
+        @foreach ($items['data'] as $product)
             <x-table-row :data="$product" :columns="$columns" route="products.show" />
         @endforeach
     </tbody>

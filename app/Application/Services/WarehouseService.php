@@ -3,60 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IWarehouseService;
-use App\Application\Models\Warehouse;
 use App\Infrastructure\Interfaces\IWarehouseRepository;
 
 class WarehouseService implements IWarehouseService
 {
-    private $warehouseRepository;
+    protected IWarehouseRepository $repository;
 
-    public function __construct(IWarehouseRepository $warehouseRepository)
+    public function __construct(IWarehouseRepository $repository)
     {
-        $this->warehouseRepository = $warehouseRepository;
+        $this->repository = $repository;
     }
 
-    private function mapToDomainModel($eloquentWarehouse)
+    public function getAll(array $columns = ['*'], array $relations = [])
     {
-        return new Warehouse(
-            $eloquentWarehouse->id,
-            $eloquentWarehouse->name,
-            $eloquentWarehouse->location
-        );
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getAllWarehouses()
+    public function getById(int $id, array $relations = []): object
     {
-        $warehouses = $this->warehouseRepository->getAll();
-
-        // Transform the collection but keep pagination intact
-        $warehouses->getCollection()->transform(function ($warehouse) {
-            return $this->mapToDomainModel($warehouse);
-        });
-
-        return $warehouses;  // Return the paginated result with transformed items
+        return $this->repository->find($id, $relations);
     }
 
-
-    public function getWarehouseById($id)
+    public function create(array $data): object
     {
-        $warehouse = $this->warehouseRepository->getById($id);
-        return $this->mapToDomainModel($warehouse);
+        return $this->repository->create($data);
     }
 
-    public function createWarehouse(array $data)
+    public function update(int $id, array $data): object
     {
-        $warehouse = $this->warehouseRepository->create($data);
-        return $this->mapToDomainModel($warehouse);
+        return $this->repository->update($id, $data);
     }
 
-    public function updateWarehouse($id, array $data)
+    public function delete(int $id): bool
     {
-        $warehouse = $this->warehouseRepository->update($id, $data);
-        return $this->mapToDomainModel($warehouse);
-    }
-
-    public function deleteWarehouse($id)
-    {
-        return $this->warehouseRepository->delete($id);
+        return $this->repository->delete($id);
     }
 }

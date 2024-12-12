@@ -7,8 +7,8 @@
 
     @php
         $columns = [
-            ['key' => 'nameEn', 'type' => 'text'],
-            ['key' => 'nameAr', 'type' => 'text'],
+            ['key' => 'name_en', 'type' => 'text'],
+            ['key' => 'name_ar', 'type' => 'text'],
             ['key' => 'abbreviation', 'type' => 'text'],
             [
                 'key' => 'actions',
@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $unit)
+        @foreach ($items['data'] as $unit)
             <x-table-row :data="$unit" :columns="$columns" route="measurementUnits.show" />
         @endforeach
     </tbody>

@@ -3,16 +3,16 @@
 @section('title', __('messages.edit'))
 
 @section('subContent')
-    <form action="{{ route('companies.update', $company->getId()) }}" method="POST">
+    <form action="{{ route('companies.update', $company['id']) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name" label="{{ __('company.name') }}" :value="$company->getName()" required />
-            <x-text-input name="email" label="{{ __('company.email') }}" :value="$company->getEmail()" required />
-            <x-text-input name="phone" label="{{ __('company.phone') }}" :value="$company->getPhone()" />
-            <x-text-input name="address" label="{{ __('company.address') }}" :value="$company->getAddress()" />
-            <x-text-input name="website" label="{{ __('company.website') }}" :value="$company->getWebsite()" />
+            <x-text-input name="name" label="{{ __('company.name') }}" :value="$company['name']" required />
+            <x-text-input name="email" label="{{ __('company.email') }}" :value="$company['email']" required />
+            <x-text-input name="phone" label="{{ __('company.phone') }}" :value="$company['phone']" />
+            <x-text-input name="address" label="{{ __('company.address') }}" :value="$company['address']" />
+            <x-text-input name="website" label="{{ __('company.website') }}" :value="$company['website']" />
         </div>
 
         <div class="mt-6">

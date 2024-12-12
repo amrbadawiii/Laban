@@ -7,8 +7,8 @@
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="first_name" label="{{ __('customer.first_name') }}" required />
-            <x-text-input name="last_name" label="{{ __('customer.last_name') }}" required />
+            <x-text-input name="first_name" label="{{ __('customer.firstName') }}" required />
+            <x-text-input name="last_name" label="{{ __('customer.lastName') }}" required />
             <x-text-input name="email" label="{{ __('customer.email') }}" required />
             <x-text-input name="phone" label="{{ __('customer.phone') }}" />
             <x-text-input name="address" label="{{ __('customer.address') }}" />

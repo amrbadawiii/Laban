@@ -5,33 +5,12 @@ namespace App\Infrastructure\Repositories;
 use App\Domain\Models\Customer;
 use App\Infrastructure\Interfaces\ICustomerRepository;
 
-class CustomerRepository implements ICustomerRepository
+class CustomerRepository extends BaseRepository implements ICustomerRepository
 {
-    public function getAll()
+    public function __construct(Customer $model)
     {
-        return Customer::paginate(10); // Return raw Eloquent collection
+        parent::__construct($model);
     }
 
-    public function getById($id)
-    {
-        return Customer::findOrFail($id); // Return raw Eloquent model
-    }
-
-    public function create(array $data)
-    {
-        return Customer::create($data); // Return raw Eloquent model
-    }
-
-    public function update($id, array $data)
-    {
-        $warehouse = Customer::findOrFail($id);
-        $warehouse->update($data);
-        return $warehouse; // Return raw Eloquent model
-    }
-
-    public function delete($id)
-    {
-        $warehouse = Customer::findOrFail($id);
-        return $warehouse->delete();
-    }
+    // Add custom methods specific to Company here if needed
 }

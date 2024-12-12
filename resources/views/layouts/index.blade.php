@@ -29,10 +29,23 @@
                             @yield('subContent')
                         </table>
 
-                        <!-- Pagination Section (only renders if pagination exists) -->
-                        <div class="mt-4">
-                            {{ $items->links() ?? '' }}
-                        </div>
+                        <!-- Pagination Section -->
+                        @if (!empty($items['data']))
+                            <div class="mt-4 flex justify-center items-center">
+                                @foreach ($items['links'] as $link)
+                                    @if ($link['url'])
+                                        <a href="{{ $link['url'] }}"
+                                            class="px-4 py-2 {{ $link['active'] ? 'bg-blue-500 text-white' : 'bg-gray-200' }} rounded-md mx-1">
+                                            {{ $link['label'] }}
+                                        </a>
+                                    @else
+                                        <span class="px-4 py-2 bg-gray-100 rounded-md mx-1 text-gray-400">
+                                            {{ $link['label'] }}
+                                        </span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -42,23 +55,16 @@
     <!-- JavaScript for Frontend Search -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get the input field and the table
             const searchInput = document.getElementById('tableSearch');
             const table = document.getElementById('dataTable');
             const rows = table.querySelectorAll('tbody tr');
 
-            // Add event listener to the search input field
             searchInput.addEventListener('keyup', function() {
                 const searchTerm = searchInput.value.toLowerCase();
 
-                // Loop through all rows and hide those that don't match the search query
                 rows.forEach(row => {
                     const rowText = row.innerText.toLowerCase();
-                    if (rowText.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
+                    row.style.display = rowText.includes(searchTerm) ? '' : 'none';
                 });
             });
         });

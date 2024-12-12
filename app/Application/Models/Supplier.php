@@ -30,21 +30,6 @@ class Supplier
         $this->isActive = $isActive;
     }
 
-    // Magic methods
-    public function __get(string $property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
-
-        throw new \Exception("Property '{$property}' does not exist on " . static::class);
-    }
-
-    public function __isset(string $property): bool
-    {
-        return property_exists($this, $property);
-    }
-
     // Getters
     public function getId(): int
     {
@@ -79,5 +64,18 @@ class Supplier
     public function isActive(): bool
     {
         return $this->isActive;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'city' => $this->city,
+            'isActive' => $this->isActive
+        ];
     }
 }

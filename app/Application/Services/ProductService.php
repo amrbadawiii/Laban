@@ -3,56 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IProductService;
-use App\Application\Models\Product;
-use App\Domain\Enums\Type;
 use App\Infrastructure\Interfaces\IProductRepository;
 
 class ProductService implements IProductService
 {
-    private IProductRepository $productRepository;
+    protected IProductRepository $repository;
 
-    public function __construct(IProductRepository $productRepository)
+    public function __construct(IProductRepository $repository)
     {
-        $this->productRepository = $productRepository;
+        $this->repository = $repository;
     }
 
-    public function getAllProducts()
+    public function getAll(array $columns = ['*'], array $relations = []): iterable
     {
-        $products = $this->productRepository->getAll();
-        // Transform the collection but keep pagination intact
-        $products->getCollection()->transform(function ($product) {
-            return $this->mapToDomainModel($product);
-        });
-        return $products;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getProductById($id)
+    public function getById(int $id, array $relations = []): object
     {
-        $product = $this->productRepository->getById($id);
-        return $this->mapToDomainModel($product);
+        return $this->repository->find($id, $relations);
     }
 
-    public function createProduct(array $data)
+    public function create(array $data): object
     {
-        return $this->productRepository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function updateProduct($id, array $data)
+    public function update(int $id, array $data): object
     {
-        return $this->productRepository->update($id, $data);
+        return $this->repository->update($id, $data);
     }
 
-    public function deleteProduct($id)
+    public function delete(int $id): bool
     {
-        return $this->productRepository->delete($id);
-    }
-
-    private function mapToDomainModel($eloquentProduct)
-    {
-        return new Product(
-            $eloquentProduct->id,
-            $eloquentProduct->name,
-            Type::from($eloquentProduct->type),
-        );
+        return $this->repository->delete($id);
     }
 }

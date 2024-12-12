@@ -2,36 +2,15 @@
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Models\Warehouse;
 use App\Infrastructure\Interfaces\IWarehouseRepository;
-use App\Domain\Models\Warehouse as EloquentWarehouse;
 
-class WarehouseRepository implements IWarehouseRepository
+class WarehouseRepository extends BaseRepository implements IWarehouseRepository
 {
-    public function getAll()
+    public function __construct(Warehouse $model)
     {
-        return EloquentWarehouse::paginate(10); // Return raw Eloquent collection
+        parent::__construct($model);
     }
 
-    public function getById($id)
-    {
-        return EloquentWarehouse::findOrFail($id); // Return raw Eloquent model
-    }
-
-    public function create(array $data)
-    {
-        return EloquentWarehouse::create($data); // Return raw Eloquent model
-    }
-
-    public function update($id, array $data)
-    {
-        $warehouse = EloquentWarehouse::findOrFail($id);
-        $warehouse->update($data);
-        return $warehouse; // Return raw Eloquent model
-    }
-
-    public function delete($id)
-    {
-        $warehouse = EloquentWarehouse::findOrFail($id);
-        return $warehouse->delete();
-    }
+    // Add custom methods specific to Company here if needed
 }

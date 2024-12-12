@@ -3,59 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\ISupplierService;
-use App\Application\Models\Supplier;
 use App\Infrastructure\Interfaces\ISupplierRepository;
 
 class SupplierService implements ISupplierService
 {
-    private ISupplierRepository $supplierRepository;
+    protected ISupplierRepository $repository;
 
-    public function __construct(ISupplierRepository $supplierRepository)
+    public function __construct(ISupplierRepository $repository)
     {
-        $this->supplierRepository = $supplierRepository;
+        $this->repository = $repository;
     }
 
-    public function getAllSuppliers()
+    public function getAll(array $columns = ['*'], array $relations = []): iterable
     {
-        $suppliers = $this->supplierRepository->getAll();
-        // Transform the collection but keep pagination intact
-        $suppliers->getCollection()->transform(function ($supplier) {
-            return $this->mapToDomainModel($supplier);
-        });
-        return $suppliers;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getSupplierById($id)
+    public function getById(int $id, array $relations = []): object
     {
-        $supplier = $this->supplierRepository->getById($id);
-        return $this->mapToDomainModel($supplier);
+        return $this->repository->find($id, $relations);
     }
 
-    public function createSupplier(array $data)
+    public function create(array $data): object
     {
-        return $this->supplierRepository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function updateSupplier($id, array $data)
+    public function update(int $id, array $data): object
     {
-        return $this->supplierRepository->update($id, $data);
+        return $this->repository->update($id, $data);
     }
 
-    public function deleteSupplier($id)
+    public function delete(int $id): bool
     {
-        return $this->supplierRepository->delete($id);
-    }
-
-    private function mapToDomainModel($eloquentSupplier)
-    {
-        return new Supplier(
-            $eloquentSupplier->id,
-            $eloquentSupplier->name,
-            $eloquentSupplier->email,
-            $eloquentSupplier->phone,
-            $eloquentSupplier->address,
-            $eloquentSupplier->city,
-            $eloquentSupplier->is_active
-        );
+        return $this->repository->delete($id);
     }
 }

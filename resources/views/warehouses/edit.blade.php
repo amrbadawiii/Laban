@@ -5,14 +5,14 @@
 @section('subContent')
     <br>
     <!-- Form for updating warehouse details -->
-    <form action="{{ route('warehouses.update', $warehouse->getId()) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('warehouses.update', $warehouse['id']) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <!-- Grid of Inputs for Warehouse details -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name" label="{{ __('warehouse.name') }}" :value="$warehouse->getName()" required />
-            <x-text-input name="location" label="{{ __('warehouse.location') }}" :value="$warehouse->getLocation()" required />
+            <x-text-input name="name" label="{{ __('warehouse.name') }}" :value="$warehouse['name']" required />
+            <x-text-input name="location" label="{{ __('warehouse.location') }}" :value="$warehouse['location']" required />
         </div>
 
         <!-- Submit Button for updating warehouse details -->

@@ -17,21 +17,6 @@ class MeasurementUnit
         $this->abbreviation = $abbreviation;
     }
 
-    // Magic methods
-    public function __get(string $property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
-
-        throw new \Exception("Property '{$property}' does not exist on " . static::class);
-    }
-
-    public function __isset(string $property): bool
-    {
-        return property_exists($this, $property);
-    }
-
     public function getId()
     {
         return $this->id;
@@ -61,5 +46,15 @@ class MeasurementUnit
     public function getNameByLocale(string $locale): string
     {
         return $locale === 'ar' ? $this->nameAr : $this->nameEn;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'nameEn' => $this->nameEn,
+            'nameAr' => $this->nameAr,
+            'abbreviation' => $this->abbreviation
+        ];
     }
 }

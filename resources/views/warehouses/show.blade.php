@@ -9,8 +9,8 @@
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
 
             <!-- Display warehouse details -->
-            <x-key-value label="{{ __('warehouse.name') }}" :value="$warehouse->getName()" />
-            <x-key-value label="{{ __('warehouse.location') }}" :value="$warehouse->getLocation()" />
+            <x-key-value label="{{ __('warehouse.name') }}" :value="$warehouse['name']" />
+            <x-key-value label="{{ __('warehouse.location') }}" :value="$warehouse['location']" />
         </div>
     </div>
 

@@ -5,33 +5,12 @@ namespace App\Infrastructure\Repositories;
 use App\Domain\Models\Company;
 use App\Infrastructure\Interfaces\ICompanyRepository;
 
-class CompanyRepository implements ICompanyRepository
+class CompanyRepository extends BaseRepository implements ICompanyRepository
 {
-    public function getAll()
+    public function __construct(Company $model)
     {
-        return Company::paginate(10); // Return raw Eloquent collection
+        parent::__construct($model);
     }
 
-    public function getById($id)
-    {
-        return Company::findOrFail($id); // Return raw Eloquent model
-    }
-
-    public function create(array $data)
-    {
-        return Company::create($data); // Return raw Eloquent model
-    }
-
-    public function update($id, array $data)
-    {
-        $warehouse = Company::findOrFail($id);
-        $warehouse->update($data);
-        return $warehouse; // Return raw Eloquent model
-    }
-
-    public function delete($id)
-    {
-        $warehouse = Company::findOrFail($id);
-        return $warehouse->delete();
-    }
+    // Add custom methods specific to Company here if needed
 }

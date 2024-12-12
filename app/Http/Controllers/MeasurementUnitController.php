@@ -16,54 +16,55 @@ class MeasurementUnitController extends Controller
 
     public function index()
     {
-        $items = $this->measurementUnitService->getAllMeasurementUnits();
-        return view('measurementUnits.index', compact('items'));
+        $items = $this->measurementUnitService->getAll()->toArray();
+
+        return view('measurementUnits.index', compact('items')); // Pass Measurement Units as an array to the view
     }
 
     public function show($id)
     {
-        $measurementUnit = $this->measurementUnitService->getMeasurementUnitById($id);
-        return view('measurementUnits.show', compact('measurementUnit'));
+        $unit = $this->measurementUnitService->getById($id)->toArray();
+        return view('measurementUnits.show', ['measurementUnit' => $unit]); // Pass Measurement Unit as an array to the view
     }
 
     public function create()
     {
-        return view('measurementUnits.create');
+        return view('measurementUnits.create'); // Show a form for creating a Measurement Unit
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
-            'abbreviation' => 'required|string|max:255',
+            'name_en' => 'required',
+            'name_ar' => 'required',
+            'abbreviation' => 'required'
         ]);
 
-        $this->measurementUnitService->createMeasurementUnit($validated);
+        $this->measurementUnitService->create($validated);
         return redirect()->route('measurementUnits.index')->with('success', 'Measurement Unit created successfully.');
     }
 
     public function edit($id)
     {
-        $measurementUnit = $this->measurementUnitService->getMeasurementUnitById($id);
-        return view('measurementUnits.edit', compact('measurementUnit'));
+        $unit = $this->measurementUnitService->getById($id)->toArray();
+        return view('measurementUnits.edit', ['measurementUnit' => $unit]); // Pass Measurement Units as an array to the view
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
-            'abbreviation' => 'required|string|max:255',
+            'name_en' => 'required',
+            'name_ar' => 'required',
+            'abbreviation' => 'required'
         ]);
 
-        $this->measurementUnitService->updateMeasurementUnit($id, $validated);
-        return redirect()->route('measurementUnits.index')->with('success', 'Measurement Unit updated successfully.');
+        $this->measurementUnitService->update($id, $validated);
+        return redirect()->route('measurementUnits.index')->with('success', 'measurement Units updated successfully.');
     }
 
     public function destroy($id)
     {
-        $this->measurementUnitService->deleteMeasurementUnit($id);
-        return redirect()->route('measurementUnits.index')->with('success', 'Measurement Unit deleted successfully.');
+        $this->measurementUnitService->delete($id);
+        return redirect()->route('measurementUnits.index')->with('success', 'measurement Unit deleted successfully.');
     }
 }

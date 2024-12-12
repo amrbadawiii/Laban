@@ -9,11 +9,6 @@ class Inbound extends Model
 {
     use HasFactory;
 
-    /**
-     * Fillable attributes for mass assignment.
-     *
-     * @var array
-     */
     protected $fillable = [
         'product_id',
         'measurement_unit_id',
@@ -25,43 +20,24 @@ class Inbound extends Model
         'invoice_number',
     ];
 
-    /**
-     * Relationship: Inbound belongs to a Product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relationships
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    /**
-     * Relationship: Inbound belongs to a Supplier.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    public function measurementUnit()
+    {
+        return $this->belongsTo(MeasurementUnit::class);
+    }
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    /**
-     * Relationship: Inbound belongs to a Warehouse.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
-    }
-
-    /**
-     * Relationship: Inbound belongs to a MeasurementUnit.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function measurementUnit()
-    {
-        return $this->belongsTo(MeasurementUnit::class);
     }
 }

@@ -7,8 +7,8 @@
 
     @php
         $columns = [
-            ['key' => 'firstName', 'type' => 'text'],
-            ['key' => 'lastName', 'type' => 'text'],
+            ['key' => 'first_name', 'type' => 'text'],
+            ['key' => 'last_name', 'type' => 'text'],
             ['key' => 'email', 'type' => 'text'],
             ['key' => 'phone', 'type' => 'text'],
             ['key' => 'city', 'type' => 'text'],
@@ -32,7 +32,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $customer)
+        @foreach ($items['data'] as $customer)
             <x-table-row :data="$customer" :columns="$columns" route="customers.show" />
         @endforeach
     </tbody>

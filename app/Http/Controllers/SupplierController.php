@@ -16,58 +16,58 @@ class SupplierController extends Controller
 
     public function index()
     {
-        $items = $this->supplierService->getAllSuppliers();
-        return view('suppliers.index', compact('items'));
+        $items = $this->supplierService->getAll()->toArray();
+        return view('suppliers.index', compact('items')); // Pass suppliers as an array to the view
     }
 
     public function show($id)
     {
-        $supplier = $this->supplierService->getSupplierById($id);
-        return view('suppliers.show', compact('supplier'));
+        $supplier = $this->supplierService->getById($id)->toArray();
+        return view('suppliers.show', ['supplier' => $supplier]); // Pass supplier as an array to the view
     }
 
     public function create()
     {
-        return view('suppliers.create');
+        return view('suppliers.create'); // Show a form for creating a supplier
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:suppliers',
-            'phone' => 'nullable|string|max:20|unique:suppliers',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'city' => 'required'
         ]);
 
-        $this->supplierService->createSupplier($validated);
+        $this->supplierService->create($validated);
         return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
     }
 
     public function edit($id)
     {
-        $supplier = $this->supplierService->getSupplierById($id);
-        return view('suppliers.edit', compact('supplier'));
+        $supplier = $this->supplierService->getById($id)->toArray();
+        return view('suppliers.edit', ['supplier' => $supplier]); // Pass supplier as an array to the view
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:suppliers,email,' . $id,
-            'phone' => 'nullable|string|max:20|unique:suppliers,phone,' . $id,
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'city' => 'required'
         ]);
 
-        $this->supplierService->updateSupplier($id, $validated);
-        return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');
+        $this->supplierService->update($id, $validated);
+        return redirect()->route('suppliers.index')->with('success', 'supplier updated successfully.');
     }
 
     public function destroy($id)
     {
-        $this->supplierService->deleteSupplier($id);
-        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
+        $this->supplierService->delete($id);
+        return redirect()->route('suppliers.index')->with('success', 'supplier deleted successfully.');
     }
 }

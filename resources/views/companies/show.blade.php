@@ -7,11 +7,11 @@
         <div class="bg-white p-4 shadow rounded-lg">
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
 
-            <x-key-value label="{{ __('company.name') }}" :value="$company->getName()" />
-            <x-key-value label="{{ __('company.email') }}" :value="$company->getEmail()" />
-            <x-key-value label="{{ __('company.phone') }}" :value="$company->getPhone()" />
-            <x-key-value label="{{ __('company.address') }}" :value="$company->getAddress()" />
-            <x-key-value label="{{ __('company.website') }}" :value="$company->getWebsite()" />
+            <x-key-value label="{{ __('company.name') }}" :value="$company['name']" />
+            <x-key-value label="{{ __('company.email') }}" :value="$company['email']" />
+            <x-key-value label="{{ __('company.phone') }}" :value="$company['phone']" />
+            <x-key-value label="{{ __('company.address') }}" :value="$company['address']" />
+            <x-key-value label="{{ __('company.website') }}" :value="$company['website']" />
         </div>
     </div>
 

@@ -2,11 +2,7 @@
 
 namespace App\Application\Interfaces;
 
-interface IWarehouseService
+interface IWarehouseService extends IBaseService
 {
-    public function getAllWarehouses();
-    public function getWarehouseById($id);
-    public function createWarehouse(array $data);
-    public function updateWarehouse($id, array $data);
-    public function deleteWarehouse($id);
+    // Add specific methods for warehouse if needed
 }

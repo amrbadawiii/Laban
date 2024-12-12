@@ -3,59 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\ICompanyService;
-use App\Application\Models\Company;
 use App\Infrastructure\Interfaces\ICompanyRepository;
 
 class CompanyService implements ICompanyService
 {
-    private ICompanyRepository $companyRepository;
+    protected ICompanyRepository $repository;
 
-    public function __construct(ICompanyRepository $companyRepository)
+    public function __construct(ICompanyRepository $repository)
     {
-        $this->companyRepository = $companyRepository;
+        $this->repository = $repository;
     }
 
-    public function getAllCompanies()
+    public function getAll(array $columns = ['*'], array $relations = []): iterable
     {
-        $companies = $this->companyRepository->getAll();
-        // Transform the collection but keep pagination intact
-        $companies->getCollection()->transform(function ($company) {
-            return $this->mapToDomainModel($company);
-        });
-        return $companies;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getCompanyById($id)
+    public function getById(int $id, array $relations = []): object
     {
-        $company = $this->companyRepository->getById($id);
-        return $this->mapToDomainModel($company);
+        return $this->repository->find($id, $relations);
     }
 
-    public function createCompany(array $data)
+    public function create(array $data): object
     {
-        return $this->companyRepository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function updateCompany($id, array $data)
+    public function update(int $id, array $data): object
     {
-        return $this->companyRepository->update($id, $data);
+        return $this->repository->update($id, $data);
     }
 
-    public function deleteCompany($id)
+    public function delete(int $id): bool
     {
-        return $this->companyRepository->delete($id);
-    }
-
-    private function mapToDomainModel($eloquentCompany)
-    {
-        return new Company(
-            $eloquentCompany->id,
-            $eloquentCompany->name,
-            $eloquentCompany->email,
-            $eloquentCompany->phone,
-            $eloquentCompany->address,
-            $eloquentCompany->website,
-            $eloquentCompany->is_active
-        );
+        return $this->repository->delete($id);
     }
 }

@@ -2,11 +2,7 @@
 
 namespace App\Application\Interfaces;
 
-interface ICompanyService
+interface ICompanyService extends IBaseService
 {
-    public function getAllCompanies();
-    public function getCompanyById($id);
-    public function createCompany(array $data);
-    public function updateCompany($id, array $data);
-    public function deleteCompany($id);
+    // Add specific methods for warehouse if needed
 }

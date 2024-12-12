@@ -3,13 +3,13 @@
 @section('title', __('messages.edit'))
 
 @section('subContent')
-    <form action="{{ route('products.update', $product->getId()) }}" method="POST">
+    <form action="{{ route('products.update', $product['id']) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name" label="{{ __('product.name') }}" :value="$product->getName()" required />
-            <x-select name="type" label="{{ __('product.type') }}" :options="['0' => __('product.row'), '1' => __('product.product')]" :selected="$product->getType()" required />
+            <x-text-input name="name" label="{{ __('product.name') }}" :value="$product['name']" required />
+            <x-select name="type" label="{{ __('product.type') }}" :options="['0' => __('product.row'), '1' => __('product.product')]" :selected="$product['type']" required />
         </div>
 
         <div class="mt-6">

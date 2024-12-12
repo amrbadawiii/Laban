@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
 {
-    private $warehouseService;
+    private IWarehouseService $warehouseService;
 
     public function __construct(IWarehouseService $warehouseService)
     {
@@ -16,14 +16,14 @@ class WarehouseController extends Controller
 
     public function index()
     {
-        $items = $this->warehouseService->getAllWarehouses();
-        return view('warehouses.index', compact('items')); // Pass warehouses to the view
+        $items = $this->warehouseService->getAll()->toArray();
+        return view('warehouses.index', compact('items')); // Pass warehouses as an array to the view
     }
 
     public function show($id)
     {
-        $warehouse = $this->warehouseService->getWarehouseById($id);
-        return view('warehouses.show', compact('warehouse')); // Pass a single warehouse to the view
+        $warehouse = $this->warehouseService->getById($id)->toArray();
+        return view('warehouses.show', ['warehouse' => $warehouse]); // Pass warehouse as an array to the view
     }
 
     public function create()
@@ -38,14 +38,14 @@ class WarehouseController extends Controller
             'location' => 'required',
         ]);
 
-        $this->warehouseService->createWarehouse($validated);
+        $this->warehouseService->create($validated);
         return redirect()->route('warehouses.index')->with('success', 'Warehouse created successfully.');
     }
 
     public function edit($id)
     {
-        $warehouse = $this->warehouseService->getWarehouseById($id);
-        return view('warehouses.edit', compact('warehouse')); // Show a form for editing a warehouse
+        $warehouse = $this->warehouseService->getById($id)->toArray();
+        return view('warehouses.edit', ['warehouse' => $warehouse]); // Pass warehouse as an array to the view
     }
 
     public function update(Request $request, $id)
@@ -55,13 +55,13 @@ class WarehouseController extends Controller
             'location' => 'required',
         ]);
 
-        $this->warehouseService->updateWarehouse($id, $validated);
+        $this->warehouseService->update($id, $validated);
         return redirect()->route('warehouses.index')->with('success', 'Warehouse updated successfully.');
     }
 
     public function destroy($id)
     {
-        $this->warehouseService->deleteWarehouse($id);
+        $this->warehouseService->delete($id);
         return redirect()->route('warehouses.index')->with('success', 'Warehouse deleted successfully.');
     }
 }

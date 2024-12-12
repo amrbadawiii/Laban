@@ -7,9 +7,9 @@
         <div class="bg-white p-4 shadow rounded-lg">
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
 
-            <x-key-value label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit->getNameEn()" />
-            <x-key-value label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit->getNameAr()" />
-            <x-key-value label="{{ __('measurementUnit.abbreviation') }}" :value="$measurementUnit->getAbbreviation()" />
+            <x-key-value label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit['name_en']" />
+            <x-key-value label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit['name_ar']" />
+            <x-key-value label="{{ __('measurementUnit.abbreviation') }}" :value="$measurementUnit['abbreviation']" />
         </div>
     </div>
 

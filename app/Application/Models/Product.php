@@ -17,21 +17,6 @@ class Product
         $this->type = $type;
     }
 
-    // Magic methods
-    public function __get(string $property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
-
-        throw new \Exception("Property '{$property}' does not exist on " . static::class);
-    }
-
-    public function __isset(string $property): bool
-    {
-        return property_exists($this, $property);
-    }
-
     public function getId()
     {
         return $this->id;
@@ -65,5 +50,14 @@ class Product
     public function isFinalProduct(): bool
     {
         return $this->type === Type::Product;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->type
+        ];
     }
 }

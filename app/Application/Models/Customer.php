@@ -33,16 +33,6 @@ class Customer
         $this->isActive = $isActive;
     }
 
-    // Magic getter for camelCase access
-    public function __get(string $property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->{$property};
-        }
-
-        throw new \Exception("Property '{$property}' does not exist on " . static::class);
-    }
-
     // Getters
     public function getId(): int
     {
@@ -82,5 +72,19 @@ class Customer
     public function isActive(): bool
     {
         return $this->isActive;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'city' => $this->city,
+            'isActive' => $this->isActive
+        ];
     }
 }

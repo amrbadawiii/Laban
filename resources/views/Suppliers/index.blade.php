@@ -32,7 +32,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $supplier)
+        @foreach ($items['data'] as $supplier)
             <x-table-row :data="$supplier" :columns="$columns" route="suppliers.show" />
         @endforeach
     </tbody>

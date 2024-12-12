@@ -27,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $warehouse)
+        @foreach ($items['data'] as $warehouse)
             <x-table-row :data="$warehouse" :columns="$columns" route="warehouses.show" />
         @endforeach
     </tbody>

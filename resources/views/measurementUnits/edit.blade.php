@@ -3,14 +3,14 @@
 @section('title', __('messages.edit'))
 
 @section('subContent')
-    <form action="{{ route('measurementUnits.update', $measurementUnit->getId()) }}" method="POST">
+    <form action="{{ route('measurementUnits.update', $measurementUnit['id']) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name_en" label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit->getNameEn()" required />
-            <x-text-input name="name_ar" label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit->getNameAr()" required />
-            <x-text-input name="abbreviation" label="{{ __('measurementUnit.abbreviation') }}" :value="$measurementUnit->getAbbreviation()" />
+            <x-text-input name="name_en" label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit['name_en']" required />
+            <x-text-input name="name_ar" label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit['name_ar']" required />
+            <x-text-input name="abbreviation" label="{{ __('measurementUnit.abbreviation') }}" :value="$measurementUnit['abbreviation']" />
         </div>
 
         <div class="mt-6">

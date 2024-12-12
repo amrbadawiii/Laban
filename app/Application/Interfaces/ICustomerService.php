@@ -2,11 +2,7 @@
 
 namespace App\Application\Interfaces;
 
-interface ICustomerService
+interface ICustomerService extends IBaseService
 {
-    public function getAllCustomers();
-    public function getCustomerById($id);
-    public function createCustomer(array $data);
-    public function updateCustomer($id, array $data);
-    public function deleteCustomer($id);
+    // Add specific methods for warehouse if needed
 }

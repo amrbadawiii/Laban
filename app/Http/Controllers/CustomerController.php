@@ -16,40 +16,41 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $items = $this->customerService->getAllCustomers();
-        return view('customers.index', compact('items'));
+        $items = $this->customerService->getAll()->toArray();
+        return view('customers.index', compact('items')); // Pass customers as an array to the view
     }
 
     public function show($id)
     {
-        $customer = $this->customerService->getCustomerById($id);
-        return view('customers.show', compact('customer'));
+        $customer = $this->customerService->getById($id)->toArray();
+        return view('customers.show', ['customer' => $customer]); // Pass customer as an array to the view
     }
 
     public function create()
     {
-        return view('customers.create');
+        return view('customers.create'); // Show a form for creating a warehouse
     }
 
     public function store(Request $request)
     {
+        //dd($request->toArray());
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers',
+            'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
         ]);
 
-        $this->customerService->createCustomer($validated);
-        return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
+        $this->customerService->create($validated);
+        return redirect()->route('customers.index')->with('success', 'customer created successfully.');
     }
 
     public function edit($id)
     {
-        $customer = $this->customerService->getCustomerById($id);
-        return view('customers.edit', compact('customer'));
+        $customer = $this->customerService->getById($id)->toArray();
+        return view('customers.edit', ['customer' => $customer]); // Pass customer as an array to the view
     }
 
     public function update(Request $request, $id)
@@ -57,19 +58,19 @@ class CustomerController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email,' . $id,
+            'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
         ]);
 
-        $this->customerService->updateCustomer($id, $validated);
-        return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
+        $this->customerService->update($id, $validated);
+        return redirect()->route('customers.index')->with('success', 'customer updated successfully.');
     }
 
     public function destroy($id)
     {
-        $this->customerService->deleteCustomer($id);
-        return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
+        $this->customerService->delete($id);
+        return redirect()->route('customers.index')->with('success', 'customer deleted successfully.');
     }
 }

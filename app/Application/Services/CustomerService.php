@@ -3,60 +3,39 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\ICustomerService;
-use App\Application\Models\Customer;
 use App\Infrastructure\Interfaces\ICustomerRepository;
 
 class CustomerService implements ICustomerService
 {
-    private ICustomerRepository $customerRepository;
+    protected ICustomerRepository $repository;
 
-    public function __construct(ICustomerRepository $customerRepository)
+    public function __construct(ICustomerRepository $repository)
     {
-        $this->customerRepository = $customerRepository;
+        $this->repository = $repository;
     }
 
-    public function getAllCustomers()
+    public function getAll(array $columns = ['*'], array $relations = []): iterable
     {
-        $customers = $this->customerRepository->getAll();
-        // Transform the collection but keep pagination intact
-        $customers->getCollection()->transform(function ($customer) {
-            return $this->mapToDomainModel($customer);
-        });
-        return $customers;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getCustomerById($id)
+    public function getById(int $id, array $relations = []): object
     {
-        $customer = $this->customerRepository->getById($id);
-        return $this->mapToDomainModel($customer);
+        return $this->repository->find($id, $relations);
     }
 
-    public function createCustomer(array $data)
+    public function create(array $data): object
     {
-        return $this->customerRepository->create($data);
+        return $this->repository->create($data);
     }
 
-    public function updateCustomer($id, array $data)
+    public function update(int $id, array $data): object
     {
-        return $this->customerRepository->update($id, $data);
+        return $this->repository->update($id, $data);
     }
 
-    public function deleteCustomer($id)
+    public function delete(int $id): bool
     {
-        return $this->customerRepository->delete($id);
-    }
-
-    private function mapToDomainModel($eloquentCustomer)
-    {
-        return new Customer(
-            $eloquentCustomer->id,
-            $eloquentCustomer->first_name,
-            $eloquentCustomer->last_name,
-            $eloquentCustomer->email,
-            $eloquentCustomer->phone,
-            $eloquentCustomer->address,
-            $eloquentCustomer->city,
-            $eloquentCustomer->is_active
-        );
+        return $this->repository->delete($id);
     }
 }
