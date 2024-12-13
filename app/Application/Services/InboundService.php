@@ -2,78 +2,86 @@
 
 namespace App\Application\Services;
 
-use App\Infrastructure\Interfaces\IInboundRepository;
+use App\Application\Interfaces\IBaseService;
 use App\Application\Interfaces\IInboundService;
-use App\Application\Models\Inbound;
-use Illuminate\Pagination\LengthAwarePaginator;
-use DateTime;
+use App\Infrastructure\Interfaces\IInboundRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class InboundService implements IInboundService
 {
-    private IInboundRepository $inboundRepository;
+    /**
+     * @var IInboundRepository
+     */
+    protected $repository;
 
-    public function __construct(IInboundRepository $inboundRepository)
+    /**
+     * InboundService constructor.
+     *
+     * @param IInboundRepository $repository
+     */
+    public function __construct(IInboundRepository $repository)
     {
-        $this->inboundRepository = $inboundRepository;
+        $this->repository = $repository;
     }
 
-    public function getAll(): LengthAwarePaginator
+    /**
+     * Retrieve all inbounds with optional columns and relations.
+     *
+     * @param array $columns
+     * @param array $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getAll(array $columns = ['*'], array $relations = [])
     {
-        $inbounds = $this->inboundRepository->getAll();
-
-        // Transform Eloquent models to domain models
-        $inbounds->getCollection()->transform(function ($eloquentInbound) {
-            return $this->mapToDomainModel($eloquentInbound);
-        });
-
-        return $inbounds;
+        return $this->repository->all($columns, $relations);
     }
 
-    public function getById(int $id): ?Inbound
+    /**
+     * Retrieve a specific inbound by ID with relations.
+     *
+     * @param int $id
+     * @param array $relations
+     * @return object
+     * @throws ModelNotFoundException
+     */
+    public function getById(int $id, array $relations = []): object
     {
-        $eloquentInbound = $this->inboundRepository->getById($id);
-        if (!$eloquentInbound) {
-            return null;
-        }
-
-        return $this->mapToDomainModel($eloquentInbound);
+        return $this->repository->find($id, ['*'], $relations);
     }
 
-    public function create(array $data): Inbound
+    /**
+     * Create a new inbound record.
+     *
+     * @param array $data
+     * @return object
+     */
+    public function create(array $data): object
     {
-        $eloquentInbound = $this->inboundRepository->create($data);
-        return $this->mapToDomainModel($eloquentInbound);
+        return $this->repository->create($data);
     }
 
-    public function update(int $id, array $data): Inbound
+    /**
+     * Update an existing inbound record.
+     *
+     * @param int $id
+     * @param array $data
+     * @return object
+     * @throws ModelNotFoundException
+     */
+    public function update(int $id, array $data)
     {
-        $eloquentInbound = $this->inboundRepository->update($id, $data);
-        return $this->mapToDomainModel($eloquentInbound);
+        return $this->repository->update($id, $data);
     }
 
+    /**
+     * Delete an inbound record.
+     *
+     * @param int $id
+     * @return bool
+     * @throws ModelNotFoundException
+     */
     public function delete(int $id): bool
     {
-        return $this->inboundRepository->delete($id);
-    }
-
-    // Private Methods
-
-    private function mapToDomainModel($eloquentInbound): Inbound
-    {
-        return new Inbound(
-            id: $eloquentInbound->id,
-            productId: $eloquentInbound->product_id,
-            product: $eloquentInbound->product->toArray(),
-            measurementUnitId: $eloquentInbound->measurement_unit_id,
-            measurementUnit: $eloquentInbound->measurementUnit->toArray(),
-            quantity: $eloquentInbound->quantity,
-            supplierId: $eloquentInbound->supplier_id,
-            supplier: $eloquentInbound->supplier->toArray(),
-            warehouseId: $eloquentInbound->warehouse_id,
-            warehouse: $eloquentInbound->warehouse->toArray(),
-            receivedDate: new DateTime($eloquentInbound->received_date),
-            isConfirmed: $eloquentInbound->is_confirmed,
-            invoiceNumber: $eloquentInbound->invoice_number
-        );
+        return $this->repository->delete($id);
     }
 }

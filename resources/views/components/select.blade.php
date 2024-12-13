@@ -1,7 +1,7 @@
 @props([
     'name',
     'label',
-    'options' => [], // Can be an array of objects or key-value pairs
+    'options' => [], // Array of key-value pairs or objects
     'selected' => null,
     'required' => false,
     'displayKey' => 'name', // Key used to display text in the dropdown for objects
@@ -22,9 +22,9 @@
         <option value="">{{ __('Select an option') }}</option>
         @foreach ($options as $key => $value)
             @php
-                // Handle object or array options dynamically
-                $optionValue = is_object($value) ? $value->id : $key; // If object, use id; else use the key
-                $displayValue = is_object($value) && isset($value->$displayKey) ? $value->$displayKey : $value;
+                $optionValue = is_array($value) ? $value['id'] : $key; // Determine the value
+                $displayValue =
+                    is_array($value) && isset($value[$displayKey]) ? $value[$displayKey] : $value['abbreviation']; // Use displayKey for text
             @endphp
             <option value="{{ $optionValue }}" {{ (string) $optionValue === (string) $selected ? 'selected' : '' }}>
                 {{ $displayValue }}

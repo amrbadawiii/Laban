@@ -57,7 +57,7 @@ class AuthController extends Controller
     {
         $this->authorizeAdmin();
 
-        $warehouses = $this->warehouseService->getAllWarehouses();
+        $warehouses = $this->warehouseService->getAll();
         $userTypes = UserType::reverse();
 
         return view('auth.create-user', compact('warehouses', 'userTypes'));

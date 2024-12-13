@@ -1,4 +1,4 @@
-@props(['label', 'value'])
+@props(['label', 'value', 'valueTwo' => null])
 
 <p class="mt-2 text-gray-500">
     <strong>{{ $label }}:</strong>
@@ -16,8 +16,14 @@
     @endphp
 
     @if ($url)
-        <a href="{{ $url }}" target="_blank" class="text-indigo-600 hover:underline">{{ $stringValue }}</a>
+        <a href="{{ $url }}" target="_blank" class="text-indigo-600 hover:underline">
+            {{ $stringValue }} @if ($valueTwo)
+                - {{ $valueTwo }}
+            @endif
+        </a>
     @else
-        {{ $stringValue }}
+        {{ $stringValue }} @if ($valueTwo)
+            - {{ $valueTwo }}
+        @endif
     @endif
 </p>

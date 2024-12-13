@@ -8,8 +8,7 @@
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}</h3>
 
             <x-key-value label="{{ __('product.name') }}" :value="$inbound['product']['name']" />
-            <x-key-value label="{{ __('measurementUnit.abbreviation') }}" :value="$inbound['measurement_unit']['abbreviation']" />
-            <x-key-value label="{{ __('quantity') }}" :value="$inbound['quantity']" />
+            <x-key-value label="{{ __('quantity') }}" :value="$inbound['quantity']" :valueTwo="$inbound['measurement_unit']['abbreviation']" />
             <x-key-value label="{{ __('supplier.name') }}" :value="$inbound['supplier']['name'] ?? __('messages.not_available')" />
             <x-key-value label="{{ __('warehouse.name') }}" :value="$inbound['warehouse']['name']" />
             <x-key-value label="{{ __('receivedDate') }}" :value="$inbound['received_date']" />

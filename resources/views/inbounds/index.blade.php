@@ -10,7 +10,7 @@
             ['key' => 'quantity', 'type' => 'text'], // Simple text value
             ['key' => 'supplier.name', 'type' => 'text'], // Nested property for supplier name
             ['key' => 'warehouse.name', 'type' => 'text'], // Nested property for warehouse name
-            ['key' => 'receivedDate', 'type' => 'date'], // Date formatting
+            ['key' => 'received_date', 'type' => 'date'], // Date formatting
             [
                 'key' => 'actions',
                 'type' => 'actions',
@@ -26,12 +26,12 @@
             <x-table-header>{{ __('inbound.quantity') }}</x-table-header>
             <x-table-header>{{ __('inbound.supplier') }}</x-table-header>
             <x-table-header>{{ __('inbound.warehouse') }}</x-table-header>
-            <x-table-header>{{ __('inbound.receivedDate') }}</x-table-header>
+            <x-table-header>{{ __('inbound.received_date') }}</x-table-header>
             <x-table-header>{{ __('messages.actions') }}</x-table-header>
         </tr>
     </thead>
     <tbody>
-        @foreach ($items as $inbound)
+        @foreach ($items['data'] as $inbound)
             <x-table-row :data="$inbound" :columns="$columns" route="inbounds.show" />
         @endforeach
     </tbody>

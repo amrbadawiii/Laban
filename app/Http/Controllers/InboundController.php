@@ -8,120 +8,139 @@ use App\Application\Interfaces\IProductService;
 use App\Application\Interfaces\ISupplierService;
 use App\Application\Interfaces\IWarehouseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InboundController extends Controller
 {
     private IInboundService $inboundService;
-    private IProductService $iProductService;
-    private ISupplierService $iSupplierService;
-    private IWarehouseService $iWarehouseService;
-    private IMeasurementUnitService $iMeasurementUnitService;
+    private IProductService $productService;
+    private IMeasurementUnitService $measurementUnitService;
+    private ISupplierService $supplierService;
+    private IWarehouseService $warehouseService;
 
-    public function __construct(IInboundService $inboundService, IProductService $iProductService, ISupplierService $iSupplierService, IWarehouseService $iWarehouseService, IMeasurementUnitService $iMeasurementUnitService)
+    public function __construct(IInboundService $inboundService, IProductService $productService, IMeasurementUnitService $measurementUnitService, ISupplierService $supplierService, IWarehouseService $warehouseService)
     {
         $this->inboundService = $inboundService;
-        $this->iProductService = $iProductService;
-        $this->iSupplierService = $iSupplierService;
-        $this->iWarehouseService = $iWarehouseService;
-        $this->iMeasurementUnitService = $iMeasurementUnitService;
+        $this->productService = $productService;
+        $this->measurementUnitService = $measurementUnitService;
+        $this->supplierService = $supplierService;
+        $this->warehouseService = $warehouseService;
     }
 
+    /**
+     * Display a listing of the inbounds.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
-        $items = $this->inboundService->getAll();
-
-        //dd($items);
-        $items->getCollection()->transform(function ($inbound) {
-            return $inbound->toArray();
-        });
-
+        $items = $this->inboundService->getAll(['*'], ['product', 'measurementUnit', 'supplier', 'warehouse'])->toArray();
         return view('inbounds.index', compact('items'));
     }
 
-    public function show(int $id)
-    {
-        $inbound = $this->inboundService->getById($id)->toArray();
-        return view('inbounds.show', compact('inbound'));
-    }
-
+    /**
+     * Show the form for creating a new inbound.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
-        $products = $this->iProductService->getAllProducts();
-        $suppliers = $this->iSupplierService->getAllSuppliers();
-        $measurementUnits = $this->iMeasurementUnitService->getAllMeasurementUnits();
-        $warehouses = $this->iWarehouseService->getAllWarehouses();
-        return view('inbounds.create', compact('products', 'suppliers', 'measurementUnits', 'warehouses'));
+        $products = $this->productService->getAll()->toArray();
+        $measurementUnits = $this->measurementUnitService->getAll()->toArray();
+        $suppliers = $this->supplierService->getAll()->toArray();
+        $warehouses = $this->warehouseService->getAll()->toArray();
+        //dd($products);
+        return view('inbounds.create', compact('products', 'measurementUnits', 'suppliers', 'warehouses'));
     }
 
+    /**
+     * Store a newly created inbound in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
-        $validated = $request->merge([
-            'is_confirmed' => $request->input('is_confirmed', false),
-        ])->validate([
-                    'product_id' => 'required|exists:products,id',
-                    'measurement_unit_id' => 'required|exists:measurement_units,id',
-                    'quantity' => 'required|numeric|min:0.01',
-                    'supplier_id' => 'nullable|exists:suppliers,id',
-                    'warehouse_id' => 'required|exists:warehouses,id',
-                    'received_date' => 'required|date',
-                    'is_confirmed' => 'boolean',
-                    'invoice_number' => 'nullable|string|max:255',
-                ]);
-
-        $inbound = $this->inboundService->create($validated);
-
-        return view('inbounds.show', compact('inbound'));
-    }
-
-    public function edit($id)
-    {
-        $inbound = $this->inboundService->getById($id)->toArray();
-        $products = $this->iProductService->getAllProducts();
-        $suppliers = $this->iSupplierService->getAllSuppliers();
-        $measurementUnits = $this->iMeasurementUnitService->getAllMeasurementUnits();
-        $warehouses = $this->iWarehouseService->getAllWarehouses();
-        return view('inbounds.edit', compact('inbound', 'products', 'suppliers', 'measurementUnits', 'warehouses'));
-    }
-    public function update(Request $request, int $id)
-    {
-        $validated = $request->validate([
-            'product_id' => 'sometimes|required|exists:products,id',
-            'measurement_unit_id' => 'sometimes|required|exists:measurement_units,id',
-            'quantity' => 'sometimes|required|numeric|min:0.01',
+        $data = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'measurement_unit_id' => 'required|exists:measurement_units,id',
+            'quantity' => 'required|numeric|min:0',
             'supplier_id' => 'nullable|exists:suppliers,id',
-            'warehouse_id' => 'sometimes|required|exists:warehouses,id',
-            'received_date' => 'sometimes|required|date',
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'received_date' => 'required|date',
             'is_confirmed' => 'boolean',
             'invoice_number' => 'nullable|string|max:255',
         ]);
 
-        $inbound = $this->inboundService->update($id, $validated);
+        $this->inboundService->create($data);
 
-        return view('inbounds.edit', compact('inbound'));
+        return redirect()->route('inbounds.index')->with('success', __('Inbound created successfully.'));
     }
 
-    public function confirm($id)
+    /**
+     * Display the specified inbound.
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show($id)
     {
-        try {
-            // Update the is_confirmed status
-            DB::table('inbounds')->where('id', $id)->update(['is_confirmed' => true]);
-
-            return redirect()->route('inbounds.index')->with('success', __('messages.inbound_confirmed'));
-        } catch (\Exception $e) {
-            return redirect()->route('inbounds.index')->with('error', __('messages.error_confirming_inbound'));
-        }
+        $inbound = $this->inboundService->getById($id, ['product', 'measurementUnit', 'supplier', 'warehouse'])->toArray();
+        //dd($inbound);
+        return view('inbounds.show', compact('inbound'));
     }
 
-    public function destroy(int $id)
+    /**
+     * Show the form for editing the specified inbound.
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function edit($id)
     {
-        $deleted = $this->inboundService->delete($id);
+        $inbound = $this->inboundService->getById($id)->toArray();
+        $products = $this->productService->getAll()->toArray();
+        $measurementUnits = $this->measurementUnitService->getAll()->toArray();
+        $suppliers = $this->supplierService->getAll()->toArray();
+        $warehouses = $this->warehouseService->getAll()->toArray();
+        //dd($inbound, $measurementUnits);
+        return view('inbounds.edit', compact('inbound', 'products', 'measurementUnits', 'suppliers', 'warehouses'));
+    }
 
-        if (!$deleted) {
-            return redirect()->route('inbounds.index');
-        }
+    /**
+     * Update the specified inbound in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'measurement_unit_id' => 'required|exists:measurement_units,id',
+            'quantity' => 'required|numeric|min:0',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'received_date' => 'required|date',
+            'is_confirmed' => 'boolean',
+            'invoice_number' => 'nullable|string|max:255',
+        ]);
 
-        return redirect()->route('inbounds.index');
-        ;
+        $this->inboundService->update($id, $data);
+
+        return redirect()->route('inbounds.index')->with('success', __('Inbound updated successfully.'));
+    }
+
+    /**
+     * Remove the specified inbound from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
+    {
+        $this->inboundService->delete($id);
+
+        return redirect()->route('inbounds.index')->with('success', __('Inbound deleted successfully.'));
     }
 }
