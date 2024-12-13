@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application\Interfaces\IInboundService;
 use App\Application\Interfaces\IMeasurementUnitService;
 use App\Application\Interfaces\IProductService;
+use App\Application\Interfaces\IStockService;
 use App\Application\Interfaces\ISupplierService;
 use App\Application\Interfaces\IWarehouseService;
 use Illuminate\Http\Request;
@@ -16,14 +17,22 @@ class InboundController extends Controller
     private IMeasurementUnitService $measurementUnitService;
     private ISupplierService $supplierService;
     private IWarehouseService $warehouseService;
+    private IStockService $stockService;
 
-    public function __construct(IInboundService $inboundService, IProductService $productService, IMeasurementUnitService $measurementUnitService, ISupplierService $supplierService, IWarehouseService $warehouseService)
-    {
+    public function __construct(
+        IInboundService $inboundService,
+        IProductService $productService,
+        IMeasurementUnitService $measurementUnitService,
+        ISupplierService $supplierService,
+        IWarehouseService $warehouseService,
+        IStockService $stockService
+    ) {
         $this->inboundService = $inboundService;
         $this->productService = $productService;
         $this->measurementUnitService = $measurementUnitService;
         $this->supplierService = $supplierService;
         $this->warehouseService = $warehouseService;
+        $this->stockService = $stockService;
     }
 
     /**
@@ -33,8 +42,18 @@ class InboundController extends Controller
      */
     public function index()
     {
-        $items = $this->inboundService->getAll(['*'], ['product', 'measurementUnit', 'supplier', 'warehouse'])->toArray();
-        return view('inbounds.index', compact('items'));
+        $items = $this->inboundService->getAll(['*'], ['product', 'measurementUnit', 'supplier', 'warehouse']);
+        // Convert domain models to arrays in the 'data' key
+        $convertedData = $items->toArray();
+        $convertedData['data'] = array_map(function ($inbound) {
+            return $inbound->toArray(); // Convert each domain model to an array
+        }, $items->items());
+
+        //dd($convertedData); // View the structure to confirm
+
+        return view('inbounds.index', [
+            'items' => $convertedData,
+        ]);
     }
 
     /**
@@ -142,5 +161,22 @@ class InboundController extends Controller
         $this->inboundService->delete($id);
 
         return redirect()->route('inbounds.index')->with('success', __('Inbound deleted successfully.'));
+    }
+
+    public function confirm(int $id)
+    {
+        $inbound = $this->inboundService->getById($id);
+        $data = [
+            'product_id' => $inbound->getProductId(),
+            'warehouse_id' => $inbound->getWarehouseId(),
+            'credit' => $inbound->getQuantity(),
+            'debit' => 0,
+            'measurement_unit_id' => $inbound->getMeasurementUnitId(),
+        ];
+        $inbound = $this->inboundService->confirmInbound($id)->toArray();
+        //dd($inbound);
+        $this->stockService->create($data);
+
+        return view('inbounds.show', compact('inbound'));
     }
 }

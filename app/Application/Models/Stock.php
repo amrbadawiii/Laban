@@ -105,13 +105,13 @@ class Stock
         return [
             'id' => $this->id,
             'productId' => $this->productId,
-            'product' => $this->product,
+            'product' => $this->product->toArray(),
             'warehouseId' => $this->warehouseId,
-            'warehouse' => $this->warehouse,
+            'warehouse' => $this->warehouse->toArray(),
             'credit' => $this->credit,
             'debit' => $this->debit,
             'measurementUnitId' => $this->measurementUnitId,
-            'measurementUnit' => $this->measurementUnit,
+            'measurementUnit' => $this->measurementUnit->toArray(),
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
         ];

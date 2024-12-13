@@ -14,66 +14,96 @@ class StockService implements IStockService
         $this->stockRepository = $stockRepository;
     }
 
-    public function addCredit(array $data): void
+    /**
+     * Calculate the total stock balance for a product.
+     *
+     * @param int $productId
+     * @return float
+     */
+    public function calculateTotalStock(int $productId): float
     {
-        $this->stockRepository->addCredit($data);
+        return $this->stockRepository->getTotalStock($productId);
     }
 
-    public function addDebit(array $data): void
+    /**
+     * Calculate the stock balance for a product in a specific warehouse.
+     *
+     * @param int $productId
+     * @param int $warehouseId
+     * @return float
+     */
+    public function calculateStockByWarehouse(int $productId, int $warehouseId): float
     {
-        $this->stockRepository->addDebit($data);
+        return $this->stockRepository->getStockByWarehouse($productId, $warehouseId);
     }
 
-    public function getAllStocks(): array
+    /**
+     * Get a detailed stock breakdown for a product across warehouses.
+     *
+     * @param int $productId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getStockDetails(int $productId)
     {
-        // Get the stocks from the repository
-        $stocks = $this->stockRepository->getAllStocks();
-
-        // Map to domain model
-        return [
-            'id' => $stocks->id,
-            'productId' => $stocks->product_id,
-            'product' => $stocks->product,
-            'warehouseId' => $stocks->warehouse_id,
-            'warehouse' => $stocks->warehouse,
-            'credit' => $stocks->credit,
-            'debit' => $stocks->debit,
-            'measurementUnitId' => $stocks->measurement_unit_id,
-            'measurementUnit' => $stocks->measurement_unit,
-            'createdAt' => $stocks->created_at,
-            'updatedAt' => $stocks->updated_at
-        ];
-
+        return $this->stockRepository->getStocksGroupedByWarehouse($productId);
     }
 
-    public function getStockByProduct(int $productId): ?array
+    /**
+     * Create a new stock entry.
+     *
+     * @param array $data
+     * @return object
+     */
+    public function create(array $data): object
     {
-        // Get the stock for the product from the repository
-        $stock = $this->stockRepository->getStockByProduct($productId);
-
-        // If there's no stock for this product, return null
-        if (!$stock) {
-            return null;
-        }
-
-        // Map to domain model
-        return [
-            'id' => $stock->id,
-            'productId' => $stock->product_id,
-            'product' => $stock->product,
-            'warehouseId' => $stock->warehouse_id,
-            'warehouse' => $stock->warehouse,
-            'credit' => $stock->credit,
-            'debit' => $stock->debit,
-            'measurementUnitId' => $stock->measurement_unit_id,
-            'measurementUnit' => $stock->measurement_unit,
-            'createdAt' => $stock->created_at,
-            'updatedAt' => $stock->updated_at
-        ];
+        return $this->stockRepository->create($data);
     }
 
-    public function calculateStock(int $productId): float
+    /**
+     * Delete a stock entry by ID.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
     {
-        return $this->stockRepository->calculateStock($productId);
+        return $this->stockRepository->delete($id);
+    }
+
+    /**
+     * Get all stock entries.
+     *
+     * @param array $columns
+     * @param array $relations
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAll(array $columns = ['*'], array $relations = [])
+    {
+        $relations = array_merge(['product', 'warehouse', 'measurementUnit'], $relations);
+        return $this->stockRepository->all($columns, $relations);
+    }
+
+    /**
+     * Get a stock entry by ID.
+     *
+     * @param int $id
+     * @param array $relations
+     * @return object|null
+     */
+    public function getById(int $id, array $relations = [])
+    {
+        return $this->stockRepository->find($id, $relations);
+    }
+
+    /**
+     * Update a stock entry by ID.
+     *
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function update(int $id, array $data): bool
+    {
+        return $this->stockRepository->update($id, $data);
     }
 }

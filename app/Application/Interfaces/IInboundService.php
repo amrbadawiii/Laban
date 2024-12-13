@@ -7,5 +7,5 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface IInboundService extends IBaseService
 {
-
+    public function confirmInbound(int $id): Inbound;
 }

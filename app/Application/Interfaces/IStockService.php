@@ -1,11 +1,9 @@
 <?php
 namespace App\Application\Interfaces;
 
-interface IStockService
+interface IStockService extends IBaseService
 {
-    public function addCredit(array $data): void;
-    public function addDebit(array $data): void;
-    public function getAllStocks(): array;
-    public function getStockByProduct(int $productId): ?array;
-    public function calculateStock(int $productId): float;
+    public function calculateTotalStock(int $productId): float;
+    public function calculateStockByWarehouse(int $productId, int $warehouseId): float;
+    public function getStockDetails(int $productId);
 }
