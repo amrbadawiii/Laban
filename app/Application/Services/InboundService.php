@@ -82,9 +82,9 @@ class InboundService implements IInboundService
     public function create(array $data): Inbound
     {
         $eloquentInbound = $this->repository->create($data);
-
+        $inbound = $this->repository->find($eloquentInbound->id);
         // Map Eloquent model to Domain model
-        return $this->mapToDomainModel($eloquentInbound);
+        return $this->mapToDomainModel($inbound);
     }
 
     /**

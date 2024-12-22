@@ -24,17 +24,35 @@ class AuthService implements AuthServiceInterface
      */
     public function login(Request $request): \Illuminate\Http\RedirectResponse
     {
+        // Validate the login credentials
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            // Regenerate session to prevent fixation attacks
             $request->session()->regenerate();
+
+            // Retrieve authenticated user
+            $user = Auth::user();
+
+            // Store user-specific information in the session
+            $request->session()->put([
+                'user_id' => $user->id,
+                'role' => $user->user_type, // Assuming your User model has a 'role' attribute
+                'warehouse_id' => $user->warehouse_id, // Assuming your User model has a 'warehouse_id' attribute
+            ]);
+            dd($user, session(), session('role'));
+            // Optionally debug the session for verification
+            // dd(session()->all());
+
             return redirect()->intended('dashboard')->with('success', 'Welcome back!');
         }
 
+        // Redirect back with an error message if credentials fail
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
 
     /**
      * Handle user logout.
