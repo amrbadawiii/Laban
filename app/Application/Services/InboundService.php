@@ -4,193 +4,115 @@ namespace App\Application\Services;
 
 use App\Application\Interfaces\IInboundService;
 use App\Application\Models\Inbound;
-use App\Application\Models\MeasurementUnit;
-use App\Application\Models\Product;
-use App\Application\Models\Supplier;
-use App\Application\Models\Warehouse;
-use App\Domain\Enums\Type;
 use App\Infrastructure\Interfaces\IInboundRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use DateTime;
 
 class InboundService implements IInboundService
 {
-    /**
-     * @var IInboundRepository
-     */
-    protected $repository;
+    protected IInboundRepository $repository;
 
-    /**
-     * InboundService constructor.
-     *
-     * @param IInboundRepository $repository
-     */
     public function __construct(IInboundRepository $repository)
     {
         $this->repository = $repository;
     }
 
-    /**
-     * Retrieve all inbounds with optional columns and relations.
-     *
-     * @param array $columns
-     * @param array $relations
-     * @return array
-     */
-    public function getAll(array $columns = ['*'], array $relations = []): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function getAllWoP(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        $eloquentInbounds = $this->repository->all($columns, $relations);
-
-        // Map Eloquent models to Domain models
-        $domainModels = $eloquentInbounds->getCollection()->map(function ($eloquentInbound) {
-            return $this->mapToDomainModel($eloquentInbound);
-        });
-
-        // Replace the collection in the paginator with the mapped domain models
-        return new \Illuminate\Pagination\LengthAwarePaginator(
-            $domainModels,
-            $eloquentInbounds->total(),
-            $eloquentInbounds->perPage(),
-            $eloquentInbounds->currentPage(),
-            ['path' => $eloquentInbounds->path()]
-        );
+        $eloquentCollection = $this->repository->allWoP($conditions, $columns, $relations);
+        return $eloquentCollection;
     }
 
-
-    /**
-     * Retrieve a specific inbound by ID with relations.
-     *
-     * @param int $id
-     * @param array $relations
-     * @return Inbound
-     * @throws ModelNotFoundException
-     */
-    public function getById(int $id, array $relations = []): Inbound
+    public function getAll(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        $eloquentInbound = $this->repository->find($id, ['*'], $relations);
-
-        // Map Eloquent model to Domain model
-        return $this->mapToDomainModel($eloquentInbound);
+        $eloquentCollection = $this->repository->all($conditions, $columns, $relations);
+        return $eloquentCollection;
     }
 
-    /**
-     * Create a new inbound record.
-     *
-     * @param array $data
-     * @return Inbound
-     */
-    public function create(array $data): Inbound
+    public function getById(int $id, array $relations = [])
     {
-        $eloquentInbound = $this->repository->create($data);
-        $inbound = $this->repository->find($eloquentInbound->id);
-        // Map Eloquent model to Domain model
-        return $this->mapToDomainModel($inbound);
+        $eloquentModel = $this->repository->find($id, ['*'], $relations);
+        return $eloquentModel;
     }
 
-    /**
-     * Update an existing inbound record.
-     *
-     * @param int $id
-     * @param array $data
-     * @return Inbound
-     * @throws ModelNotFoundException
-     */
-    public function update(int $id, array $data): Inbound
+    public function create(array $data): object
     {
-        $eloquentInbound = $this->repository->update($id, $data);
-
-        // Map Eloquent model to Domain model
-        return $this->mapToDomainModel($eloquentInbound);
+        $eloquentModel = $this->repository->create($data);
+        return $this->mapToApplicationModel($eloquentModel);
     }
 
-    /**
-     * Delete an inbound record.
-     *
-     * @param int $id
-     * @return bool
-     * @throws ModelNotFoundException
-     */
+    public function update(int $id, array $data): object
+    {
+        $eloquentModel = $this->repository->update($id, $data);
+        return $this->mapToApplicationModel($eloquentModel);
+    }
+
     public function delete(int $id): bool
     {
         return $this->repository->delete($id);
     }
 
-    /**
-     * Confirm an inbound record by setting is_confirmed to true.
-     *
-     * @param int $id
-     * @return Inbound
-     * @throws ModelNotFoundException
-     */
-    public function confirmInbound(int $id): Inbound
+    public function search(array $criteria, array $columns = ['*'], array $relations = []): array
     {
-        // Retrieve the inbound record
-        $eloquentInbound = $this->repository->find($id);
+        $eloquentCollection = $this->repository->customQuery(function ($query) use ($criteria) {
+            foreach ($criteria as $column => $value) {
+                $query->where($column, $value);
+            }
+        });
+        return array_map([$this, 'mapToApplicationModel'], $eloquentCollection);
+    }
 
-        if (!$eloquentInbound) {
-            throw new ModelNotFoundException("Inbound record not found with ID: $id");
+    public function confirmInbound(int $id): bool
+    {
+        $inbound = $this->repository->find($id);
+        if (!$inbound) {
+            throw new ModelNotFoundException('Inbound not found');
         }
 
-        // Update the is_confirmed field
-        $eloquentInbound->is_confirmed = true;
-        $eloquentInbound->save();
+        $updated = $this->repository->update($id, ['is_confirmed' => true]);
+        return (bool) $updated;
+    }
 
-        // Map the updated Eloquent model to the Domain model
-        return $this->mapToDomainModel($eloquentInbound);
+    public function filterByDateRange(string $startDate, string $endDate, array $relations = []): array
+    {
+        $eloquentCollection = $this->repository->customQuery(function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('received_date', [$startDate, $endDate]);
+        });
+
+        return array_map([$this, 'mapToApplicationModel'], $eloquentCollection);
+    }
+
+    public function getByInvoiceNumber(string $invoiceNumber, array $relations = []): ?object
+    {
+        $inbound = $this->repository->customQuery(function ($query) use ($invoiceNumber) {
+            $query->where('invoice_number', $invoiceNumber);
+        });
+
+        return $inbound ? $this->mapToApplicationModel($inbound->first()) : null;
     }
 
     /**
-     * Map Eloquent model to Domain model.
-     *
-     * @param object $eloquentInbound
-     * @return \App\Application\Models\Inbound
+     * Map Eloquent model to Application model
      */
-    private function mapToDomainModel(\App\Domain\Models\Inbound $eloquentModel): Inbound
+    private function mapToApplicationModel($eloquentModel): Inbound
     {
-        $productDomainModel = new Product(
-            $eloquentModel->product->id,
-            $eloquentModel->product->name,
-            Type::from($eloquentModel->product->type),
-            // Add other necessary fields here
-        );
-
-        $measurementUnitDomainModel = new MeasurementUnit(
-            $eloquentModel->measurementUnit->id,
-            $eloquentModel->measurementUnit->name_en,
-            $eloquentModel->measurementUnit->name_ar
-        );
-
-        $supplierDomainModel = new Supplier(
-            $eloquentModel->supplier->id,
-            $eloquentModel->supplier->name,
-            $eloquentModel->supplier->email,
-            $eloquentModel->supplier->phone,
-            $eloquentModel->supplier->address,
-            $eloquentModel->supplier->city,
-            $eloquentModel->supplier->is_active
-        );
-
-        $warehouseDomainModel = new Warehouse(
-            $eloquentModel->warehouse->id,
-            $eloquentModel->warehouse->name,
-            $eloquentModel->warehouse->location
-        );
+        if (!$eloquentModel) {
+            throw new ModelNotFoundException('Inbound not found');
+        }
 
         return new Inbound(
             $eloquentModel->id,
             $eloquentModel->product_id,
-            $productDomainModel,
+            $eloquentModel->product, // Assuming Product is already an application model
             $eloquentModel->measurement_unit_id,
-            $measurementUnitDomainModel,
+            $eloquentModel->measurementUnit, // Assuming MeasurementUnit is already an application model
             $eloquentModel->quantity,
             $eloquentModel->supplier_id,
-            $supplierDomainModel,
+            $eloquentModel->supplier, // Assuming Supplier is already an application model
             $eloquentModel->warehouse_id,
-            $warehouseDomainModel,
-            new DateTime($eloquentModel->received_date),
+            $eloquentModel->warehouse, // Assuming Warehouse is already an application model
+            new \DateTime($eloquentModel->received_date),
             $eloquentModel->is_confirmed,
             $eloquentModel->invoice_number
         );
     }
-
 }

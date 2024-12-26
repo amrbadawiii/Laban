@@ -10,7 +10,7 @@ class Company
     private ?string $phone;
     private ?string $address;
     private ?string $website;
-    private bool $isActive;
+    private ?bool $isActive;
 
     public function __construct(
         int $id,
@@ -19,7 +19,7 @@ class Company
         ?string $phone,
         ?string $address,
         ?string $website,
-        bool $isActive
+        ?bool $isActive
     ) {
         $this->id = $id;
         $this->name = $name;

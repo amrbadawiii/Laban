@@ -2,130 +2,89 @@
 
 namespace App\Http\Controllers;
 
-use App\Application\Services\StockService;
+use App\Application\Interfaces\IStockService;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    private StockService $stockService;
+    protected IStockService $stockService;
 
-    public function __construct(StockService $stockService)
+    public function __construct(IStockService $stockService)
     {
         $this->stockService = $stockService;
     }
 
     /**
-     * Display a listing of the stocks.
-     *
-     * @return \Illuminate\View\View
+     * Display a listing of all stocks without pagination.
      */
-    public function index()
+    public function indexWoP(Request $request)
     {
-        $items = $this->stockService->getAll()->toArray();
-        //dd($items);
+        $conditions = $request->input('conditions', []);
+        $columns = $request->input('columns', ['*']);
+        $relations = $request->input('relations', []);
+
+        $items = $this->stockService->getAllWoP($conditions, $columns, $relations)->toArray();
         return view('stocks.index', compact('items'));
     }
 
     /**
-     * Show the form for creating a new stock.
-     *
-     * @return \Illuminate\View\View
+     * Display a paginated listing of stocks.
      */
-    public function create()
+    public function index(Request $request)
     {
-        return view('stocks.create');
+        $conditions = $request->input('conditions', []);
+        $columns = $request->input('columns', ['*']);
+        $relations = $request->input('relations', ['product', 'warehouse', 'measurementUnit']);
+
+        $items = $this->stockService->getAll($conditions, $columns, $relations)->toArray();
+        return view('stocks.index', compact('items'));
     }
 
     /**
-     * Store a newly created stock in storage.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * Display the details of a specific stock.
      */
-    public function store(Request $request)
+    public function show(int $id, Request $request)
     {
-        $validated = $request->validate([
-            'product_id' => 'required|integer',
-            'warehouse_id' => 'required|integer',
-            'quantity' => 'required|numeric',
-        ]);
-
-        $this->stockService->create($validated);
-
-        return redirect()->route('stocks.index')->with('success', 'Stock created successfully.');
-    }
-
-    /**
-     * Display the specified stock.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
-     */
-    public function show(int $id)
-    {
-        $stock = $this->stockService->getById($id)->toArray();
-
-        if (!$stock) {
-            abort(404, 'Stock not found');
-        }
+        $relations = $request->input('relations', ['product', 'warehouse', 'measurementUnit']);
+        $stock = $this->stockService->getById($id, $relations)->toArray();
 
         return view('stocks.show', compact('stock'));
     }
 
     /**
-     * Show the form for editing the specified stock.
-     *
-     * @param int $id
-     * @return \Illuminate\View\View
+     * Store a new stock in the database.
      */
-    public function edit(int $id)
+    public function store(Request $request)
     {
-        $stock = $this->stockService->getById($id)->toArray();
-
-        if (!$stock) {
-            abort(404, 'Stock not found');
-        }
-
-        return view('stocks.edit', compact('stock'));
-    }
-
-    /**
-     * Update the specified stock in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, int $id)
-    {
-        $validated = $request->validate([
-            'quantity' => 'sometimes|required|numeric',
-            'warehouse_id' => 'sometimes|required|integer',
+        $data = $request->validate([
+            'product_id' => 'required|integer|exists:products,id',
+            'warehouse_id' => 'required|integer|exists:warehouses,id',
+            'credit' => 'required|numeric|min:0',
+            'debit' => 'required|numeric|min:0',
+            'measurement_unit_id' => 'required|integer|exists:measurement_units,id',
         ]);
 
-        $updated = $this->stockService->update($id, $validated);
-
-        if (!$updated) {
-            return redirect()->back()->withErrors('Failed to update stock.');
-        }
-
-        return redirect()->route('stocks.index')->with('success', 'Stock updated successfully.');
+        $this->stockService->create($data);
+        return redirect()->route('stocks.index')->with('success', 'Stock created successfully.');
     }
 
     /**
-     * Remove the specified stock from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Delete a stock.
      */
     public function destroy(int $id)
     {
-        $deleted = $this->stockService->delete($id);
-
-        if (!$deleted) {
-            return redirect()->back()->withErrors('Failed to delete stock.');
-        }
-
+        $this->stockService->delete($id);
         return redirect()->route('stocks.index')->with('success', 'Stock deleted successfully.');
+    }
+
+    /**
+     * Display total stock information.
+     */
+    public function totalStock(Request $request)
+    {
+        $warehouseId = $request->input('warehouse_id');
+        $totalStock = $this->stockService->getTotalStock($warehouseId);
+
+        return view('stocks.total', compact('totalStock'));
     }
 }

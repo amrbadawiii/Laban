@@ -8,20 +8,20 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Product Dropdown -->
-            <x-select name="product_id" label="{{ __('inbound.product') }}" :options="$products['data']" :selected="old('product_id')" required />
+            <x-select name="product_id" label="{{ __('inbound.product') }}" :options="$products" :selected="old('product_id')" required />
 
             <!-- Measurement Unit Dropdown -->
-            <x-select name="measurement_unit_id" label="{{ __('inbound.measurementUnit') }}" :options="$measurementUnits['data']"
+            <x-select name="measurement_unit_id" label="{{ __('inbound.measurementUnit') }}" :options="$measurementUnits"
                 :selected="old('measurement_unit_id')" displayKey="abbreviation" required />
 
             <!-- Quantity -->
             <x-text-input name="quantity" label="{{ __('inbound.quantity') }}" :value="old('quantity')" required type="number" />
 
             <!-- Supplier Dropdown -->
-            <x-select name="supplier_id" label="{{ __('inbound.supplier') }}" :options="$suppliers['data']" :selected="old('supplier_id')" />
+            <x-select name="supplier_id" label="{{ __('inbound.supplier') }}" :options="$suppliers" :selected="old('supplier_id')" />
 
             <!-- Warehouse Dropdown -->
-            <x-select name="warehouse_id" label="{{ __('inbound.warehouse') }}" :options="$warehouses['data']" :selected="old('warehouse_id')"
+            <x-select name="warehouse_id" label="{{ __('inbound.warehouse') }}" :options="$warehouses" :selected="old('warehouse_id')"
                 required />
 
             <!-- Received Date -->

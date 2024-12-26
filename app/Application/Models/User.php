@@ -3,6 +3,7 @@
 namespace App\Application\Models;
 
 use App\Domain\Enums\UserType;
+use App\Domain\Models\Warehouse;
 
 class User
 {
@@ -12,6 +13,7 @@ class User
     private string $password;
     private int $warehouseId;
     private UserType $userType;
+    private ?Warehouse $warehouse; // Optional Warehouse object
 
     public function __construct(
         int $id,
@@ -19,7 +21,8 @@ class User
         string $email,
         string $password,
         int $warehouseId,
-        UserType $userType
+        UserType $userType,
+        ?Warehouse $warehouse = null // Accept a Warehouse object
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -27,6 +30,7 @@ class User
         $this->password = $password;
         $this->warehouseId = $warehouseId;
         $this->userType = $userType;
+        $this->warehouse = $warehouse;
     }
 
     // Getters
@@ -60,6 +64,11 @@ class User
         return $this->userType;
     }
 
+    public function getWarehouse(): ?Warehouse
+    {
+        return $this->warehouse;
+    }
+
     // Business logic
     public function isAdmin(): bool
     {
@@ -70,5 +79,20 @@ class User
     {
         // Add any necessary validation rules for password changes
         $this->password = $newPassword;
+    }
+
+    // Convert the user and associated warehouse to an array
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+            'warehouseId' => $this->warehouseId,
+            'userTypeName' => $this->userType->name,
+            'userTypeValue' => $this->userType->value,
+            'warehouse' => $this->warehouse ? $this->warehouse->toArray() : null, // Include warehouse details
+        ];
     }
 }

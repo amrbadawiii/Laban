@@ -8,8 +8,8 @@
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name_en" label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit['name_en']" required />
-            <x-text-input name="name_ar" label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit['name_ar']" required />
+            <x-text-input name="name_en" label="{{ __('measurementUnit.name_en') }}" :value="$measurementUnit['nameEn']" required />
+            <x-text-input name="name_ar" label="{{ __('measurementUnit.name_ar') }}" :value="$measurementUnit['nameAr']" required />
             <x-text-input name="abbreviation" label="{{ __('measurementUnit.abbreviation') }}" :value="$measurementUnit['abbreviation']" />
         </div>
 

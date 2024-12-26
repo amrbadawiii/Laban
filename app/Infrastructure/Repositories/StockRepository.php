@@ -13,47 +13,36 @@ class StockRepository extends BaseRepository implements IStockRepository
     }
 
     /**
-     * Get the total stock balance for a product across all warehouses.
+     * Get stocks filtered by warehouse ID.
      *
-     * @param int $productId
-     * @return float
-     */
-    public function getTotalStock(int $productId): float
-    {
-        return $this->model
-            ->where('product_id', $productId)
-            ->selectRaw('SUM(credit - debit) as total')
-            ->value('total') ?? 0;
-    }
-
-    /**
-     * Get the stock balance for a product in a specific warehouse.
-     *
-     * @param int $productId
      * @param int $warehouseId
-     * @return float
+     * @param array $conditions
+     * @param array $columns
+     * @param array $relations
+     *
      */
-    public function getStockByWarehouse(int $productId, int $warehouseId): float
+    public function getStockByWarehouse(int $warehouseId, array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        return $this->model
-            ->where('product_id', $productId)
-            ->where('warehouse_id', $warehouseId)
-            ->selectRaw('SUM(credit - debit) as total')
-            ->value('total') ?? 0;
+        $conditions[] = ['warehouse_id', '=', $warehouseId];
+        $query = $this->buildQuery($conditions, $relations);
+
+        return $query->get($columns);
     }
 
     /**
-     * Get all stocks for a product, grouped by warehouse.
+     * Get stocks filtered by product ID.
      *
      * @param int $productId
-     * @return \Illuminate\Support\Collection
+     * @param array $conditions
+     * @param array $columns
+     * @param array $relations
+     *
      */
-    public function getStocksGroupedByWarehouse(int $productId)
+    public function getStockByProduct(int $productId, array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        return $this->model
-            ->where('product_id', $productId)
-            ->groupBy('warehouse_id')
-            ->selectRaw('warehouse_id, SUM(credit - debit) as total')
-            ->get();
+        $conditions[] = ['product_id', '=', $productId];
+        $query = $this->buildQuery($conditions, $relations);
+
+        return $query->get($columns);
     }
 }

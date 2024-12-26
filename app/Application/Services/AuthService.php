@@ -3,15 +3,15 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\AuthServiceInterface;
-use App\Infrastructure\Interfaces\UserRepositoryInterface;
+use App\Infrastructure\Interfaces\IUserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService implements AuthServiceInterface
 {
-    protected UserRepositoryInterface $userRepository;
+    private IUserRepository $userRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(IUserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
@@ -24,8 +24,12 @@ class AuthService implements AuthServiceInterface
      */
     public function login(Request $request): \Illuminate\Http\RedirectResponse
     {
-        // Validate the login credentials
+        // Validate login credentials
         $credentials = $request->only('email', 'password');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
 
         if (Auth::attempt($credentials)) {
             // Regenerate session to prevent fixation attacks
@@ -37,22 +41,18 @@ class AuthService implements AuthServiceInterface
             // Store user-specific information in the session
             $request->session()->put([
                 'user_id' => $user->id,
-                'role' => $user->user_type, // Assuming your User model has a 'role' attribute
-                'warehouse_id' => $user->warehouse_id, // Assuming your User model has a 'warehouse_id' attribute
+                'role' => $user->user_type, // Assuming the User model has a 'user_type' attribute
+                'warehouse_id' => $user->warehouse_id, // Assuming the User model has a 'warehouse_id' attribute
             ]);
-            dd($user, session(), session('role'));
-            // Optionally debug the session for verification
-            // dd(session()->all());
 
             return redirect()->intended('dashboard')->with('success', 'Welcome back!');
         }
 
-        // Redirect back with an error message if credentials fail
+        // Redirect back with error if authentication fails
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Invalid credentials provided.',
         ])->onlyInput('email');
     }
-
 
     /**
      * Handle user logout.

@@ -4,7 +4,6 @@ namespace App\Infrastructure\Repositories;
 
 use App\Domain\Models\Inbound;
 use App\Infrastructure\Interfaces\IInboundRepository;
-use Illuminate\Support\Facades\Session;
 
 class InboundRepository extends BaseRepository implements IInboundRepository
 {
@@ -13,41 +12,47 @@ class InboundRepository extends BaseRepository implements IInboundRepository
         parent::__construct($model);
     }
 
-    public function all(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10)
+    /**
+     * Confirm an inbound record.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function confirmInbound(int $id): bool
     {
-        // Add default relations specific to Inbound
-        $relations = array_merge(['product', 'measurementUnit', 'supplier', 'warehouse'], $relations);
-
-        // Apply role-based filtering
-        $conditions = $this->applyRoleBasedConditions($conditions);
-
-        return parent::all($conditions, $columns, $relations, $perPage);
-    }
-
-    public function find(int $id, array $columns = ['*'], array $relations = [])
-    {
-        // Add default relations specific to Inbound
-        $relations = array_merge(['product', 'measurementUnit', 'supplier', 'warehouse'], $relations);
-
-        return parent::find($id, $columns, $relations);
+        $inbound = $this->find($id);
+        $inbound->is_confirmed = true;
+        return $inbound->save();
     }
 
     /**
-     * Apply role-based conditions based on the session.
+     * Find an inbound record by its invoice number.
      *
-     * @param array $conditions
-     * @return array
+     * @param string $invoiceNumber
+     * @param array $relations
+     * @return object|null
      */
-    private function applyRoleBasedConditions(array $conditions): array
+    public function findByInvoiceNumber(string $invoiceNumber, array $relations = []): ?object
     {
-        $role = Session::get('role');
-        $warehouseId = Session::get('warehouse_id');
+        return $this->model
+            ->with($relations)
+            ->where('invoice_number', $invoiceNumber)
+            ->first();
+    }
 
-        // If role is "0", fetch all data, otherwise filter by warehouse_id
-        if ($role !== '0') {
-            $conditions['warehouse_id'] = $warehouseId;
-        }
-
-        return $conditions;
+    /**
+     * Filter inbound records by a date range.
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @param array $relations
+     * @return \Illuminate\Support\Collection
+     */
+    public function filterByDateRange(string $startDate, string $endDate, array $relations = [])
+    {
+        return $this->model
+            ->with($relations)
+            ->whereBetween('received_date', [$startDate, $endDate])
+            ->get();
     }
 }

@@ -4,7 +4,6 @@ namespace App\Infrastructure\Interfaces;
 
 interface IStockRepository extends IBaseRepository
 {
-    public function getTotalStock(int $productId): float;
-    public function getStockByWarehouse(int $productId, int $warehouseId): float;
-    public function getStocksGroupedByWarehouse(int $productId);
+    public function getStockByWarehouse(int $warehouseId, array $conditions = [], array $columns = ['*'], array $relations = []);
+    public function getStockByProduct(int $productId, array $conditions = [], array $columns = ['*'], array $relations = []);
 }

@@ -26,7 +26,7 @@
     </thead>
     <tbody>
         @foreach ($items['data'] as $stock)
-            <x-table-row :data="$stock" :columns="$columns" route="stocks.show" />
+            <x-table-row :data="$stock" :columns="$columns" route="stocks.index" />
         @endforeach
     </tbody>
 

@@ -2,10 +2,9 @@
 
 namespace App\Application\Interfaces;
 
-use App\Application\Models\Inbound;
-use Illuminate\Pagination\LengthAwarePaginator;
-
 interface IInboundService extends IBaseService
 {
-    public function confirmInbound(int $id): Inbound;
+    public function confirmInbound(int $id): bool;
+    public function getByInvoiceNumber(string $invoiceNumber, array $relations = []): ?object;
+    public function filterByDateRange(string $startDate, string $endDate, array $relations = []): array;
 }

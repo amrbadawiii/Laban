@@ -7,8 +7,8 @@
         <div class="bg-white p-4 shadow rounded-lg">
             <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
 
-            <x-key-value label="{{ __('customer.firstName') }}" :value="$customer['first_name']" />
-            <x-key-value label="{{ __('customer.lastName') }}" :value="$customer['last_name']" />
+            <x-key-value label="{{ __('customer.firstName') }}" :value="$customer['firstName']" />
+            <x-key-value label="{{ __('customer.lastName') }}" :value="$customer['lastName']" />
             <x-key-value label="{{ __('customer.email') }}" :value="$customer['email']" />
             <x-key-value label="{{ __('customer.phone') }}" :value="$customer['phone']" />
             <x-key-value label="{{ __('customer.address') }}" :value="$customer['address']" />

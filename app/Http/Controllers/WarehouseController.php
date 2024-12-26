@@ -16,6 +16,7 @@ class WarehouseController extends Controller
 
     public function index()
     {
+
         $items = $this->warehouseService->getAll()->toArray();
         return view('warehouses.index', compact('items')); // Pass warehouses as an array to the view
     }

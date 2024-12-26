@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Infrastructure\Interfaces;
 
 interface IInboundRepository extends IBaseRepository
 {
-    // Add custom methods specific to Inbound, if needed
+    public function confirmInbound(int $id): bool;
+    public function findByInvoiceNumber(string $invoiceNumber, array $relations = []): ?object;
+    public function filterByDateRange(string $startDate, string $endDate, array $relations = []);
 }

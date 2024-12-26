@@ -12,11 +12,11 @@
                 @method('PUT')
 
                 <!-- Product Selection -->
-                <x-select name="product_id" label="{{ __('messages.product') }}" :options="$products['data']" :selected="$inbound['product_id']"
+                <x-select name="product_id" label="{{ __('messages.product') }}" :options="$products" :selected="$inbound['product_id']"
                     required />
 
                 <!-- Measurement Unit Selection -->
-                <x-select name="measurement_unit_id" label="{{ __('messages.measurement_unit') }}" :options="$measurementUnits['data']"
+                <x-select name="measurement_unit_id" label="{{ __('messages.measurement_unit') }}" :options="$measurementUnits"
                     :selected="$inbound['measurement_unit_id']" required />
 
                 <!-- Quantity Input -->
@@ -24,11 +24,11 @@
                     :value="$inbound['quantity']" required />
 
                 <!-- Supplier Selection -->
-                <x-select name="supplier_id" label="{{ __('messages.supplier') }}" :options="$suppliers['data']" :selected="$inbound['supplier_id']"
+                <x-select name="supplier_id" label="{{ __('messages.supplier') }}" :options="$suppliers" :selected="$inbound['supplier_id']"
                     nullable />
 
                 <!-- Warehouse Selection -->
-                <x-select name="warehouse_id" label="{{ __('messages.warehouse') }}" :options="$warehouses['data']" :selected="$inbound['warehouse_id']"
+                <x-select name="warehouse_id" label="{{ __('messages.warehouse') }}" :options="$warehouses" :selected="$inbound['warehouse_id']"
                     required />
 
                 <!-- Received Date Input -->

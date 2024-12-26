@@ -11,7 +11,7 @@ class Customer
     private ?string $phone;
     private ?string $address;
     private ?string $city;
-    private bool $isActive;
+    private ?bool $isActive;
 
     public function __construct(
         int $id,
@@ -21,7 +21,7 @@ class Customer
         ?string $phone = null,
         ?string $address = null,
         ?string $city = null,
-        bool $isActive = true
+        ?bool $isActive = true
     ) {
         $this->id = $id;
         $this->firstName = $firstName;

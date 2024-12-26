@@ -54,7 +54,7 @@
             </x-sidebar-section>
 
             <x-sidebar-section id="users-toggle" icon="fas fa-users" :text="__('messages.user')">
-                <x-sidebar-subitem href="#" icon="fas fa-user" :text="__('messages.user')" />
+                <x-sidebar-subitem href="{{ route('users.index') }}" icon="fas fa-user" :text="__('messages.user')" />
             </x-sidebar-section>
         </ul>
     </nav>

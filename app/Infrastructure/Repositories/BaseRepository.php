@@ -14,57 +14,28 @@ abstract class BaseRepository implements IBaseRepository
         $this->model = $model;
     }
 
-    /**
-     * Retrieve all records with optional conditions, columns, relations, and pagination.
-     *
-     * @param array $conditions
-     * @param array $columns
-     * @param array $relations
-     * @param int $perPage
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function all(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10)
+    public function allWoP(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10, array $orderBy = ['created_at' => 'desc'])
     {
-        $query = $this->model->with($relations);
-
-        if (!empty($conditions)) {
-            $query->where($conditions);
-        }
-
-        return $query->orderByDesc('created_at')->paginate($perPage, $columns);
+        $query = $this->buildQuery($conditions, $relations, $orderBy);
+        return $query->get($columns);
     }
 
-    /**
-     * Find a specific record by ID with optional relations.
-     *
-     * @param int $id
-     * @param array $columns
-     * @param array $relations
-     * @return Model
-     */
+    public function all(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10, array $orderBy = ['created_at' => 'desc'])
+    {
+        $query = $this->buildQuery($conditions, $relations, $orderBy);
+        return $query->paginate($perPage, $columns);
+    }
+
     public function find(int $id, array $columns = ['*'], array $relations = [])
     {
         return $this->model->with($relations)->findOrFail($id, $columns);
     }
 
-    /**
-     * Create a new record.
-     *
-     * @param array $data
-     * @return Model
-     */
     public function create(array $data)
     {
         return $this->model->create($data);
     }
 
-    /**
-     * Update an existing record by ID.
-     *
-     * @param int $id
-     * @param array $data
-     * @return Model
-     */
     public function update(int $id, array $data)
     {
         $record = $this->find($id);
@@ -72,34 +43,56 @@ abstract class BaseRepository implements IBaseRepository
         return $record;
     }
 
-    /**
-     * Delete a record by ID.
-     *
-     * @param int $id
-     * @return bool
-     */
     public function delete(int $id): bool
     {
         $record = $this->find($id);
         return $record->delete();
     }
 
-    /**
-     * Retrieve records with specific conditions and optional columns and relations.
-     *
-     * @param array $conditions
-     * @param array $columns
-     * @param array $relations
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getWhere(array $conditions = [], array $columns = ['*'], array $relations = [])
+    public function bulkCreate(array $data)
     {
-        $query = $this->model->with($relations);
+        return $this->model->insert($data);
+    }
 
-        if (!empty($conditions)) {
-            $query->where($conditions);
+    public function bulkDelete(array $ids): int
+    {
+        return $this->model->whereIn('id', $ids)->delete();
+    }
+
+    public function customQuery(callable $callback)
+    {
+        $query = $this->model->newQuery();
+        return $callback($query);
+    }
+
+    private function buildQuery(array $conditions = [], array $relations = [], array $orderBy = [])
+    {
+        // Start with a fresh query builder instance
+        $query = $this->model->newQuery();
+
+        // Apply relations if provided
+        if (!empty($relations)) {
+            $query->with($relations);
         }
 
-        return $query->get($columns);
+        // Apply conditions dynamically
+        foreach ($conditions as $condition) {
+            if (is_array($condition) && count($condition) === 3) {
+                [$column, $operator, $value] = $condition;
+                $query->where($column, $operator, $value);
+            } elseif (is_array($condition) && count($condition) === 2) {
+                [$column, $value] = $condition;
+                $query->where($column, '=', $value);
+            }
+        }
+
+        // Apply ordering if provided
+        foreach ($orderBy as $column => $direction) {
+            $query->orderBy($column, $direction);
+        }
+
+        return $query;
     }
+
+
 }

@@ -40,4 +40,16 @@ enum UserType: string
 
         );
     }
+
+    public static function reverse_array(): array
+    {
+        return array_map(
+            fn($case) => [
+                'id' => $case->value,
+                'name' => $case->label(),
+            ],
+            self::cases()
+        );
+    }
+
 }

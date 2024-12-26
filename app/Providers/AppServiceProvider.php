@@ -10,9 +10,11 @@ use App\Application\Interfaces\IMeasurementUnitService;
 use App\Application\Interfaces\IProductService;
 use App\Application\Interfaces\IStockService;
 use App\Application\Interfaces\ISupplierService;
+use App\Application\Interfaces\IUserService;
 use App\Application\Interfaces\IWarehouseService;
 use App\Application\Interfaces\UserServiceInterface;
 use App\Application\Services\StockService;
+use App\Infrastructure\Interfaces\IUserRepository;
 use App\Infrastructure\Repositories\StockRepository;
 use App\Application\Services\AuthService;
 use App\Application\Services\CompanyService;
@@ -50,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Repository Bindings
-        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(IUserRepository::class, UserRepository::class);
         $this->app->bind(IWarehouseRepository::class, WarehouseRepository::class);
         $this->app->bind(ICompanyRepository::class, CompanyRepository::class);
         $this->app->bind(ICustomerRepository::class, CustomerRepository::class);
@@ -61,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IStockRepository::class, StockRepository::class);
 
         // Service Bindings
-        $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(IUserService::class, UserService::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
         $this->app->bind(IWarehouseService::class, WarehouseService::class);
         $this->app->bind(ICompanyService::class, CompanyService::class);

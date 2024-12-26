@@ -2,79 +2,32 @@
 
 namespace App\Infrastructure\Repositories;
 
-use App\Application\Models\User as DomainUser;
-use App\Infrastructure\Interfaces\UserRepositoryInterface;
-use App\Domain\Models\User as EloquentUser;
-use App\Domain\Enums\UserType;
-use Illuminate\Support\Collection;
+use App\Infrastructure\Interfaces\IUserRepository;
+use App\Domain\Models\User;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends BaseRepository implements IUserRepository
 {
-    public function findById(int $id): ?DomainUser
+    public function __construct(User $model)
     {
-        $eloquentUser = EloquentUser::find($id);
-        return $eloquentUser ? $this->toDomainModel($eloquentUser) : null;
-    }
-
-    public function findByEmail(string $email): ?DomainUser
-    {
-        $eloquentUser = EloquentUser::where('email', $email)->first();
-        return $eloquentUser ? $this->toDomainModel($eloquentUser) : null;
-    }
-
-    public function save(DomainUser $user): void
-    {
-        $eloquentUser = $user->getId()
-            ? EloquentUser::findOrFail($user->getId())
-            : new EloquentUser();
-
-        $eloquentUser->name = $user->getName();
-        $eloquentUser->email = $user->getEmail();
-        $eloquentUser->password = $user->getPassword();
-        $eloquentUser->warehouse_id = $user->getWarehouseId();
-        $eloquentUser->user_type = $user->getUserType()->value;
-
-        $eloquentUser->save();
-    }
-
-    public function delete(int $id): void
-    {
-        EloquentUser::destroy($id);
+        parent::__construct($model);
     }
 
     /**
-     * Retrieve all users.
-     *
-     * @return Collection
-     */
-    public function all(): Collection
-    {
-        return EloquentUser::all()->map(function ($eloquentUser) {
-            return $this->toDomainModel($eloquentUser);
-        });
-    }
-
-    /**
-     * Create a new user.
+     * Save or update a user record.
      *
      * @param array $data
-     * @return DomainUser
+     * @param int|null $id
+     * @return User
      */
-    public function create(array $data): DomainUser
+    public function save(array $data, ?int $id = null): User
     {
-        $eloquentUser = EloquentUser::create($data);
-        return $this->toDomainModel($eloquentUser);
-    }
+        if ($id) {
+            $user = $this->find($id);
+            $user->update($data);
+        } else {
+            $user = $this->create($data);
+        }
 
-    private function toDomainModel(EloquentUser $eloquentUser): DomainUser
-    {
-        return new DomainUser(
-            id: $eloquentUser->id,
-            name: $eloquentUser->name,
-            email: $eloquentUser->email,
-            password: $eloquentUser->password,
-            warehouseId: $eloquentUser->warehouse_id,
-            userType: UserType::from($eloquentUser->user_type)
-        );
+        return $user;
     }
 }
