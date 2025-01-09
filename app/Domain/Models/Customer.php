@@ -2,6 +2,7 @@
 
 namespace App\Domain\Models;
 
+use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class Customer extends Model
      */
     protected static function newFactory()
     {
-        return \Database\Factories\CustomerFactory::new();
+        return CustomerFactory::new();
     }
 
     protected $fillable = [
@@ -28,4 +29,19 @@ class Customer extends Model
         'city',
         'is_active',
     ];
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function quotaions()
+    {
+        return $this->hasMany(Quotation::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

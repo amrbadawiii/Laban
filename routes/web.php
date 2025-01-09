@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InboundController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ManufactureController;
 use App\Http\Controllers\MeasurementUnitController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockController;
@@ -41,6 +42,8 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('inbounds', InboundController::class);
     Route::resource('stocks', StockController::class);
+    Route::resource('manufacture', ManufactureController::class);
+    Route::get('manufacture/stage/{id}', [ManufactureController::class, 'stage'])->name('manufacture.stage');
     Route::post('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {

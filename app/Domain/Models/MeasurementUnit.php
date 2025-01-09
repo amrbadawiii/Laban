@@ -25,14 +25,29 @@ class MeasurementUnit extends Model
         'abbreviation'
     ];
 
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function quotationItems()
+    {
+        return $this->hasMany(QuotationItem::class);
+    }
+
     public function stocks()
     {
         return $this->hasMany(Stock::class);
     }
 
-    public function inbounds()
+    public function orderItems()
     {
-        return $this->hasMany(Inbound::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function inboundItems()
+    {
+        return $this->hasMany(InboundItem::class);
     }
 
 }

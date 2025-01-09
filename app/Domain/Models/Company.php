@@ -2,6 +2,7 @@
 
 namespace App\Domain\Models;
 
+use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class Company extends Model
      */
     protected static function newFactory()
     {
-        return \Database\Factories\CompanyFactory::new();
+        return CompanyFactory::new();
     }
 
     protected $fillable = [

@@ -2,6 +2,8 @@
 
 namespace App\Domain\Models;
 
+use App\Domain\Enums\StatusEnum;
+use App\Domain\Enums\StockTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,16 +18,16 @@ class Stock extends Model
      */
     protected $fillable = [
         'product_id',
-        'credit',
-        'debit',
         'warehouse_id',
         'measurement_unit_id',
+        'incoming',
+        'outgoing',
+        'stock_type',
+        'reference',
     ];
 
     /**
      * Relationship: Stock belongs to a Product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product()
     {
@@ -34,8 +36,6 @@ class Stock extends Model
 
     /**
      * Relationship: Stock belongs to a Warehouse.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function warehouse()
     {
@@ -44,11 +44,17 @@ class Stock extends Model
 
     /**
      * Relationship: Stock belongs to a MeasurementUnit.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function measurementUnit()
     {
         return $this->belongsTo(MeasurementUnit::class);
+    }
+
+    /**
+     * Polymorphic Relationship: Stock reference.
+     */
+    public function reference()
+    {
+        return $this->morphTo();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Domain\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +21,7 @@ class User extends Authenticatable
 
     protected static function newFactory()
     {
-        return \Database\Factories\UserFactory::new();
+        return UserFactory::new();
     }
     protected $fillable = [
         'name',
@@ -54,5 +55,22 @@ class User extends Authenticatable
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    public function inbounds()
+    {
+        return $this->hasMany(Inbound::class);
     }
 }

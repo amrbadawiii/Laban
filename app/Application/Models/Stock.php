@@ -1,7 +1,10 @@
 <?php
 
-// app/Application/Models/Stock.php
 namespace App\Application\Models;
+
+use App\Domain\Models\Product;
+use App\Domain\Models\Warehouse;
+use App\Domain\Models\MeasurementUnit;
 
 class Stock
 {
@@ -10,24 +13,31 @@ class Stock
     private Product $product;
     private int $warehouseId;
     private Warehouse $warehouse;
-    private float $credit;
-    private float $debit;
     private int $measurementUnitId;
     private MeasurementUnit $measurementUnit;
+    private float $incoming; // Quantity added to stock
+    private float $outgoing; // Quantity removed from stock
+    private string $status; // 'pending', 'completed', 'cancelled'
+    private string $type; // 'production', 'sales', 'adjustment'
+    private ?string $referenceType; // Polymorphic relationship type
+    private ?int $referenceId; // Polymorphic relationship ID
     private string $createdAt;
     private string $updatedAt;
 
-    // Constructor to initialize the domain model
     public function __construct(
         int $id,
         int $productId,
         Product $product,
         int $warehouseId,
         Warehouse $warehouse,
-        float $credit,
-        float $debit,
         int $measurementUnitId,
         MeasurementUnit $measurementUnit,
+        float $incoming,
+        float $outgoing,
+        string $status,
+        string $type,
+        ?string $referenceType,
+        ?int $referenceId,
         string $createdAt,
         string $updatedAt
     ) {
@@ -36,15 +46,20 @@ class Stock
         $this->product = $product;
         $this->warehouseId = $warehouseId;
         $this->warehouse = $warehouse;
-        $this->credit = $credit;
-        $this->debit = $debit;
         $this->measurementUnitId = $measurementUnitId;
         $this->measurementUnit = $measurementUnit;
+        $this->incoming = $incoming;
+        $this->outgoing = $outgoing;
+        $this->status = $status;
+        $this->type = $type;
+        $this->referenceType = $referenceType;
+        $this->referenceId = $referenceId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }
 
-    // Getters for each property
+    // Getters for accessing the properties
+
     public function getId(): int
     {
         return $this->id;
@@ -70,16 +85,6 @@ class Stock
         return $this->warehouse;
     }
 
-    public function getCredit(): float
-    {
-        return $this->credit;
-    }
-
-    public function getDebit(): float
-    {
-        return $this->debit;
-    }
-
     public function getMeasurementUnitId(): int
     {
         return $this->measurementUnitId;
@@ -88,6 +93,36 @@ class Stock
     public function getMeasurementUnit(): MeasurementUnit
     {
         return $this->measurementUnit;
+    }
+
+    public function getIncoming(): float
+    {
+        return $this->incoming;
+    }
+
+    public function getOutgoing(): float
+    {
+        return $this->outgoing;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getReferenceType(): ?string
+    {
+        return $this->referenceType;
+    }
+
+    public function getReferenceId(): ?int
+    {
+        return $this->referenceId;
     }
 
     public function getCreatedAt(): string
@@ -108,10 +143,14 @@ class Stock
             'product' => $this->product->toArray(),
             'warehouseId' => $this->warehouseId,
             'warehouse' => $this->warehouse->toArray(),
-            'credit' => $this->credit,
-            'debit' => $this->debit,
             'measurementUnitId' => $this->measurementUnitId,
             'measurementUnit' => $this->measurementUnit->toArray(),
+            'incoming' => $this->incoming,
+            'outgoing' => $this->outgoing,
+            'status' => $this->status,
+            'type' => $this->type,
+            'referenceType' => $this->referenceType,
+            'referenceId' => $this->referenceId,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
         ];

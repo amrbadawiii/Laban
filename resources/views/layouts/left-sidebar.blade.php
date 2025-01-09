@@ -36,7 +36,7 @@
 
             <!-- Manufacture Management Section -->
             <x-sidebar-section id="manufacture-toggle" icon="fas fa-industry" :text="__('messages.manufacture_management')">
-                <x-sidebar-subitem href="#" icon="fas fa-cogs" :text="__('messages.production_schedule')" />
+                <x-sidebar-subitem href="{{ route('manufacture.index') }}" icon="fas fa-cogs" :text="__('messages.manufacture')" />
                 <x-sidebar-subitem href="#" icon="fas fa-tools" :text="__('messages.machine_maintenance')" />
             </x-sidebar-section>
 

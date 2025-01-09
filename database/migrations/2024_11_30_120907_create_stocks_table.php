@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Enums\StockTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,14 +13,18 @@ return new class extends Migration {
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Links to products
-            $table->decimal('credit', 10, 2); // Tracks the stock quantity
-            $table->decimal('debit', 10, 2); // Tracks the stock quantity
-            $table->foreignId('warehouse_id')->constrained()->onDelete('cascade'); // Links to specific warehouses
-            $table->foreignId('measurement_unit_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
+            $table->foreignId('measurement_unit_id')->constrained('measurement_units')->onDelete('cascade');
+            $table->decimal('incoming', 10, 2)->default(0);
+            $table->decimal('outgoing', 10, 2)->default(0);
+            $table->enum('stock_type', [StockTypeEnum::Production->value, StockTypeEnum::Sales->value, StockTypeEnum::Adjustment->value])->default(StockTypeEnum::Adjustment->value);
+            $table->nullableMorphs('reference');
             $table->timestamps();
         });
+
     }
+
 
     /**
      * Reverse the migrations.

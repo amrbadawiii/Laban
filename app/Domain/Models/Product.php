@@ -10,32 +10,41 @@ class Product extends Model
     use HasFactory;
 
     /**
-     * The factory method declaration.
+     * The table associated with the model.
      *
      * @var string
      */
-    protected static function newFactory()
-    {
-        return \Database\Factories\ProductFactory::new();
-    }
+    protected $table = 'products';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
-        'type',
+        'is_production',
+        'is_selling',
     ];
 
-    // Accessor for the "type" attribute
-    public function getTypeAttribute($value)
+    public function invoiceItems()
     {
-        return ucfirst($value);
+        return $this->hasMany(InvoiceItem::class);
     }
-
+    public function quotationItems()
+    {
+        return $this->hasMany(QuotationItem::class);
+    }
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+    public function inboundItems()
+    {
+        return $this->hasMany(InboundItem::class);
+    }
     public function stocks()
     {
         return $this->hasMany(Stock::class);
-    }
-    public function inbounds()
-    {
-        return $this->hasMany(Inbound::class);
     }
 }
