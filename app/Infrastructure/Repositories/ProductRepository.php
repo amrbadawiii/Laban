@@ -13,5 +13,5 @@ class ProductRepository extends BaseRepository implements IProductRepository
         parent::__construct($model);
     }
 
-    // Add custom methods specific to Company here if needed
+    // Add custom methods specific to Product here if needed
 }

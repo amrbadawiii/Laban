@@ -12,5 +12,5 @@ class MeasurementUnitRepository extends BaseRepository implements IMeasurementUn
         parent::__construct($model);
     }
 
-    // Add custom methods specific to Company here if needed
+    // Add custom methods specific to Unit here if needed
 }

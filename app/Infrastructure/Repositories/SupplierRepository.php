@@ -12,5 +12,5 @@ class SupplierRepository extends BaseRepository implements ISupplierRepository
         parent::__construct($model);
     }
 
-    // Add custom methods specific to Company here if needed
+    // Add custom methods specific to Supplier here if needed
 }

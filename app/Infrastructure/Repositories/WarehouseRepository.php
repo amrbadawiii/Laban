@@ -12,5 +12,5 @@ class WarehouseRepository extends BaseRepository implements IWarehouseRepository
         parent::__construct($model);
     }
 
-    // Add custom methods specific to Company here if needed
+    // Add custom methods specific to Warehouse here if needed
 }

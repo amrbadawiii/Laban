@@ -7,11 +7,7 @@ use DateTime;
 class Inbound
 {
     private int $id;
-    private int $productId;
-    private Product $product;
-    private int $measurementUnitId;
-    private MeasurementUnit $measurementUnit;
-    private float $quantity;
+    private string $referenceNumber;
     private int $supplierId;
     private Supplier $supplier;
     private int $warehouseId;
@@ -19,28 +15,28 @@ class Inbound
     private DateTime $receivedDate;
     private bool $isConfirmed;
     private ?string $invoiceNumber;
+    private int $createdBy;
+    private User $createdByuser;
+    private int $updatedBy;
+    private User $updatedByuser;
 
     public function __construct(
         int $id,
-        int $productId,
-        Product $product,
-        int $measurementUnitId,
-        MeasurementUnit $measurementUnit,
-        float $quantity,
+        string $referenceNumber,
         int $supplierId,
         Supplier $supplier,
         int $warehouseId,
         Warehouse $warehouse,
         DateTime $receivedDate,
         bool $isConfirmed,
-        ?string $invoiceNumber
+        ?string $invoiceNumber,
+        int $createdBy,
+        User $createdByuser,
+        int $updatedBy,
+        User $updatedByuser,
     ) {
         $this->id = $id;
-        $this->productId = $productId;
-        $this->product = $product;
-        $this->measurementUnitId = $measurementUnitId;
-        $this->measurementUnit = $measurementUnit;
-        $this->quantity = $quantity;
+        $this->referenceNumber = $referenceNumber;
         $this->supplierId = $supplierId;
         $this->supplier = $supplier;
         $this->warehouseId = $warehouseId;
@@ -48,6 +44,10 @@ class Inbound
         $this->receivedDate = $receivedDate;
         $this->isConfirmed = $isConfirmed;
         $this->invoiceNumber = $invoiceNumber;
+        $this->createdBy = $createdBy;
+        $this->createdByuser = $createdByuser;
+        $this->updatedBy = $updatedBy;
+        $this->updatedByuser = $updatedByuser;
     }
 
     // Add getters for accessing properties
@@ -55,32 +55,14 @@ class Inbound
     {
         return $this->id;
     }
-    public function getProductId(): int
+    public function getReferenceNumber(): string
     {
-        return $this->productId;
+        return $this->referenceNumber;
     }
-    public function getProduct(): Product
-    {
-        return $this->product;
-    }
-    public function getMeasurementUnitId(): int
-    {
-        return $this->measurementUnitId;
-    }
-
-    public function getMeasurementUnit(): MeasurementUnit
-    {
-        return $this->measurementUnit;
-    }
-    public function getQuantity(): float
-    {
-        return $this->quantity;
-    }
-    public function getSupplierId(): ?int
+    public function getSupplierId(): int
     {
         return $this->supplierId;
     }
-
     public function getSupplier(): Supplier
     {
         return $this->supplier;
@@ -97,7 +79,7 @@ class Inbound
     {
         return $this->receivedDate;
     }
-    public function isConfirmed(): bool
+    public function getIsConfirmed(): bool
     {
         return $this->isConfirmed;
     }
@@ -105,23 +87,39 @@ class Inbound
     {
         return $this->invoiceNumber;
     }
+    public function getCreatedBy(): int
+    {
+        return $this->createdBy;
+    }
+    public function getCreatedByuser(): User
+    {
+        return $this->createdByuser;
+    }
+    public function getUpdatedBy(): int
+    {
+        return $this->updatedBy;
+    }
+    public function getUpdatedByuser(): User
+    {
+        return $this->updatedByuser;
+    }
 
     public function toArray(): array
     {
         return [
             'id' => $this->id,
-            'product_id' => $this->productId,
-            'product' => $this->product ? $this->product->toArray() : null,
-            'measurement_unit_id' => $this->measurementUnitId,
-            'measurement_unit' => $this->measurementUnit ? $this->measurementUnit->toArray() : null,
-            'quantity' => $this->quantity,
+            'reference_number' => $this->referenceNumber,
             'supplier_id' => $this->supplierId,
-            'supplier' => $this->supplier ? $this->supplier->toArray() : null,
+            'supplier' => $this->supplier->toArray(),
             'warehouse_id' => $this->warehouseId,
-            'warehouse' => $this->warehouse ? $this->warehouse->toArray() : null,
-            'received_date' => $this->receivedDate->format('Y-m-d'), // Format the DateTime
+            'warehouse' => $this->warehouse->toArray(),
+            'received_date' => $this->receivedDate->format('Y-m-d'),
             'is_confirmed' => $this->isConfirmed,
             'invoice_number' => $this->invoiceNumber,
+            'created_by' => $this->createdBy,
+            'created_by_user' => $this->createdByuser->toArray(),
+            'updated_by' => $this->updatedBy,
+            'updated_by_user' => $this->updatedByuser->toArray(),
         ];
     }
 }

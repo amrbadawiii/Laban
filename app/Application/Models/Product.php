@@ -8,48 +8,36 @@ class Product
 {
     private int $id;
     private string $name;
-    private Type $type;
+    private bool $isProduction;
+    private bool $isSelling;
 
-    public function __construct(int $id, string $name, Type $type)
-    {
+    public function __construct(
+        int $id,
+        string $name,
+        bool $isProduction,
+        bool $isSelling
+    ) {
         $this->id = $id;
         $this->name = $name;
-        $this->type = $type;
+        $this->isProduction = $isProduction;
+        $this->isSelling = $isSelling;
     }
 
     public function getId()
     {
         return $this->id;
     }
-
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
-
-    public function getType(): Type
+    public function getIsProduction()
     {
-        return $this->type;
+        return $this->isProduction;
     }
-
-    /**
-     * Check if the product is a raw material.
-     *
-     * @return bool
-     */
-    public function isRaw(): bool
+    public function getIsSelling()
     {
-        return $this->type === Type::Row;
-    }
-
-    /**
-     * Check if the product is a final product.
-     *
-     * @return bool
-     */
-    public function isFinalProduct(): bool
-    {
-        return $this->type === Type::Product;
+        return $this->isSelling;
     }
 
     public function toArray(): array
@@ -57,7 +45,8 @@ class Product
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'type' => $this->type
+            'is_production' => $this->isProduction,
+            'is_selling' => $this->isSelling,
         ];
     }
 }

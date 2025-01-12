@@ -65,7 +65,7 @@ abstract class BaseRepository implements IBaseRepository
         return $callback($query);
     }
 
-    private function buildQuery(array $conditions = [], array $relations = [], array $orderBy = [])
+    public function buildQuery(array $conditions = [], array $relations = [], array $orderBy = [])
     {
         // Start with a fresh query builder instance
         $query = $this->model->newQuery();

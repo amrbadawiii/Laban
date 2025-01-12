@@ -12,5 +12,5 @@ class CustomerRepository extends BaseRepository implements ICustomerRepository
         parent::__construct($model);
     }
 
-    // Add custom methods specific to Company here if needed
+    // Add custom methods specific to Customer here if needed
 }
