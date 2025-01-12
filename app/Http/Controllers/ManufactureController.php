@@ -2,73 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Application\Interfaces\IProductService;
+use App\Application\Interfaces\IStockService;
 use Illuminate\Http\Request;
 
 class ManufactureController extends Controller
 {
+    protected IStockService $stockService;
 
-    private IProductService $productService;
-
-    public function __construct(IProductService $productService)
+    public function __construct(IStockService $stockService)
     {
-        $this->productService = $productService;
+        $this->stockService = $stockService;
     }
 
+    /**
+     * Display the manufacturing stages.
+     */
     public function index()
     {
-        return view('manufacture.index'); // Pass customers as an array to the view
+        $stages = [
+            'Stage 1: Preparation',
+            'Stage 2: Mixing',
+            'Stage 3: Processing',
+            'Stage 4: Packaging',
+            'Stage 5: Quality Control',
+            'Stage 6: Storage',
+        ];
+
+        return view('manufacture.index', compact('stages'));
     }
 
-    public function show($id)
+    /**
+     * Handle stock changes for a specific manufacturing stage.
+     */
+    public function processStage(Request $request, int $stage)
     {
-        return view('manufacture.show'); // Pass customer as an array to the view
-    }
+        $data = $request->validate([
+            'inputs' => 'required|array', // Array of inputs: ['product_id', 'quantity', 'warehouse_id', etc.]
+            'outputs' => 'required|array', // Array of outputs: ['product_id', 'quantity', 'warehouse_id', etc.]
+        ]);
 
-    public function stage($id)
-    {
-        switch ($id) {
-            case 0:
+        \DB::transaction(function () use ($data, $stage) {
+            // Process inputs (reduce stock)
+            foreach ($data['inputs'] as $input) {
+                $this->stockService->create([
+                    'product_id' => $input['product_id'],
+                    'warehouse_id' => $input['warehouse_id'],
+                    'measurement_unit_id' => $input['measurement_unit_id'],
+                    'credit' => 0,
+                    'debit' => $input['quantity'], // Reduce stock
+                    'type' => 'production',
+                    'status' => 'completed',
+                    'reference_type' => 'stage_' . $stage,
+                ]);
+            }
 
-                break;
-            case 1:
+            // Process outputs (add stock)
+            foreach ($data['outputs'] as $output) {
+                $this->stockService->create([
+                    'product_id' => $output['product_id'],
+                    'warehouse_id' => $output['warehouse_id'],
+                    'measurement_unit_id' => $output['measurement_unit_id'],
+                    'credit' => $output['quantity'], // Add stock
+                    'debit' => 0,
+                    'type' => 'production',
+                    'status' => 'completed',
+                    'reference_type' => 'stage_' . $stage,
+                ]);
+            }
+        });
 
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-            default:
-                return view('manufacture.stage1');
-        }
-        return view('manufacture.create'); // Show a form for creating a warehouse
-    }
-
-    public function store(Request $request)
-    {
-        return redirect()->route('manufacture.index')->with('success', 'customer created successfully.');
-    }
-
-    public function edit($id)
-    {
-        return view('manufacture.edit'); // Pass customer as an array to the view
-    }
-
-    public function update(Request $request, $id)
-    {
-        return redirect()->route('manufacture.index')->with('success', 'customer updated successfully.');
-    }
-
-    public function destroy($id)
-    {
-        return redirect()->route('manufacture.index')->with('success', 'customer deleted successfully.');
+        return redirect()->route('manufacture.index')->with('success', "Stage $stage processed successfully.");
     }
 }

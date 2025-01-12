@@ -3,116 +3,144 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IInboundService;
-use App\Application\Models\Inbound;
-use App\Infrastructure\Interfaces\IInboundRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class InboundService implements IInboundService
 {
-    protected IInboundRepository $repository;
+    protected $inboundRepository;
+    protected $inboundItemRepository;
 
-    public function __construct(IInboundRepository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        $inboundRepository, // Inject InboundRepository
+        $inboundItemRepository // Inject InboundItemRepository
+    ) {
+        $this->inboundRepository = $inboundRepository;
+        $this->inboundItemRepository = $inboundItemRepository;
     }
 
     public function getAllWoP(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        $eloquentCollection = $this->repository->allWoP($conditions, $columns, $relations);
-        return $eloquentCollection;
+        return $this->inboundRepository->allWoP($conditions, $columns, $relations);
     }
 
     public function getAll(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
-        $eloquentCollection = $this->repository->all($conditions, $columns, $relations);
-        return $eloquentCollection;
+        return $this->inboundRepository->all($conditions, $columns, $relations);
     }
 
     public function getById(int $id, array $relations = [])
     {
-        $eloquentModel = $this->repository->find($id, ['*'], $relations);
-        return $eloquentModel;
+        return $this->inboundRepository->find($id, ['*'], $relations);
     }
 
     public function create(array $data): object
     {
-        $eloquentModel = $this->repository->create($data);
-        return $this->mapToApplicationModel($eloquentModel);
+        return \DB::transaction(function () use ($data) {
+            // Create inbound record
+            $inbound = $this->inboundRepository->create([
+                'reference_number' => $data['reference_number'],
+                'supplier_id' => $data['supplier_id'] ?? null,
+                'warehouse_id' => $data['warehouse_id'],
+                'received_date' => $data['received_date'],
+                'is_confirmed' => $data['is_confirmed'] ?? false,
+                'invoice_number' => $data['invoice_number'] ?? null,
+                'created_by' => $data['created_by'] ?? null,
+                'updated_by' => $data['updated_by'] ?? null,
+            ]);
+
+            // Create inbound items
+            if (isset($data['items']) && is_array($data['items'])) {
+                foreach ($data['items'] as $item) {
+                    $item['inbound_id'] = $inbound->id;
+                }
+                $this->inboundItemRepository->bulkCreate($data['items']);
+            }
+
+            return $inbound;
+        });
     }
 
     public function update(int $id, array $data): object
     {
-        $eloquentModel = $this->repository->update($id, $data);
-        return $this->mapToApplicationModel($eloquentModel);
+        return \DB::transaction(function () use ($id, $data) {
+            // Update inbound record
+            $inbound = $this->inboundRepository->update($id, [
+                'supplier_id' => $data['supplier_id'] ?? null,
+                'warehouse_id' => $data['warehouse_id'] ?? null,
+                'received_date' => $data['received_date'] ?? null,
+                'is_confirmed' => $data['is_confirmed'] ?? false,
+                'invoice_number' => $data['invoice_number'] ?? null,
+                'updated_by' => $data['updated_by'] ?? null,
+            ]);
+
+            // Update inbound items
+            if (isset($data['items']) && is_array($data['items'])) {
+                $this->inboundItemRepository->bulkDelete(
+                    $this->inboundItemRepository->allWoP(['inbound_id' => $id], ['id'])->pluck('id')->toArray()
+                );
+
+                foreach ($data['items'] as $item) {
+                    $item['inbound_id'] = $id;
+                }
+                $this->inboundItemRepository->bulkCreate($data['items']);
+            }
+
+            return $inbound;
+        });
     }
 
     public function delete(int $id): bool
     {
-        return $this->repository->delete($id);
-    }
+        return \DB::transaction(function () use ($id) {
+            $this->inboundItemRepository->bulkDelete(
+                $this->inboundItemRepository->allWoP(['inbound_id' => $id], ['id'])->pluck('id')->toArray()
+            );
 
-    public function search(array $criteria, array $columns = ['*'], array $relations = []): array
-    {
-        $eloquentCollection = $this->repository->customQuery(function ($query) use ($criteria) {
-            foreach ($criteria as $column => $value) {
-                $query->where($column, $value);
-            }
+            return $this->inboundRepository->delete($id);
         });
-        return array_map([$this, 'mapToApplicationModel'], $eloquentCollection);
     }
 
     public function confirmInbound(int $id): bool
     {
-        $inbound = $this->repository->find($id);
+        $inbound = $this->inboundRepository->find($id);
         if (!$inbound) {
-            throw new ModelNotFoundException('Inbound not found');
+            throw new \Exception("Inbound record not found.");
         }
 
-        $updated = $this->repository->update($id, ['is_confirmed' => true]);
-        return (bool) $updated;
-    }
-
-    public function filterByDateRange(string $startDate, string $endDate, array $relations = []): array
-    {
-        $eloquentCollection = $this->repository->customQuery(function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('received_date', [$startDate, $endDate]);
-        });
-
-        return array_map([$this, 'mapToApplicationModel'], $eloquentCollection);
+        return $this->inboundRepository->update($id, ['is_confirmed' => true]);
     }
 
     public function getByInvoiceNumber(string $invoiceNumber, array $relations = []): ?object
     {
-        $inbound = $this->repository->customQuery(function ($query) use ($invoiceNumber) {
-            $query->where('invoice_number', $invoiceNumber);
-        });
+        return $this->inboundRepository->customQuery(function ($query) use ($invoiceNumber, $relations) {
+            // Use both $invoiceNumber and $relations explicitly in the callback
+            if (!empty($relations)) {
+                $query->with($relations);
+            }
 
-        return $inbound ? $this->mapToApplicationModel($inbound->first()) : null;
+            return $query->where('invoice_number', $invoiceNumber)->first();
+        });
     }
 
-    /**
-     * Map Eloquent model to Application model
-     */
-    private function mapToApplicationModel($eloquentModel): Inbound
-    {
-        if (!$eloquentModel) {
-            throw new ModelNotFoundException('Inbound not found');
-        }
 
-        return new Inbound(
-            $eloquentModel->id,
-            $eloquentModel->product_id,
-            $eloquentModel->product, // Assuming Product is already an application model
-            $eloquentModel->measurement_unit_id,
-            $eloquentModel->measurementUnit, // Assuming MeasurementUnit is already an application model
-            $eloquentModel->quantity,
-            $eloquentModel->supplier_id,
-            $eloquentModel->supplier, // Assuming Supplier is already an application model
-            $eloquentModel->warehouse_id,
-            $eloquentModel->warehouse, // Assuming Warehouse is already an application model
-            new \DateTime($eloquentModel->received_date),
-            $eloquentModel->is_confirmed,
-            $eloquentModel->invoice_number
-        );
+    public function filterByDateRange(string $startDate, string $endDate, array $relations = []): array
+    {
+        return $this->inboundRepository->customQuery(function ($query) use ($startDate, $endDate, $relations) {
+            return $query->whereBetween('received_date', [$startDate, $endDate])->with($relations)->get();
+        });
+    }
+
+    public function search(array $criteria, array $columns = ['*'], array $relations = []): array
+    {
+        return $this->inboundRepository->customQuery(function ($query) use ($criteria, $relations) {
+            if (!empty($relations)) {
+                $query->with($relations);
+            }
+
+            foreach ($criteria as $column => $value) {
+                $query->where($column, 'like', "%$value%");
+            }
+
+            return $query->get();
+        });
     }
 }

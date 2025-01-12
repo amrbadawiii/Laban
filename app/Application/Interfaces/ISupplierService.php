@@ -4,5 +4,5 @@ namespace App\Application\Interfaces;
 
 interface ISupplierService extends IBaseService
 {
-    // Add specific methods for warehouse if needed
+    // Add specific methods for supplier if needed
 }
