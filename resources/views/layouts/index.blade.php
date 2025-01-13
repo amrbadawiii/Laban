@@ -13,17 +13,21 @@
                                     dark:focus:ring-blue-600 rounded-md shadow-sm w-48 px-3 py-2"
                                     style="{{ app()->getLocale() === 'ar' ? 'margin-right: 5rem;' : 'margin-left: 5rem;' }}">
                             </div>
-                            <div class="flex items-center" x-data="{ openPopup: false }">
-                                @if ($usePopup ?? false)
-                                    <x-popup-form x-show="openPopup" @click.away="openPopup = false" :title="$title"
-                                        :action="$action" :inputs="$inputs" />
-                                @else
-                                    <a href="@yield('header_link', '#')"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded ml-auto">
-                                        {{ __('messages.add_new') }}
-                                    </a>
-                                @endif
-                            </div>
+
+                            @if (Session::get('role') === 'admin')
+
+                                <div class="flex items-center" x-data="{ openPopup: false }">
+                                    @if ($usePopup ?? false)
+                                        <x-popup-form x-show="openPopup" @click.away="openPopup = false"
+                                            :title="$title" :action="$action" :inputs="$inputs" />
+                                    @else
+                                        <a href="@yield('header_link', '#')"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded ml-auto">
+                                            {{ __('messages.add_new') }}
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                         <table id="dataTable" class="min-w-full bg-white dark:bg-gray-800 text-center">
                             @yield('subContent')

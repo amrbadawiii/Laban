@@ -9,7 +9,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <x-text-input name="name" label="{{ __('product.name') }}" :value="$product['name']" required />
-            <x-select name="type" label="{{ __('product.type') }}" :options="['0' => __('product.row'), '1' => __('product.product')]" :selected="$product['type']" required />
+            <x-checkbox name="is_production" label="{{ __('product.is_production') }}" :checked="$product['is_production']" />
+            <x-checkbox name="is_selling" label="{{ __('product.is_selling') }}" :checked="$product['is_selling']" />
         </div>
 
         <div class="mt-6">

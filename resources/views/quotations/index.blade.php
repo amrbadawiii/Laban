@@ -33,8 +33,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items['data'] ?? [] as $quotation)
-            <x-table-row :data="$quotation" :columns="$columns" route="quotations.show" />
-        @endforeach
+
+        @if (!empty($items['data']))
+            @foreach ($items['data'] ?? [] as $quotation)
+                <x-table-row :data="$quotation" :columns="$columns" route="quotations.show" />
+            @endforeach
+        @else
+            <tr>
+                <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+            </tr>
+        @endif
     </tbody>
 @endsection

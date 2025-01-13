@@ -31,9 +31,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items['data'] as $user)
-            <x-table-row :data="$user" :columns="$columns" route="users.show" />
-        @endforeach
+
+        @if (!empty($items['data']))
+            @foreach ($items['data'] as $user)
+                <x-table-row :data="$user" :columns="$columns" route="users.show" />
+            @endforeach
+        @else
+            <tr>
+                <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+            </tr>
+        @endif
     </tbody>
 
 @endsection

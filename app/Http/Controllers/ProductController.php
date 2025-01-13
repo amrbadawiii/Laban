@@ -24,7 +24,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = $this->productService->getById($id)->toArray();
-        return view('products.show', ['product' => $product, 'types' => Type::reverse()]); // Pass product as an array to the view
+        return view('products.show', ['product' => $product]); // Pass product as an array to the view
     }
 
     public function create()
@@ -36,9 +36,11 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'type' => 'required'
+            'is_production' => 'nullable|boolean', // You can validate as boolean
+            'is_selling' => 'nullable|boolean', // You can validate as boolean
         ]);
-
+        $validated['is_production'] = $validated['is_production'] ?? 0;
+        $validated['is_selling'] = $validated['is_selling'] ?? 0;
         $this->productService->create($validated);
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
@@ -53,8 +55,11 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'type' => 'required'
+            'is_production' => 'nullable|boolean', // You can validate as boolean
+            'is_selling' => 'nullable|boolean', // You can validate as boolean
         ]);
+        $validated['is_production'] = $validated['is_production'] ?? 0;
+        $validated['is_selling'] = $validated['is_selling'] ?? 0;
 
         $this->productService->update($id, $validated);
         return redirect()->route('products.index')->with('success', 'product updated successfully.');

@@ -146,7 +146,8 @@ class ProductService implements IProductService
         return new Product(
             id: $model->id,
             name: $model->name,
-            type: $model->type
+            isProduction: $model->is_production,
+            isSelling: $model->is_selling
         );
     }
 }
