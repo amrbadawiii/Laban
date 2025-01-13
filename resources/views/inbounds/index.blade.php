@@ -1,7 +1,8 @@
 @extends('layouts.index')
 
 @section('title', __('messages.inbound'))
-@section('header_link', route('inbounds.create'))
+@section('popup_action', route('inbounds.store')) {{-- Used for popup form --}}
+@section('header_link', route('inbounds.create')) {{-- Used if popup is disabled --}}
 
 @section('subContent')
     @php
@@ -31,8 +32,14 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items['data'] as $inbound)
-            <x-table-row :data="$inbound" :columns="$columns" route="inbounds.show" />
-        @endforeach
+        @if (!empty($items['data']))
+            @foreach ($items['data'] as $inbound)
+                <x-table-row :data="$inbound" :columns="$columns" route="inbounds.show" />
+            @endforeach
+        @else
+            <tr>
+                <td colspan="{{ count($columns) }}" class="text-center">No data available</td>
+            </tr>
+        @endif
     </tbody>
 @endsection

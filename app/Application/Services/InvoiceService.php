@@ -3,6 +3,8 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IInvoiceService;
+use App\Infrastructure\Repositories\InvoiceItemRepository;
+use App\Infrastructure\Repositories\InvoiceRepository;
 
 class InvoiceService implements IInvoiceService
 {
@@ -10,8 +12,8 @@ class InvoiceService implements IInvoiceService
     protected $invoiceItemRepository;
 
     public function __construct(
-        $invoiceRepository, // Inject InvoiceRepository
-        $invoiceItemRepository // Inject InvoiceItemRepository
+        InvoiceRepository $invoiceRepository, // Inject InvoiceRepository
+        InvoiceItemRepository $invoiceItemRepository // Inject InvoiceItemRepository
     ) {
         $this->invoiceRepository = $invoiceRepository;
         $this->invoiceItemRepository = $invoiceItemRepository;

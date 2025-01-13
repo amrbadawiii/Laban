@@ -3,6 +3,8 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IOrderService;
+use App\Infrastructure\Repositories\OrderItemRepository;
+use App\Infrastructure\Repositories\OrderRepository;
 
 class OrderService implements IOrderService
 {
@@ -10,8 +12,8 @@ class OrderService implements IOrderService
     protected $orderItemRepository;
 
     public function __construct(
-        $orderRepository, // Inject OrderRepository
-        $orderItemRepository // Inject OrderItemRepository
+        OrderRepository $orderRepository, // Inject OrderRepository
+        OrderItemRepository $orderItemRepository // Inject OrderItemRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderItemRepository = $orderItemRepository;

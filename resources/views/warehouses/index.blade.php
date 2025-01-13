@@ -6,7 +6,7 @@
 @section('subContent')
 
     @php
-        // Define the columns with their type (text, image, link, or toggle)
+        // Define the columns with their type (text, image, link, or actions)
         $columns = [
             ['key' => 'name', 'type' => 'text'],
             ['key' => 'location', 'type' => 'text'],
@@ -27,9 +27,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($items['data'] as $warehouse)
-            <x-table-row :data="$warehouse" :columns="$columns" route="warehouses.show" />
-        @endforeach
+        @if (!empty($items['data']))
+            @foreach ($items['data'] as $warehouse)
+                <x-table-row :data="$warehouse" :columns="$columns" route="warehouses.show" />
+            @endforeach
+        @else
+            <tr>
+                <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+            </tr>
+        @endif
     </tbody>
 
 @endsection

@@ -3,6 +3,8 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IQuotationService;
+use App\Infrastructure\Repositories\QuotationItemRepository;
+use App\Infrastructure\Repositories\QuotationRepository;
 
 class QuotationService implements IQuotationService
 {
@@ -10,8 +12,8 @@ class QuotationService implements IQuotationService
     protected $quotationItemRepository;
 
     public function __construct(
-        $quotationRepository, // Inject QuotationRepository
-        $quotationItemRepository // Inject QuotationItemRepository
+        QuotationRepository $quotationRepository, // Inject QuotationRepository
+        QuotationItemRepository $quotationItemRepository // Inject QuotationItemRepository
     ) {
         $this->quotationRepository = $quotationRepository;
         $this->quotationItemRepository = $quotationItemRepository;

@@ -3,6 +3,8 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IInboundService;
+use App\Infrastructure\Repositories\InboundItemRepository;
+use App\Infrastructure\Repositories\InboundRepository;
 
 class InboundService implements IInboundService
 {
@@ -10,8 +12,8 @@ class InboundService implements IInboundService
     protected $inboundItemRepository;
 
     public function __construct(
-        $inboundRepository, // Inject InboundRepository
-        $inboundItemRepository // Inject InboundItemRepository
+        InboundRepository $inboundRepository, // Inject InboundRepository
+        InboundItemRepository $inboundItemRepository // Inject InboundItemRepository
     ) {
         $this->inboundRepository = $inboundRepository;
         $this->inboundItemRepository = $inboundItemRepository;

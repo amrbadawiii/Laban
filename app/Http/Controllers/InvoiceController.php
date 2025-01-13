@@ -17,8 +17,8 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         $conditions = $request->only(['customer_id', 'warehouse_id', 'invoice_status']);
-        $invoices = $this->invoiceService->getAll($conditions, ['*'], ['customer', 'warehouse', 'items.product']);
-        return view('invoices.index', compact('invoices'));
+        $items = $this->invoiceService->getAll($conditions, ['*'], ['customer', 'warehouse', 'items.product']);
+        return view('invoices.index', compact('items'));
     }
 
     public function show(int $id)
