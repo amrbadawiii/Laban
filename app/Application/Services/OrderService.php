@@ -122,4 +122,41 @@ class OrderService implements IOrderService
             return $query->get();
         });
     }
+
+    public function addOrderItems(int $orderId, array $items): void
+    {
+        // Prepare items for insertion
+
+        $items['order_id'] = $orderId;
+        $items['total_price'] = $items['quantity'] * $items['unit_price'];
+        $relations = [];
+        $order = $this->orderRepository->find($orderId, ['*'], $relations);
+        if (!$order) {
+            throw new \Exception("Order record not found.");
+        }
+        $order->total_amount += $items['quantity'];
+        $order->save();
+        // Bulk insert items
+        $this->orderItemRepository->create($items);
+    }
+
+    public function removeOrderItems(int $orderId): void
+    {
+        $orderItem = $this->orderItemRepository->find($orderId);
+        $order = $this->orderRepository->find($orderItem->order_id);
+        $order->total_amount -= $orderItem->quantity;
+        $order->save();
+        // Delete items by IDs
+        $this->orderItemRepository->delete($orderId);
+    }
+
+    public function updateStatus(int $id, string $status)
+    {
+        $order = $this->orderRepository->find($id);
+        $order->order_status = $status;
+        $order->save();
+
+        return $order;
+    }
+
 }

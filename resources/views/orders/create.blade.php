@@ -1,50 +1,69 @@
 @extends('layouts.create')
 
-@section('title', __('messages.create'))
+@section('title', __('messages.create_order'))
 
 @section('subContent')
-    <br>
-    <form action="{{ route('warehouses.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name" label="{{ __('warehouse.name') }}" required />
-            <x-text-input name="location" label="{{ __('warehouse.location') }}" required />
+    <!-- Order Details Section -->
+    <div class="mb-6 bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-bold mb-4">{{ __('messages.order_details') }}</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <x-key-value label="{{ __('order.order_number') }}" :value="$order['order_number']" />
+            <x-key-value label="{{ __('order.order_date') }}" :value="$order['order_date']" />
+            <x-key-value label="{{ __('order.delivery_date') }}" :value="$order['delivery_date']" />
+            <x-key-value label="{{ __('order.customer') }}" :value="$order['customer']['first_name']" />
+            <x-key-value label="{{ __('order.warehouse') }}" :value="$order['warehouse']['name']" />
+            <x-key-value label="{{ __('order.order_status') }}" :value="$order['order_status']" />
+            <x-key-value label="{{ __('order.total_amount') }}" :value="$order['total_amount']" />
         </div>
+    </div>
 
-        <!-- Submit Button -->
-        <div class="mt-6">
-            <button type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                {{ __('messages.create') }}
-            </button>
-        </div>
-    </form>
-    @if ($errors->any())
-        <div class="text-red-700 px-4 py-3">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+    @php
+        // Define the columns with their type (text, image, link, or actions)
+        $columns = [
+            ['key' => 'id', 'type' => 'text'],
+            ['key' => 'product.name', 'type' => 'text'],
+            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+            ['key' => 'quantity', 'type' => 'text'],
+            ['key' => 'unit_price', 'type' => 'text'],
+            [
+                'key' => 'actions',
+                'type' => 'actions',
+                'route' => '#',
+                'delete_route' => $order['order_status'] == 'pending' ? 'orders.deleteItem' : '#',
+            ],
+        ];
+    @endphp
+    <h3 class="text-lg font-bold mb-4">{{ __('messages.order_items') }}</h3>
+    <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
+        <thead>
+            <tr>
+                <x-table-header>{{ __('order_item.id') }}</x-table-header>
+                <x-table-header>{{ __('order_item.name') }}</x-table-header>
+                <x-table-header>{{ __('order_item.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('order_item.quantity') }}</x-table-header>
+                <x-table-header>{{ __('order_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('messages.actions') }}</x-table-header>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!empty($order['order_items']))
+                @foreach ($order['order_items'] as $orderItem)
+                    <x-table-row :data="$orderItem" :columns="$columns" route="#" />
                 @endforeach
-            </ul>
+            @else
+                <tr>
+                    <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+    @if ($order['order_status'] == 'pending')
+        <!-- Add Item Button -->
+        <div class="mt-4">
+            <x-popup-form x-show="openPopup" @click.away="openPopup = false" :title="$title" :action="$action"
+                :inputs="$inputs" />
         </div>
     @endif
 
-    <style>
-        .rtl-select {
-            background-position: right 0.5rem center;
-            padding-right: 0.75rem;
-            padding-left: 2rem;
-        }
-
-        .rtl-select::-ms-expand {
-            display: none;
-        }
-
-        [dir="rtl"] .rtl-select {
-            background-position: left 0.5rem center;
-            padding-right: 2rem;
-            padding-left: 0.75rem;
-        }
-    </style>
+    </div>
 @endsection

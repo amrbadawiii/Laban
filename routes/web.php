@@ -54,6 +54,11 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::post('/inbounds/store_items/{id}', [InboundController::class, 'storeItems'])->name('inbounds.storeItems');
     Route::get('/inbounds/create_inbound/{id}', [InboundController::class, 'createInbound'])->name('inbounds.createInbound');
     Route::delete('/inbounds/delete_item/{id}', [InboundController::class, 'deleteItem'])->name('inbounds.deleteItem');
+    Route::post('/orders/store_items/{id}', [OrderController::class, 'storeItems'])->name('orders.storeItems');
+    Route::get('/orders/create_order/{id}', [OrderController::class, 'createOrder'])->name('orders.createOrder');
+    Route::delete('/orders/delete_item/{id}', [OrderController::class, 'deleteItem'])->name('orders.deleteItem');
+    Route::patch('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
+    Route::patch('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {
