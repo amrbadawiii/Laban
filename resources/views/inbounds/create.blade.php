@@ -3,40 +3,66 @@
 @section('title', __('messages.create_inbound'))
 
 @section('subContent')
-    <form action="{{ route('inbounds.store') }}" method="POST">
-        @csrf
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Product Dropdown -->
-            <x-select name="product_id" label="{{ __('inbound.product') }}" :options="$products" :selected="old('product_id')" required />
-
-            <!-- Measurement Unit Dropdown -->
-            <x-select name="measurement_unit_id" label="{{ __('inbound.measurementUnit') }}" :options="$measurementUnits"
-                :selected="old('measurement_unit_id')" displayKey="abbreviation" required />
-
-            <!-- Quantity -->
-            <x-text-input name="quantity" label="{{ __('inbound.quantity') }}" :value="old('quantity')" required type="number" />
-
-            <!-- Supplier Dropdown -->
-            <x-select name="supplier_id" label="{{ __('inbound.supplier') }}" :options="$suppliers" :selected="old('supplier_id')" />
-
-            <!-- Warehouse Dropdown -->
-            <x-select name="warehouse_id" label="{{ __('inbound.warehouse') }}" :options="$warehouses" :selected="old('warehouse_id')"
-                required />
-
-            <!-- Received Date -->
-            <x-text-input name="received_date" label="{{ __('inbound.receivedDate') }}" :value="old('received_date')" required
-                type="date" />
-
-            <!-- Invoice Number -->
-            <x-text-input name="invoice_number" label="{{ __('inbound.invoiceNumber') }}" :value="old('invoice_number')"
-                type="text" />
+    <!-- Inbound Details Section -->
+    <div class="mb-6 bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_details') }}</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <x-key-value label="{{ __('inbound.reference_number') }}" :value="$inbound['reference_number']" />
+            <x-key-value label="{{ __('inbound.supplier') }}" :value="$inbound['supplier']['name']" />
+            <x-key-value label="{{ __('inbound.warehouse') }}" :value="$inbound['warehouse']['name']" />
+            <x-key-value label="{{ __('inbound.received_date') }}" :value="$inbound['received_date']" />
+            <x-key-value label="{{ __('inbound.invoice_number') }}" :value="$inbound['invoice_number']" />
+            <x-key-value label="{{ __('inbound.is_confirmed') }}" :value="$inbound['is_confirmed']" />
         </div>
+    </div>
 
-        <div class="mt-6">
-            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600">
-                {{ __('messages.create') }}
-            </button>
+    @php
+        // Define the columns with their type (text, image, link, or actions)
+        $columns = [
+            ['key' => 'id', 'type' => 'text'],
+            ['key' => 'product.name', 'type' => 'text'],
+            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+            ['key' => 'quantity', 'type' => 'text'],
+            ['key' => 'unit_price', 'type' => 'text'],
+            [
+                'key' => 'actions',
+                'type' => 'actions',
+                'route' => '#',
+                'delete_route' => $inbound['is_confirmed'] == 0 ? 'inbounds.deleteItem' : '#',
+            ],
+        ];
+    @endphp
+    <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
+    <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
+        <thead>
+            <tr>
+                <x-table-header>{{ __('inbound_item.id') }}</x-table-header>
+                <x-table-header>{{ __('inbound_item.name') }}</x-table-header>
+                <x-table-header>{{ __('inbound_item.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('inbound_item.quantity') }}</x-table-header>
+                <x-table-header>{{ __('inbound_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('messages.actions') }}</x-table-header>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!empty($inbound['inbound_items']))
+                @foreach ($inbound['inbound_items'] as $inboundItem)
+                    <x-table-row :data="$inboundItem" :columns="$columns" route="#" />
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+    @if ($inbound['is_confirmed'] == 0)
+        <!-- Add Item Button -->
+        <div class="mt-4">
+            <x-popup-form x-show="openPopup" @click.away="openPopup = false" :title="$title" :action="$action"
+                :inputs="$inputs" />
         </div>
-    </form>
+    @endif
+
+    </div>
 @endsection

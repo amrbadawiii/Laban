@@ -20,8 +20,6 @@ class Inbound extends Model
     ];
 
     // Relationships
-
-
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

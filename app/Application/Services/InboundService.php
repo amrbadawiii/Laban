@@ -101,7 +101,7 @@ class InboundService implements IInboundService
         });
     }
 
-    public function confirmInbound(int $id): bool
+    public function confirmInbound(int $id)
     {
         $inbound = $this->inboundRepository->find($id);
         if (!$inbound) {
@@ -145,4 +145,24 @@ class InboundService implements IInboundService
             return $query->get();
         });
     }
+
+    public function addInboundItems(int $inboundId, array $items): void
+    {
+        // Prepare items for insertion
+
+
+        $items['inbound_id'] = $inboundId;
+        $items['total_price'] = $items['quantity'] * $items['unit_price'];
+
+
+        // Bulk insert items
+        $this->inboundItemRepository->create($items);
+    }
+
+    public function removeInboundItems(int $inboundId): void
+    {
+        // Delete items by IDs
+        $this->inboundItemRepository->delete($inboundId);
+    }
+
 }

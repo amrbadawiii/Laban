@@ -1,6 +1,8 @@
 @props(['data', 'columns', 'route'])
 
-<tr class="cursor-pointer hover:bg-gray-100" onclick="window.location='{{ route($route, $data['id']) }}'">
+<tr class="{{ $route !== '#' ? 'hover:bg-gray-100 cursor-pointer' : 'cursor-default' }}"
+    @if ($route !== '#') onclick="window.location='{{ route($route, $data['id']) }}'" @endif>
+
     @foreach ($columns as $column)
         <td class="py-2 px-4 border-b" align="center">
             @php
@@ -37,17 +39,22 @@
                 @break
 
                 @case('actions')
-                    <a href="{{ route($column['route'], $data['id']) }}" class="text-yellow-500"
-                        onclick="event.stopPropagation();">
-                        {{ __('messages.edit') }}
-                    </a>
-                    |
-                    <form action="{{ route($column['delete_route'], $data['id']) }}" method="POST" class="inline-block"
-                        onclick="event.stopPropagation();">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-500">{{ __('messages.delete') }}</button>
-                    </form>
+                    @if ($column['route'] !== '#')
+                        <a href="{{ route($column['route'], $data['id']) }}" class="text-yellow-500"
+                            onclick="event.stopPropagation();">
+                            {{ __('messages.edit') }}
+                        </a>
+                        |
+                    @endif
+
+                    @if ($column['delete_route'] !== '#')
+                        <form action="{{ route($column['delete_route'], $data['id']) }}" method="POST" class="inline-block"
+                            onclick="event.stopPropagation();">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500">{{ __('messages.delete') }}</button>
+                        </form>
+                    @endif
                 @break
 
                 @default

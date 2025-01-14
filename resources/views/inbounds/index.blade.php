@@ -7,15 +7,16 @@
 @section('subContent')
     @php
         $columns = [
-            ['key' => 'product.name', 'type' => 'text'], // Nested property for product name
-            ['key' => 'quantity', 'type' => 'text'], // Simple text value
+            ['key' => 'reference_number', 'type' => 'text'], // Nested property for product name
             ['key' => 'supplier.name', 'type' => 'text'], // Nested property for supplier name
             ['key' => 'warehouse.name', 'type' => 'text'], // Nested property for warehouse name
             ['key' => 'received_date', 'type' => 'date'], // Date formatting
+            ['key' => 'invoice_number', 'type' => 'text'], // Text formatting
+            ['key' => 'is_confirmed', 'type' => 'boolean'], // Boolean formatting
             [
                 'key' => 'actions',
                 'type' => 'actions',
-                'route' => 'inbounds.edit', // Route for edit action
+                'route' => 'inbounds.createInbound', // Route for edit action
                 'delete_route' => 'inbounds.destroy', // Route for delete action
             ],
         ];
@@ -23,11 +24,12 @@
 
     <thead>
         <tr>
-            <x-table-header>{{ __('inbound.product') }}</x-table-header>
-            <x-table-header>{{ __('inbound.quantity') }}</x-table-header>
+            <x-table-header>{{ __('inbound.reference_number') }}</x-table-header>
             <x-table-header>{{ __('inbound.supplier') }}</x-table-header>
             <x-table-header>{{ __('inbound.warehouse') }}</x-table-header>
             <x-table-header>{{ __('inbound.received_date') }}</x-table-header>
+            <x-table-header>{{ __('inbound.invoice_number') }}</x-table-header>
+            <x-table-header>{{ __('inbound.is_confirmed') }}</x-table-header>
             <x-table-header>{{ __('messages.actions') }}</x-table-header>
         </tr>
     </thead>

@@ -50,7 +50,11 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::resource('quotations', QuotationController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::get('manufacture/stage/{id}', [ManufactureController::class, 'stage'])->name('manufacture.stage');
-    Route::post('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
+    Route::patch('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
+    Route::post('/inbounds/store_items/{id}', [InboundController::class, 'storeItems'])->name('inbounds.storeItems');
+    Route::get('/inbounds/create_inbound/{id}', [InboundController::class, 'createInbound'])->name('inbounds.createInbound');
+    Route::delete('/inbounds/delete_item/{id}', [InboundController::class, 'deleteItem'])->name('inbounds.deleteItem');
+
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {
         // Add admin-specific routes here
