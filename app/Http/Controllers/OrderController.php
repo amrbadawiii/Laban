@@ -62,8 +62,6 @@ class OrderController extends Controller
         $order = $this->orderService->getById($id, ['customer', 'warehouse', 'orderItems', 'orderItems.product', 'orderItems.measurementUnit'])->toArray();
         return view('orders.show', compact('order'));
     }
-
-
     public function createOrder(int $id)
     {
         $usePopup = true;

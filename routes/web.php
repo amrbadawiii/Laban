@@ -59,6 +59,11 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::delete('/orders/delete_item/{id}', [OrderController::class, 'deleteItem'])->name('orders.deleteItem');
     Route::patch('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::patch('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::post('/quotations/store_items/{id}', [QuotationController::class, 'storeItems'])->name('quotations.storeItems');
+    Route::get('/quotations/create_quotation/{id}', [QuotationController::class, 'createQuotation'])->name('quotations.createQuotation');
+    Route::delete('/quotations/delete_item/{id}', [QuotationController::class, 'deleteItem'])->name('quotations.deleteItem');
+    Route::patch('/quotations/{id}/confirm', [QuotationController::class, 'confirm'])->name('quotations.confirm');
+    Route::patch('/quotations/{id}/update-status', [QuotationController::class, 'updateStatus'])->name('quotations.updateStatus');
 
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {

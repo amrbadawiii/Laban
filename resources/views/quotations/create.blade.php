@@ -1,50 +1,69 @@
 @extends('layouts.create')
 
-@section('title', __('messages.create'))
+@section('title', __('messages.create_quotation'))
 
 @section('subContent')
-    <br>
-    <form action="{{ route('warehouses.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <x-text-input name="name" label="{{ __('warehouse.name') }}" required />
-            <x-text-input name="location" label="{{ __('warehouse.location') }}" required />
+    <!-- Quotation Details Section -->
+    <div class="mb-6 bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-bold mb-4">{{ __('messages.quotation_details') }}</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <x-key-value label="{{ __('quotation.quotation_number') }}" :value="$quotation['quotation_number']" />
+            <x-key-value label="{{ __('quotation.quotation_date') }}" :value="$quotation['quotation_date']" />
+            <x-key-value label="{{ __('quotation.customer') }}" :value="$quotation['customer']['first_name']" />
+            <x-key-value label="{{ __('quotation.warehouse') }}" :value="$quotation['warehouse']['name']" />
+            <x-key-value label="{{ __('quotation.quotation_status') }}" :value="$quotation['quotation_status']" />
+            <x-key-value label="{{ __('quotation.total_amount') }}" :value="$quotation['total_amount']" />
+            <x-key-value label="{{ __('quotation.expiry_date') }}" :value="$quotation['expiry_date']" />
         </div>
+    </div>
 
-        <!-- Submit Button -->
-        <div class="mt-6">
-            <button type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                {{ __('messages.create') }}
-            </button>
-        </div>
-    </form>
-    @if ($errors->any())
-        <div class="text-red-700 px-4 py-3">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+    @php
+        // Define the columns with their type (text, image, link, or actions)
+        $columns = [
+            ['key' => 'id', 'type' => 'text'],
+            ['key' => 'product.name', 'type' => 'text'],
+            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+            ['key' => 'quantity', 'type' => 'text'],
+            ['key' => 'unit_price', 'type' => 'text'],
+            [
+                'key' => 'actions',
+                'type' => 'actions',
+                'route' => '#',
+                'delete_route' => $quotation['quotation_status'] == 'draft' ? 'quotations.deleteItem' : '#',
+            ],
+        ];
+    @endphp
+    <h3 class="text-lg font-bold mb-4">{{ __('messages.quotation_items') }}</h3>
+    <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
+        <thead>
+            <tr>
+                <x-table-header>{{ __('quotation_item.id') }}</x-table-header>
+                <x-table-header>{{ __('quotation_item.name') }}</x-table-header>
+                <x-table-header>{{ __('quotation_item.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('quotation_item.quantity') }}</x-table-header>
+                <x-table-header>{{ __('quotation_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('messages.actions') }}</x-table-header>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!empty($quotation['quotation_items']))
+                @foreach ($quotation['quotation_items'] as $quotationItem)
+                    <x-table-row :data="$quotationItem" :columns="$columns" route="#" />
                 @endforeach
-            </ul>
+            @else
+                <tr>
+                    <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+    @if ($quotation['quotation_status'] == 'draft')
+        <!-- Add Item Button -->
+        <div class="mt-4">
+            <x-popup-form x-show="openPopup" @click.away="openPopup = false" :title="$title" :action="$action"
+                :inputs="$inputs" />
         </div>
     @endif
 
-    <style>
-        .rtl-select {
-            background-position: right 0.5rem center;
-            padding-right: 0.75rem;
-            padding-left: 2rem;
-        }
-
-        .rtl-select::-ms-expand {
-            display: none;
-        }
-
-        [dir="rtl"] .rtl-select {
-            background-position: left 0.5rem center;
-            padding-right: 2rem;
-            padding-left: 0.75rem;
-        }
-    </style>
+    </div>
 @endsection

@@ -122,4 +122,40 @@ class QuotationService implements IQuotationService
             return $query->get();
         });
     }
+
+    public function addQuotationItems(int $quotationId, array $items): void
+    {
+        // Prepare items for insertion
+
+        $items['quotation_id'] = $quotationId;
+        $items['total_price'] = $items['quantity'] * $items['unit_price'];
+        $relations = [];
+        $quotation = $this->quotationRepository->find($quotationId, ['*'], $relations);
+        if (!$quotation) {
+            throw new \Exception("Quotation record not found.");
+        }
+        $quotation->total_amount += $items['quantity'];
+        $quotation->save();
+        // Bulk insert items
+        $this->quotationItemRepository->create($items);
+    }
+
+    public function removeQuotationItems(int $quotationId): void
+    {
+        $quotationItem = $this->quotationItemRepository->find($quotationId);
+        $order = $this->quotationRepository->find($quotationItem->quotation_id);
+        $order->total_amount -= $quotationItem->quantity;
+        $order->save();
+        // Delete items by IDs
+        $this->quotationItemRepository->delete($quotationId);
+    }
+
+    public function updateStatus(int $id, string $status)
+    {
+        $order = $this->quotationRepository->find($id);
+        $order->order_status = $status;
+        $order->save();
+
+        return $order;
+    }
 }
