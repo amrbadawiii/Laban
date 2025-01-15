@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application\Interfaces\ICustomerService;
 use App\Application\Interfaces\IInboundService;
+use App\Application\Interfaces\IInvoiceService;
 use App\Application\Interfaces\IMeasurementUnitService;
 use App\Application\Interfaces\IOrderService;
 use App\Application\Interfaces\IProductService;
@@ -19,14 +20,16 @@ class OrderController extends Controller
     protected IWarehouseService $warehouseService;
     protected IProductService $productService;
     protected IMeasurementUnitService $measurementUnitService;
+    protected IInvoiceService $invoiceService;
 
-    public function __construct(IOrderService $orderService, ICustomerService $customerService, IWarehouseService $warehouseService, IProductService $productService, IMeasurementUnitService $measurementUnitService)
+    public function __construct(IOrderService $orderService, ICustomerService $customerService, IWarehouseService $warehouseService, IProductService $productService, IMeasurementUnitService $measurementUnitService, IInvoiceService $invoiceService)
     {
         $this->orderService = $orderService;
         $this->customerService = $customerService;
         $this->warehouseService = $warehouseService;
         $this->productService = $productService;
         $this->measurementUnitService = $measurementUnitService;
+        $this->invoiceService = $invoiceService;
     }
 
     public function index(Request $request)
@@ -120,7 +123,31 @@ class OrderController extends Controller
             'order_status' => ['required', Rule::in(OrderStatusEnum::cases())],
         ]);
 
-        $order = $this->orderService->updateStatus($id, $validated['order_status']);
+        $this->orderService->updateStatus($id, $validated['order_status']);
+        $order = $this->orderService->getById($id, ['orderItems', 'orderItems.product', 'orderItems.measurementUnit'])->toArray();
+
+        $data['warehouse_id'] = $order['warehouse_id'];
+        $data['customer_id'] = $order['customer_id'];
+        $data['order_id'] = $order['id'];
+        $data['invoice_number'] = 'INV-' . $order['order_number'];
+        $data['invoice_date'] = now();
+        $data['invoice_status'] = 'unpaid';
+        $data['total_amount'] = $order['total_amount'];
+        $data['notes'] = $order['notes'];
+
+        if ($validated['order_status'] == OrderStatusEnum::Completed->value) {
+            $invoice = $this->invoiceService->create($data);
+            foreach ($order['order_items'] as $item) {
+                $this->invoiceService->addInvoiceItems($invoice->id, [
+                    'invoice_id' => $data['order_id'],
+                    'product_id' => $item['product_id'],
+                    'measurement_unit_id' => $item['measurement_unit_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'total_price' => $item['total_price'],
+                ]);
+            }
+        }
 
         return redirect()->route('orders.show', $id)->with('status', __('messages.order_status_updated'));
     }

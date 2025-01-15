@@ -13,11 +13,8 @@ class Invoice
     private ?Order $order;
     private string $invoiceNumber;
     private string $invoiceDate;
-    private ?string $dueDate;
     private string $invoiceStatus;
     private float $totalAmount;
-    private float $paidAmount;
-    private float $balanceDue;
     private ?string $notes;
     private ?int $createdBy;
     private ?User $createdByUser;
@@ -34,11 +31,8 @@ class Invoice
         ?Order $order,
         string $invoiceNumber,
         string $invoiceDate,
-        ?string $dueDate,
         string $invoiceStatus,
         float $totalAmount,
-        float $paidAmount,
-        float $balanceDue,
         string $notes,
         ?int $createdBy,
         ?User $createdByUser,
@@ -54,11 +48,8 @@ class Invoice
         $this->order = $order;
         $this->invoiceNumber = $invoiceNumber;
         $this->invoiceDate = $invoiceDate;
-        $this->dueDate = $dueDate;
         $this->invoiceStatus = $invoiceStatus;
         $this->totalAmount = $totalAmount;
-        $this->paidAmount = $paidAmount;
-        $this->balanceDue = $balanceDue;
         $this->notes = $notes;
         $this->createdBy = $createdBy;
         $this->createdByUser = $createdByUser;
@@ -103,10 +94,6 @@ class Invoice
     {
         return $this->invoiceDate;
     }
-    public function getDueDate(): ?string
-    {
-        return $this->dueDate;
-    }
     public function getInvoiceStatus(): string
     {
         return $this->invoiceStatus;
@@ -114,14 +101,6 @@ class Invoice
     public function getTotalAmount(): float
     {
         return $this->totalAmount;
-    }
-    public function getPaidAmount(): float
-    {
-        return $this->paidAmount;
-    }
-    public function getBalanceDue(): float
-    {
-        return $this->balanceDue;
     }
     public function getNotes(): ?string
     {
@@ -156,11 +135,8 @@ class Invoice
             'order' => $this->order ? $this->order->toArray() : null,
             'invoice_number' => $this->invoiceNumber,
             'invoice_date' => $this->invoiceDate,
-            'due_date' => $this->dueDate,
             'invoice_status' => $this->invoiceStatus,
             'total_amount' => $this->totalAmount,
-            'paid_amount' => $this->paidAmount,
-            'balance_due' => $this->balanceDue,
             'notes' => $this->notes,
             'created_by' => $this->createdBy,
             'created_by_user' => $this->createdByUser ? $this->createdByUser->toArray() : null,

@@ -44,11 +44,8 @@ class InvoiceService implements IInvoiceService
                 'order_id' => $data['order_id'] ?? null,
                 'invoice_number' => $data['invoice_number'],
                 'invoice_date' => $data['invoice_date'],
-                'due_date' => $data['due_date'] ?? null,
                 'invoice_status' => $data['invoice_status'] ?? 'unpaid',
                 'total_amount' => $data['total_amount'] ?? 0,
-                'paid_amount' => $data['paid_amount'] ?? 0,
-                'balance_due' => $data['balance_due'] ?? 0,
                 'notes' => $data['notes'] ?? null,
                 'created_by' => $data['created_by'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
@@ -68,6 +65,7 @@ class InvoiceService implements IInvoiceService
 
     public function update(int $id, array $data): object
     {
+        dd($data);
         return \DB::transaction(function () use ($id, $data) {
             // Update the invoice
             $invoice = $this->invoiceRepository->update($id, [
@@ -76,11 +74,8 @@ class InvoiceService implements IInvoiceService
                 'order_id' => $data['order_id'] ?? null,
                 'invoice_number' => $data['invoice_number'] ?? null,
                 'invoice_date' => $data['invoice_date'] ?? null,
-                'due_date' => $data['due_date'] ?? null,
                 'invoice_status' => $data['invoice_status'] ?? null,
                 'total_amount' => $data['total_amount'] ?? null,
-                'paid_amount' => $data['paid_amount'] ?? null,
-                'balance_due' => $data['balance_due'] ?? null,
                 'notes' => $data['notes'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
@@ -127,5 +122,41 @@ class InvoiceService implements IInvoiceService
             }
             return $query->get();
         });
+    }
+
+    public function addInvoiceItems(int $invoiceId, array $items): void
+    {
+        // Prepare items for insertion
+
+        $items['invoice_id'] = $invoiceId;
+        $items['total_price'] = $items['quantity'] * $items['unit_price'];
+        $relations = [];
+        $invoice = $this->invoiceRepository->find($invoiceId, ['*'], $relations);
+        if (!$invoice) {
+            throw new \Exception("Invoice record not found.");
+        }
+        $invoice->total_amount += $items['quantity'];
+        $invoice->save();
+        // Bulk insert items
+        $this->invoiceItemRepository->create($items);
+    }
+
+    public function removeInvoiceItems(int $invoiceId): void
+    {
+        $invoiceItem = $this->invoiceItemRepository->find($invoiceId);
+        $invoice = $this->invoiceRepository->find($invoiceItem->invoice_id);
+        $invoice->total_amount -= $invoiceItem->quantity;
+        $invoice->save();
+        // Delete items by IDs
+        $this->invoiceItemRepository->delete($invoiceId);
+    }
+
+    public function updateStatus(int $id, string $status)
+    {
+        $invoice = $this->invoiceRepository->find($id);
+        $invoice->invoice_status = $status;
+        $invoice->save();
+
+        return $invoice;
     }
 }

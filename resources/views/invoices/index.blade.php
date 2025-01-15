@@ -8,12 +8,12 @@
     @php
         // Define the columns with their type (text, image, link, or toggle)
         $columns = [
-            ['key' => 'invoiceNumber', 'type' => 'text'],
-            ['key' => 'orderId', 'type' => 'text'],
-            ['key' => 'invoiceDate', 'type' => 'date'],
-            ['key' => 'customer.name', 'type' => 'text'],
-            ['key' => 'totalAmount', 'type' => 'number'],
-            ['key' => 'invoiceStatus', 'type' => 'text'],
+            ['key' => 'invoice_number', 'type' => 'text'],
+            ['key' => 'order_id', 'type' => 'text'],
+            ['key' => 'invoice_date', 'type' => 'date'],
+            ['key' => 'customer.first_name', 'type' => 'text'],
+            ['key' => 'total_amount', 'type' => 'number'],
+            ['key' => 'invoice_status', 'type' => 'text'],
             [
                 'key' => 'actions',
                 'type' => 'actions',

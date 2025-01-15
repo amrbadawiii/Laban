@@ -64,6 +64,7 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::delete('/quotations/delete_item/{id}', [QuotationController::class, 'deleteItem'])->name('quotations.deleteItem');
     Route::patch('/quotations/{id}/confirm', [QuotationController::class, 'confirm'])->name('quotations.confirm');
     Route::patch('/quotations/{id}/update-status', [QuotationController::class, 'updateStatus'])->name('quotations.updateStatus');
+    Route::patch('/invoices/{id}/update-status', [InvoiceController::class, 'updateStatus'])->name('invoices.updateStatus');
 
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {

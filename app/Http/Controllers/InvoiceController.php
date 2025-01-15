@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Application\Interfaces\IInvoiceService;
+use App\Domain\Enums\InvoiceStatusEnum;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class InvoiceController extends Controller
 {
@@ -17,44 +19,30 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         $conditions = $request->only(['customer_id', 'warehouse_id', 'invoice_status']);
-        $items = $this->invoiceService->getAll($conditions, ['*'], ['customer', 'warehouse', 'items.product']);
+        $items = $this->invoiceService->getAll($conditions, ['*'], ['customer', 'warehouse', 'invoiceItems.product'])->toArray();
         return view('invoices.index', compact('items'));
     }
 
     public function show(int $id)
     {
-        $invoice = $this->invoiceService->getById($id, ['customer', 'warehouse', 'items.product']);
+        $invoice = $this->invoiceService->getById($id, ['customer', 'warehouse', 'invoiceItems', 'invoiceItems.product', 'invoiceItems.measurementUnit'])->toArray();
         return view('invoices.show', compact('invoice'));
-    }
-
-    public function create()
-    {
-        return view('invoices.create');
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->all();
-        $this->invoiceService->create($data);
-        return redirect()->route('invoices.index')->with('success', 'Invoice created successfully.');
-    }
-
-    public function edit(int $id)
-    {
-        $invoice = $this->invoiceService->getById($id, ['items']);
-        return view('invoices.edit', compact('invoice'));
-    }
-
-    public function update(Request $request, int $id)
-    {
-        $data = $request->all();
-        $this->invoiceService->update($id, $data);
-        return redirect()->route('invoices.index')->with('success', 'Invoice updated successfully.');
     }
 
     public function destroy(int $id)
     {
         $this->invoiceService->delete($id);
         return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully.');
+    }
+
+    public function updateStatus(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'invoice_status' => ['required', Rule::in(InvoiceStatusEnum::cases())],
+        ]);
+
+        $quotation = $this->invoiceService->updateStatus($id, $validated['invoice_status']);
+
+        return redirect()->route('invoices.show', $id)->with('status', __('messages.invoice_status_updated'));
     }
 }
