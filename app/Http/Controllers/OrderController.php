@@ -8,8 +8,10 @@ use App\Application\Interfaces\IInvoiceService;
 use App\Application\Interfaces\IMeasurementUnitService;
 use App\Application\Interfaces\IOrderService;
 use App\Application\Interfaces\IProductService;
+use App\Application\Interfaces\IStockService;
 use App\Application\Interfaces\IWarehouseService;
 use App\Domain\Enums\OrderStatusEnum;
+use App\Domain\Enums\StockTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -145,6 +147,15 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'total_price' => $item['total_price'],
+                ]);
+                app(IStockService::class)->create([
+                    'product_id' => $item['product_id'],
+                    'warehouse_id' => $data['warehouse_id'],
+                    'measurement_unit_id' => $item['measurement_unit_id'],
+                    'outgoing' => $item['quantity'],
+                    'stock_type' => StockTypeEnum::Sales->value,
+                    'reference_type' => 'Sales',
+                    'reference_id' => $id,
                 ]);
             }
         }

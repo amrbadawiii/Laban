@@ -1,40 +1,34 @@
 @extends('layouts.index')
 
-@section('title', __('messages.stocks'))
+@section('title', __('Products Stock Overview'))
+
 @section('header_link', '#')
 
 @section('subContent')
-
-    @php
-        $columns = [
-            ['key' => 'product.name', 'type' => 'text'],
-            ['key' => 'warehouse.name', 'type' => 'text'],
-            ['key' => 'credit', 'type' => 'text'],
-            ['key' => 'debit', 'type' => 'text'],
-            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-        ];
-    @endphp
-
     <thead>
-        <tr>
-            <x-table-header>{{ __('product.name') }}</x-table-header>
-            <x-table-header>{{ __('warehouse.name') }}</x-table-header>
-            <x-table-header>{{ __('credit') }}</x-table-header>
-            <x-table-header>{{ __('debit') }}</x-table-header>
-            <x-table-header>{{ __('measurement_unit.abbreviation') }}</x-table-header>
+        <tr class="bg-gray-200">
+            <x-table-header>{{ __('Product ID') }}</x-table-header>
+            <x-table-header>{{ __('Product Name') }}</x-table-header>
+            <x-table-header>{{ __('Incoming') }}</x-table-header>
+            <x-table-header>{{ __('Outgoing') }}</x-table-header>
+            <x-table-header>{{ __('Total Stock') }}</x-table-header>
         </tr>
     </thead>
     <tbody>
-
-        @if (!empty($items['data']))
-            @foreach ($items['data'] as $stock)
-                <x-table-row :data="$stock" :columns="$columns" route="stocks.index" />
-            @endforeach
-        @else
-            <tr>
-                <td colspan="{{ count($columns) }}" class="text-center">{{ __('messages.no_data_available') }}</td>
-            </tr>
-        @endif
+        @foreach ($products as $product)
+            <x-table-row :data="[
+                'id' => $product->product_id,
+                'product' => $product->product->name,
+                'incoming' => number_format($product->incoming, 2),
+                'outgoing' => number_format($product->outgoing, 2),
+                'total_stock' => number_format($product->total_stock, 2),
+            ]" :columns="[
+                ['key' => 'id', 'type' => 'default'],
+                ['key' => 'product', 'type' => 'default'],
+                ['key' => 'incoming', 'type' => 'default'],
+                ['key' => 'outgoing', 'type' => 'default'],
+                ['key' => 'total_stock', 'type' => 'default'],
+            ]" :route="'stocks.product'" />
+        @endforeach
     </tbody>
-
 @endsection

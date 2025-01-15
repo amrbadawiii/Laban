@@ -1,8 +1,7 @@
-@props(['data', 'columns', 'route'])
+@props(['data', 'columns', 'route', 'routeParams' => []])
 
 <tr class="{{ $route !== '#' ? 'hover:bg-gray-100 cursor-pointer' : 'cursor-default' }}"
-    @if ($route !== '#') onclick="window.location='{{ route($route, $data['id']) }}'" @endif>
-
+    @if ($route !== '#') onclick="window.location='{{ route($route, $routeParams ?: ['id' => $data['id']]) }}'" @endif>
     @foreach ($columns as $column)
         <td class="py-2 px-4 border-b" align="center">
             @php

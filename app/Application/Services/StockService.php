@@ -3,20 +3,19 @@
 namespace App\Application\Services;
 
 use App\Application\Interfaces\IStockService;
-use App\Infrastructure\Interfaces\IStockRepository;
-use App\Domain\Enums\StockTypeEnum;
+use App\Infrastructure\Repositories\StockRepository;
 
 class StockService implements IStockService
 {
-    protected IStockRepository $stockRepository;
+    private StockRepository $stockRepository;
 
-    public function __construct(IStockRepository $stockRepository)
+    public function __construct(StockRepository $stockRepository)
     {
         $this->stockRepository = $stockRepository;
     }
 
     /**
-     * Get all stocks without pagination.
+     * Get all records without pagination.
      */
     public function getAllWoP(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
@@ -24,15 +23,15 @@ class StockService implements IStockService
     }
 
     /**
-     * Get all stocks with pagination.
+     * Get all records with pagination.
      */
-    public function getAll(array $conditions = [], array $columns = ['*'], array $relations = [])
+    public function getAll(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10)
     {
-        return $this->stockRepository->all($conditions, $columns, $relations);
+        return $this->stockRepository->all($conditions, $columns, $relations, $perPage);
     }
 
     /**
-     * Get a stock by ID.
+     * Get a single record by ID.
      */
     public function getById(int $id, array $relations = [])
     {
@@ -40,41 +39,23 @@ class StockService implements IStockService
     }
 
     /**
-     * Create a new stock entry.
+     * Create a new record.
      */
     public function create(array $data): object
     {
-        return $this->stockRepository->create([
-            'product_id' => $data['product_id'],
-            'warehouse_id' => $data['warehouse_id'],
-            'measurement_unit_id' => $data['measurement_unit_id'],
-            'incoming' => $data['incoming'] ?? 0,
-            'outgoing' => $data['outgoing'] ?? 0,
-            'stock_type' => $data['stock_type'] ?? StockTypeEnum::Adjustment->value,
-            'reference_type' => $data['reference_type'] ?? null,
-            'reference_id' => $data['reference_id'] ?? null,
-        ]);
+        return $this->stockRepository->create($data);
     }
 
     /**
-     * Update a stock entry by ID.
+     * Update an existing record by ID.
      */
     public function update(int $id, array $data): object
     {
-        return $this->stockRepository->update($id, [
-            'product_id' => $data['product_id'] ?? null,
-            'warehouse_id' => $data['warehouse_id'] ?? null,
-            'measurement_unit_id' => $data['measurement_unit_id'] ?? null,
-            'incoming' => $data['incoming'] ?? null,
-            'outgoing' => $data['outgoing'] ?? null,
-            'stock_type' => $data['stock_type'] ?? null,
-            'reference_type' => $data['reference_type'] ?? null,
-            'reference_id' => $data['reference_id'] ?? null,
-        ]);
+        return $this->stockRepository->update($id, $data);
     }
 
     /**
-     * Delete a stock entry by ID.
+     * Delete a record by ID.
      */
     public function delete(int $id): bool
     {
@@ -82,49 +63,48 @@ class StockService implements IStockService
     }
 
     /**
-     * Search stocks based on criteria.
+     * Search for records based on criteria.
      */
     public function search(array $criteria, array $columns = ['*'], array $relations = []): array
     {
-        return $this->stockRepository->allWoP($criteria, $columns, $relations);
+        return $this->stockRepository->customQuery(function ($query) use ($criteria, $columns, $relations) {
+            foreach ($criteria as $key => $value) {
+                $query->where($key, $value);
+            }
+            $query->with($relations);
+            return $query->get($columns)->toArray();
+        });
     }
 
     /**
-     * Adjust stock levels (incoming/outgoing).
+     * Get all products with their total stock (incoming - outgoing).
      */
-    public function adjustStock(array $data): object
+    public function getProductsWithTotalStock()
     {
-        return $this->create([
-            'product_id' => $data['product_id'],
-            'warehouse_id' => $data['warehouse_id'],
-            'measurement_unit_id' => $data['measurement_unit_id'],
-            'incoming' => $data['incoming'] ?? 0,
-            'outgoing' => $data['outgoing'] ?? 0,
-            'stock_type' => $data['stock_type'] ?? StockTypeEnum::Adjustment->value,
-            'reference_type' => $data['reference_type'] ?? null,
-            'reference_id' => $data['reference_id'] ?? null,
-        ]);
-    }
+        $stocks = $this->stockRepository->getAllStocksGroupedByProduct();
 
-    /**
-     * Get total stock for a warehouse or overall.
-     */
-    public function getTotalStock(int $warehouseId = null): array
-    {
-        $conditions = [];
-        if ($warehouseId) {
-            $conditions[] = ['warehouse_id', '=', $warehouseId];
+        // Add total_stock attribute to each product
+        foreach ($stocks as $stock) {
+            $stock->total_stock = $stock->incoming - $stock->outgoing;
         }
 
-        $stocks = $this->stockRepository->allWoP($conditions);
+        return $stocks;
+    }
 
-        $totalIncoming = $stocks->sum('incoming');
-        $totalOutgoing = $stocks->sum('outgoing');
 
-        return [
-            'total_stock' => $totalIncoming - $totalOutgoing,
-            'incoming' => $totalIncoming,
-            'outgoing' => $totalOutgoing,
-        ];
+    /**
+     * Get stock details for a specific product grouped by warehouses.
+     */
+    public function getProductStockGroupedByWarehouse(int $productId)
+    {
+        return $this->stockRepository->getStockByProductGroupedByWarehouse($productId);
+    }
+
+    /**
+     * Get stock transactions for a specific product in a specific warehouse.
+     */
+    public function getTransactions(int $productId, int $warehouseId)
+    {
+        return $this->stockRepository->getStockTransactions($productId, $warehouseId);
     }
 }

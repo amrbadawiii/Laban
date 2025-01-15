@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    protected IStockService $stockService;
+    private IStockService $stockService;
 
     public function __construct(IStockService $stockService)
     {
@@ -15,76 +15,50 @@ class StockController extends Controller
     }
 
     /**
-     * Display a listing of all stocks without pagination.
+     * Display a listing of products with their total stock.
      */
-    public function indexWoP(Request $request)
+    public function index()
     {
-        $conditions = $request->input('conditions', []);
-        $columns = $request->input('columns', ['*']);
-        $relations = $request->input('relations', []);
-
-        $items = $this->stockService->getAllWoP($conditions, $columns, $relations)->toArray();
-        return view('stocks.index', compact('items'));
+        // Fetch all products with their total stock
+        $products = $this->stockService->getProductsWithTotalStock();
+        return view('stocks.index', compact('products'));
     }
 
     /**
-     * Display a paginated listing of stocks.
+     * Display stock details for a specific product grouped by warehouses.
+     *
+     * @param int $productId
      */
-    public function index(Request $request)
+    public function showProductStock(int $productId)
     {
-        $conditions = $request->input('conditions', []);
-        $columns = $request->input('columns', ['*']);
-        $relations = $request->input('relations', ['product', 'warehouse', 'measurementUnit']);
-
-        $items = $this->stockService->getAll($conditions, $columns, $relations)->toArray();
-        return view('stocks.index', compact('items'));
+        // Fetch stock grouped by warehouses for the given product
+        $warehouses = $this->stockService->getProductStockGroupedByWarehouse($productId);
+        return view('stocks.product', compact('warehouses', 'productId'));
     }
 
     /**
-     * Display the details of a specific stock.
+     * Display stock transactions for a specific product in a specific warehouse.
+     *
+     * @param int $productId
+     * @param int $warehouseId
      */
-    public function show(int $id, Request $request)
+    public function showWarehouseTransactions(int $productId, int $warehouseId)
     {
-        $relations = $request->input('relations', ['product', 'warehouse', 'measurementUnit']);
-        $stock = $this->stockService->getById($id, $relations)->toArray();
-
-        return view('stocks.show', compact('stock'));
+        // Fetch transactions for the given product and warehouse
+        $transactions = $this->stockService->getTransactions($productId, $warehouseId);
+        return view('stocks.transactions', compact('transactions', 'productId', 'warehouseId'));
     }
 
     /**
-     * Store a new stock in the database.
+     * Search for stock records.
+     *
+     * @param Request $request
      */
-    public function store(Request $request)
+    public function search(Request $request)
     {
-        $data = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'warehouse_id' => 'required|integer|exists:warehouses,id',
-            'credit' => 'required|numeric|min:0',
-            'debit' => 'required|numeric|min:0',
-            'measurement_unit_id' => 'required|integer|exists:measurement_units,id',
-        ]);
+        $criteria = $request->only(['product_id', 'warehouse_id', 'stock_type']);
+        $results = $this->stockService->search($criteria);
 
-        $this->stockService->create($data);
-        return redirect()->route('stocks.index')->with('success', 'Stock created successfully.');
-    }
-
-    /**
-     * Delete a stock.
-     */
-    public function destroy(int $id)
-    {
-        $this->stockService->delete($id);
-        return redirect()->route('stocks.index')->with('success', 'Stock deleted successfully.');
-    }
-
-    /**
-     * Display total stock information.
-     */
-    public function totalStock(Request $request)
-    {
-        $warehouseId = $request->input('warehouse_id');
-        $totalStock = $this->stockService->getTotalStock($warehouseId);
-
-        return view('stocks.total', compact('totalStock'));
+        return response()->json($results);
     }
 }

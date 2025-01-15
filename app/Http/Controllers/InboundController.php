@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Application\Interfaces\IInboundService;
 use App\Application\Interfaces\IMeasurementUnitService;
 use App\Application\Interfaces\IProductService;
+use App\Application\Interfaces\IStockService;
 use App\Application\Interfaces\ISupplierService;
 use App\Application\Interfaces\IWarehouseService;
+use App\Domain\Enums\StockTypeEnum;
 use Illuminate\Http\Request;
 
 class InboundController extends Controller
@@ -16,14 +18,16 @@ class InboundController extends Controller
     protected ISupplierService $supplierService;
     protected IProductService $productService;
     protected IMeasurementUnitService $measurementUnitService;
+    protected IStockService $stockService;
 
-    public function __construct(IInboundService $inboundService, IWarehouseService $warehouseService, ISupplierService $supplierService, IProductService $productService, IMeasurementUnitService $measurementUnitService)
+    public function __construct(IInboundService $inboundService, IWarehouseService $warehouseService, ISupplierService $supplierService, IProductService $productService, IMeasurementUnitService $measurementUnitService, IStockService $stockService)
     {
         $this->inboundService = $inboundService;
         $this->warehouseService = $warehouseService;
         $this->supplierService = $supplierService;
         $this->productService = $productService;
         $this->measurementUnitService = $measurementUnitService;
+        $this->stockService = $stockService;
     }
 
     public function index(Request $request)
@@ -113,7 +117,25 @@ class InboundController extends Controller
 
     public function confirm(int $id)
     {
+        $inbound = $this->inboundService->getById($id, ['inboundItems'])->toArray();
+
+        // Iterate over inbound items and update the stock
+        foreach ($inbound['inbound_items'] as $item) {
+            app(IStockService::class)->create([
+                'product_id' => $item['product_id'],
+                'warehouse_id' => $inbound['warehouse_id'],
+                'measurement_unit_id' => $item['measurement_unit_id'],
+                'incoming' => $item['quantity'],
+                'stock_type' => StockTypeEnum::Inbound->value,
+                'reference_type' => 'Inbound',
+                'reference_id' => $id,
+            ]);
+        }
+
+        // Confirm the inbound in the service
         $this->inboundService->confirmInbound($id);
-        return redirect()->back()->with('success', 'Inbound confirmed successfully.');
+
+        return redirect()->back()->with('success', 'Inbound confirmed and stock updated successfully.');
     }
+
 }

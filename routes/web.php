@@ -44,7 +44,6 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::resource('measurementUnits', MeasurementUnitController::class);
     Route::resource('products', ProductController::class);
     Route::resource('inbounds', InboundController::class);
-    Route::resource('stocks', StockController::class);
     Route::resource('manufacture', ManufactureController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('quotations', QuotationController::class);
@@ -65,6 +64,10 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::patch('/quotations/{id}/confirm', [QuotationController::class, 'confirm'])->name('quotations.confirm');
     Route::patch('/quotations/{id}/update-status', [QuotationController::class, 'updateStatus'])->name('quotations.updateStatus');
     Route::patch('/invoices/{id}/update-status', [InvoiceController::class, 'updateStatus'])->name('invoices.updateStatus');
+    Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('/stocks/product/{productId}', [StockController::class, 'showProductStock'])->name('stocks.product');
+    Route::get('/stocks/product/{productId}/warehouse/{warehouseId}', [StockController::class, 'showWarehouseTransactions'])->name('stocks.transactions');
+    Route::post('/stocks/search', [StockController::class, 'search'])->name('stocks.search');
 
     // Admin-Specific Routes
     Route::middleware('admin')->group(function () {

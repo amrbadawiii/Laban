@@ -45,4 +45,55 @@ class StockRepository extends BaseRepository implements IStockRepository
 
         return $query->get($columns);
     }
+
+    /**
+     * Get all stocks grouped by product ID.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllStocksGroupedByProduct()
+    {
+        return $this->model->select(
+            'product_id',
+            \DB::raw('SUM(incoming) as incoming'),
+            \DB::raw('SUM(outgoing) as outgoing')
+        )
+            ->with('product')
+            ->groupBy('product_id')
+            ->get();
+    }
+
+    /**
+     * Get stock for a specific product grouped by warehouse.
+     *
+     * @param int $productId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getStockByProductGroupedByWarehouse(int $productId)
+    {
+        return $this->model->select(
+            'warehouse_id',
+            \DB::raw('SUM(incoming) as incoming'),
+            \DB::raw('SUM(outgoing) as outgoing')
+        )
+            ->where('product_id', $productId)
+            ->with('warehouse')
+            ->groupBy('warehouse_id')
+            ->get();
+    }
+
+    /**
+     * Get all stock transactions for a specific product in a specific warehouse.
+     *
+     * @param int $productId
+     * @param int $warehouseId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getStockTransactions(int $productId, int $warehouseId)
+    {
+        return $this->model->where('product_id', $productId)
+            ->where('warehouse_id', $warehouseId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 }
