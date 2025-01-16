@@ -1,42 +1,40 @@
 @extends('layouts.index')
 
-@section('title', __('messages.stocks'))
-@section('popup_action', route('stocks.store'))
-@section('header_link', route('stocks.create'))
+@section('title', __('messages.quotation'))
+@section('popup_action', route('quotations.store')) {{-- Used for popup form --}}
+@section('header_link', route('quotations.create')) {{-- Used if popup is disabled --}}
 
 @section('subContent')
 
     @php
         $columns = [
-            ['key' => 'product.name', 'type' => 'text'], // Nested property for product name
-            ['key' => 'warehouse.name', 'type' => 'text'], // Nested property for warehouse name
-            ['key' => 'measurement_unit.name', 'type' => 'text'], // Nested property for measurement unit
-            ['key' => 'incoming', 'type' => 'number'], // Incoming stock
-            ['key' => 'outgoing', 'type' => 'number'], // Outgoing stock
-            ['key' => 'total_stock', 'type' => 'number'], // Calculated total stock
+            ['key' => 'quotation_number', 'type' => 'text'], // Nested property for product name
+            ['key' => 'quotation_date', 'type' => 'date'], // Nested property for supplier name
+            ['key' => 'customer.first_name', 'type' => 'text'], // Date formatting
+            ['key' => 'warehouse.name', 'type' => 'text'], // Text formatting
+            ['key' => 'quotation_status', 'type' => 'text'], // Text formatting
             [
                 'key' => 'actions',
                 'type' => 'actions',
-                'route' => 'stocks.edit', // Route for edit action
-                'delete_route' => 'stocks.destroy', // Route for delete action
+                'route' => 'quotations.createQuotation', // Route for edit action
+                'delete_route' => 'quotations.destroy', // Route for delete action
             ],
         ];
     @endphp
     <thead>
         <tr>
-            <x-table-header>{{ __('stocks.product') }}</x-table-header>
-            <x-table-header>{{ __('stocks.warehouse') }}</x-table-header>
-            <x-table-header>{{ __('stocks.measurement_unit') }}</x-table-header>
-            <x-table-header>{{ __('stocks.incoming') }}</x-table-header>
-            <x-table-header>{{ __('stocks.outgoing') }}</x-table-header>
-            <x-table-header>{{ __('stocks.total_stock') }}</x-table-header>
+            <x-table-header>{{ __('quotation.quotation_number') }}</x-table-header>
+            <x-table-header>{{ __('quotation.quotation_date') }}</x-table-header>
+            <x-table-header>{{ __('quotation.customer') }}</x-table-header>
+            <x-table-header>{{ __('quotation.warehouse') }}</x-table-header>
+            <x-table-header>{{ __('quotation.quotation_status') }}</x-table-header>
             <x-table-header>{{ __('messages.actions') }}</x-table-header>
         </tr>
     </thead>
     <tbody>
         @if (!empty($items['data']))
-            @foreach ($items['data'] as $stock)
-                <x-table-row :data="$stock" :columns="$columns" route="stocks.show" />
+            @foreach ($items['data'] as $quotation)
+                <x-table-row :data="$quotation" :columns="$columns" route="quotations.show" />
             @endforeach
         @else
             <tr>
