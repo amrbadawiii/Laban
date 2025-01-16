@@ -143,19 +143,19 @@ class QuotationService implements IQuotationService
     public function removeQuotationItems(int $quotationId): void
     {
         $quotationItem = $this->quotationItemRepository->find($quotationId);
-        $order = $this->quotationRepository->find($quotationItem->quotation_id);
-        $order->total_amount -= $quotationItem->quantity;
-        $order->save();
+        $quotation = $this->quotationRepository->find($quotationItem->quotation_id);
+        $quotation->total_amount -= $quotationItem->quantity;
+        $quotation->save();
         // Delete items by IDs
         $this->quotationItemRepository->delete($quotationId);
     }
 
     public function updateStatus(int $id, string $status)
     {
-        $order = $this->quotationRepository->find($id);
-        $order->order_status = $status;
-        $order->save();
+        $quotation = $this->quotationRepository->find($id);
+        $quotation->quotation_status = $status;
+        $quotation->save();
 
-        return $order;
+        return $quotation;
     }
 }

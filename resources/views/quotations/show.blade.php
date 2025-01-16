@@ -9,7 +9,7 @@
         <div class="flex justify-between items-center">
             <h3 class="text-lg font-bold mb-4">{{ __('messages.quotation_details') }}</h3>
 
-            @if ($quotation['quotation_status'] == 'draft')
+            @if ($quotation['quotation_status'] == 'draft' || $quotation['quotation_status'] == 'sent')
                 <form action="{{ route('quotations.updateStatus', $quotation['id']) }}" method="POST" class="inline-block">
                     @csrf
                     @method('PATCH')
