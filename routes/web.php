@@ -49,6 +49,7 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::resource('quotations', QuotationController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::get('manufacture/stage/{id}', [ManufactureController::class, 'stage'])->name('manufacture.stage');
+    Route::post('/manufacture/process/{stage}', [ManufactureController::class, 'processStage'])->name('manufacture.process');
     Route::patch('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
     Route::post('/inbounds/store_items/{id}', [InboundController::class, 'storeItems'])->name('inbounds.storeItems');
     Route::get('/inbounds/create_inbound/{id}', [InboundController::class, 'createInbound'])->name('inbounds.createInbound');
