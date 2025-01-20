@@ -21,10 +21,11 @@
                                         <x-popup-form x-show="openPopup" @click.away="openPopup = false"
                                             :title="$title" :action="$action" :inputs="$inputs" />
                                     @else
-                                        <a href="@yield('header_link', '#')"
-                                            class="bg-blue-500 text-white px-4 py-2 rounded ml-auto">
-                                            {{ __('messages.add_new') }}
-                                        </a>
+                                        @if (!empty($__env->yieldContent('header_link', '#')) && $__env->yieldContent('header_link') !== '#')
+                                            <a href="@yield('header_link', '#')" class="bg-blue-500 text-white px-4 py-2 rounded ml-auto">
+                                                {{ __('messages.add_new') }}
+                                            </a>
+                                        @endif
                                     @endif
                                 </div>
                             @endif

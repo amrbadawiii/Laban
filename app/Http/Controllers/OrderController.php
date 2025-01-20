@@ -87,6 +87,7 @@ class OrderController extends Controller
             ['name' => 'measurement_unit_id', 'type' => 'select', 'label' => 'Unit', 'required' => true, 'options' => $units],
             ['name' => 'quantity', 'type' => 'number', 'label' => 'Quantity', 'required' => true],
             ['name' => 'unit_price', 'type' => 'number', 'label' => 'Unit Price', 'required' => true],
+            ['name' => 'tax', 'type' => 'checkbox', 'label' => 'Tax', 'value' => '1'],
         ];
         $order = $this->orderService->getById($id, ['customer', 'warehouse', 'orderItems', 'orderItems.product', 'orderItems.measurementUnit'])->toArray();
 
@@ -103,9 +104,17 @@ class OrderController extends Controller
     public function storeItems(Request $request, int $id)
     {
         $data = $request->all();
+
+        // Check if 'tax' key exists and is falsy, if it doesn't exist it defaults to 1
+        if (isset($data['tax'])) {
+            $data['unit_price'] *= 0.99;
+        }
+
         $this->orderService->addOrderItems($id, $data);
+
         return redirect()->route('orders.createOrder', ['id' => $id])->with('success', 'Order created successfully.');
     }
+
 
     public function destroy(int $id)
     {
@@ -134,7 +143,6 @@ class OrderController extends Controller
         $data['invoice_number'] = 'INV-' . $order['order_number'];
         $data['invoice_date'] = now();
         $data['invoice_status'] = 'unpaid';
-        $data['total_amount'] = $order['total_amount'];
         $data['notes'] = $order['notes'];
 
         if ($validated['order_status'] == OrderStatusEnum::Completed->value) {

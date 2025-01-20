@@ -46,18 +46,11 @@ class InvoiceService implements IInvoiceService
                 'invoice_date' => $data['invoice_date'],
                 'invoice_status' => $data['invoice_status'] ?? 'unpaid',
                 'total_amount' => $data['total_amount'] ?? 0,
+                'total_price' => $data['total_price'] ?? 0,
                 'notes' => $data['notes'] ?? null,
                 'created_by' => $data['created_by'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
-
-            // Create invoice items
-            if (isset($data['items']) && is_array($data['items'])) {
-                foreach ($data['items'] as $item) {
-                    $item['invoice_id'] = $invoice->id; // Add invoice_id to item data
-                }
-                $this->invoiceItemRepository->bulkCreate($data['items']);
-            }
 
             return $invoice;
         });
@@ -76,25 +69,10 @@ class InvoiceService implements IInvoiceService
                 'invoice_date' => $data['invoice_date'] ?? null,
                 'invoice_status' => $data['invoice_status'] ?? null,
                 'total_amount' => $data['total_amount'] ?? null,
+                'total_price' => $data['total_price'] ?? 0,
                 'notes' => $data['notes'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
-
-            // Update or replace invoice items
-            if (isset($data['items']) && is_array($data['items'])) {
-                // Option 1: Delete old items and insert new ones
-                $this->invoiceItemRepository->bulkDelete(
-                    $this->invoiceItemRepository->allWoP(
-                        ['invoice_id' => $id],
-                        ['id']
-                    )->pluck('id')->toArray()
-                );
-
-                foreach ($data['items'] as $item) {
-                    $item['invoice_id'] = $id; // Add invoice_id to item data
-                }
-                $this->invoiceItemRepository->bulkCreate($data['items']);
-            }
 
             return $invoice;
         });
@@ -136,6 +114,7 @@ class InvoiceService implements IInvoiceService
             throw new \Exception("Invoice record not found.");
         }
         $invoice->total_amount += $items['quantity'];
+        $invoice->total_price += $items['total_price'];
         $invoice->save();
         // Bulk insert items
         $this->invoiceItemRepository->create($items);
@@ -146,6 +125,7 @@ class InvoiceService implements IInvoiceService
         $invoiceItem = $this->invoiceItemRepository->find($invoiceId);
         $invoice = $this->invoiceRepository->find($invoiceItem->invoice_id);
         $invoice->total_amount -= $invoiceItem->quantity;
+        $invoice->total_price -= $invoice->total_price;
         $invoice->save();
         // Delete items by IDs
         $this->invoiceItemRepository->delete($invoiceId);

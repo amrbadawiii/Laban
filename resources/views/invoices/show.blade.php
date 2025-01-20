@@ -33,18 +33,19 @@
             <x-key-value label="{{ __('invoice.warehouse') }}" :value="$invoice['warehouse']['name']" />
             <x-key-value label="{{ __('invoice.invoice_status') }}" :value="$invoice['invoice_status']" />
             <x-key-value label="{{ __('invoice.total_amount') }}" :value="$invoice['total_amount']" />
+            <x-key-value label="{{ __('invoice.total_price') }}" :value="$invoice['total_price']" />
         </div>
     </div>
 
     @php
-        // Define the columns with their type (text, image, link, or actions)
-        $columns = [
-            ['key' => 'id', 'type' => 'text'],
-            ['key' => 'product.name', 'type' => 'text'],
-            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-            ['key' => 'quantity', 'type' => 'text'],
-            ['key' => 'unit_price', 'type' => 'text'],
-        ];
+// Define the columns with their type (text, image, link, or actions)
+$columns = [
+    ['key' => 'id', 'type' => 'text'],
+    ['key' => 'product.name', 'type' => 'text'],
+    ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+    ['key' => 'quantity', 'type' => 'text'],
+    ['key' => 'unit_price', 'type' => 'text'],
+];
     @endphp
     <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">

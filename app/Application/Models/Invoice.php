@@ -15,6 +15,7 @@ class Invoice
     private string $invoiceDate;
     private string $invoiceStatus;
     private float $totalAmount;
+    private float $totalPrice;
     private ?string $notes;
     private ?int $createdBy;
     private ?User $createdByUser;
@@ -33,6 +34,7 @@ class Invoice
         string $invoiceDate,
         string $invoiceStatus,
         float $totalAmount,
+        float $totalPrice,
         string $notes,
         ?int $createdBy,
         ?User $createdByUser,
@@ -50,6 +52,7 @@ class Invoice
         $this->invoiceDate = $invoiceDate;
         $this->invoiceStatus = $invoiceStatus;
         $this->totalAmount = $totalAmount;
+        $this->totalPrice = $totalPrice;
         $this->notes = $notes;
         $this->createdBy = $createdBy;
         $this->createdByUser = $createdByUser;
@@ -102,6 +105,10 @@ class Invoice
     {
         return $this->totalAmount;
     }
+    public function getTotalPrice(): float
+    {
+        return $this->totalPrice;
+    }
     public function getNotes(): ?string
     {
         return $this->notes;
@@ -137,6 +144,7 @@ class Invoice
             'invoice_date' => $this->invoiceDate,
             'invoice_status' => $this->invoiceStatus,
             'total_amount' => $this->totalAmount,
+            'total_price' => $this->totalPrice,
             'notes' => $this->notes,
             'created_by' => $this->createdBy,
             'created_by_user' => $this->createdByUser ? $this->createdByUser->toArray() : null,

@@ -32,7 +32,7 @@ class StockController extends Controller
     public function showProductStock(int $productId)
     {
         // Fetch stock grouped by warehouses for the given product
-        $warehouses = $this->stockService->getProductStockGroupedByWarehouse($productId);
+        $warehouses = $this->stockService->getProductStockGroupedByWarehouse($productId)->toArray();
         return view('stocks.product', compact('warehouses', 'productId'));
     }
 
@@ -45,7 +45,7 @@ class StockController extends Controller
     public function showWarehouseTransactions(int $productId, int $warehouseId)
     {
         // Fetch transactions for the given product and warehouse
-        $transactions = $this->stockService->getTransactions($productId, $warehouseId);
+        $transactions = $this->stockService->getTransactions($productId, $warehouseId)->toArray();
         return view('stocks.transactions', compact('transactions', 'productId', 'warehouseId'));
     }
 

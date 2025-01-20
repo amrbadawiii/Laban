@@ -30,6 +30,7 @@ class Invoice extends Model
         'invoice_date',
         'invoice_status',
         'total_amount',
+        'total_price',
         'notes',
         'created_by',
         'updated_by',
@@ -43,6 +44,7 @@ class Invoice extends Model
     protected $casts = [
         'invoice_date' => 'date',
         'total_amount' => 'decimal:2',
+        'total_price' => 'decimal:2',
         'invoice_status' => 'string',
     ];
 

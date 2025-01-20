@@ -18,10 +18,10 @@
         @foreach ($warehouses as $warehouse)
             <x-table-row :data="[
                 'warehouse_id' => $warehouse['warehouse_id'],
-                'warehouse_name' => $warehouse['warehouse_name'],
+                'warehouse_name' => $warehouse['warehouse']['name'],
                 'incoming' => $warehouse['incoming'],
                 'outgoing' => $warehouse['outgoing'],
-                'total_stock' => $warehouse['total_stock'],
+                'total_stock' => $warehouse['incoming'] - $warehouse['outgoing'],
             ]" :columns="[
                 ['key' => 'warehouse_id', 'type' => 'default'],
                 ['key' => 'warehouse_name', 'type' => 'default'],

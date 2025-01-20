@@ -22,8 +22,8 @@
             ['key' => 'id', 'type' => 'text'],
             ['key' => 'product.name', 'type' => 'text'],
             ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-            ['key' => 'quantity', 'type' => 'text'],
-            ['key' => 'unit_price', 'type' => 'text'],
+            ['key' => 'quantity', 'type' => 'number'],
+            ['key' => 'unit_price', 'type' => 'number'],
             [
                 'key' => 'actions',
                 'type' => 'actions',

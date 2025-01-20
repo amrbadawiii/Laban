@@ -16,20 +16,21 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach ($transactions as $transaction)
             <x-table-row :data="[
                 'id' => $transaction['id'],
                 'stock_type' => $transaction['stock_type'],
                 'incoming' => $transaction['incoming'],
                 'outgoing' => $transaction['outgoing'],
-                'reference' => $transaction['reference'],
+                'reference_type' => $transaction['reference_type'],
                 'date' => $transaction['created_at'],
             ]" :columns="[
                 ['key' => 'id', 'type' => 'default'],
                 ['key' => 'stock_type', 'type' => 'default'],
                 ['key' => 'incoming', 'type' => 'default'],
                 ['key' => 'outgoing', 'type' => 'default'],
-                ['key' => 'reference', 'type' => 'default'],
+                ['key' => 'reference_type', 'type' => 'default'],
                 ['key' => 'date', 'type' => 'default'],
             ]" :route="'#'" />
         @endforeach
