@@ -3,6 +3,6 @@
 return [
     'name' => 'Name',
     'type' => 'Type',
-    'row' => 'Row',
-    'product' => 'Product',
+    'is_production' => 'Is Production',
+    'is_selling' => 'Is Selling'
 ];

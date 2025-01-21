@@ -1,6 +1,6 @@
 @extends('layouts.index')
 
-@section('title', __('messages.user'))
+@section('title', __('user.title'))
 @section('header_link', route('users.create'))
 
 @section('subContent')

@@ -52,12 +52,12 @@ $columns = [
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>
-                <x-table-header>{{ __('invoice_item.id') }}</x-table-header>
-                <x-table-header>{{ __('invoice_item.name') }}</x-table-header>
-                <x-table-header>{{ __('invoice_item.measurement_unit') }}</x-table-header>
-                <x-table-header>{{ __('invoice_item.quantity') }}</x-table-header>
-                <x-table-header>{{ __('invoice_item.unit_price') }}</x-table-header>
-                <x-table-header>{{ __('invoice_item.total_price') }}</x-table-header>
+                <x-table-header>{{ __('invoice.id') }}</x-table-header>
+                <x-table-header>{{ __('invoice.name') }}</x-table-header>
+                <x-table-header>{{ __('invoice.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('invoice.quantity') }}</x-table-header>
+                <x-table-header>{{ __('invoice.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('invoice.total_price') }}</x-table-header>
             </tr>
         </thead>
         <tbody>

@@ -25,7 +25,7 @@
             <x-select name="warehouse_id" label="{{ __('user.warehouse') }}" :options="$warehouses" :selected="old('warehouseId', isset($user) ? $user->getWarehouseId() : '')" required />
 
             <!-- User Type -->
-            <x-select name="user_type" label="{{ __('user.user_type') }}" :options="$userTypes" :selected="old('userType', isset($user) ? $user->getUserType()->value : '')"
+            <x-select name="user_type" label="{{ __('user.type') }}" :options="$userTypes" :selected="old('userType', isset($user) ? $user->getUserType()->value : '')"
                 displayKey="name" required />
 
         </div>

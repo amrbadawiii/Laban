@@ -37,11 +37,11 @@
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>
-                <x-table-header>{{ __('order_item.id') }}</x-table-header>
-                <x-table-header>{{ __('order_item.name') }}</x-table-header>
-                <x-table-header>{{ __('order_item.measurement_unit') }}</x-table-header>
-                <x-table-header>{{ __('order_item.quantity') }}</x-table-header>
-                <x-table-header>{{ __('order_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('order.id') }}</x-table-header>
+                <x-table-header>{{ __('order.name') }}</x-table-header>
+                <x-table-header>{{ __('order.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('order.quantity') }}</x-table-header>
+                <x-table-header>{{ __('order.unit_price') }}</x-table-header>
                 <x-table-header>{{ __('messages.actions') }}</x-table-header>
             </tr>
         </thead>

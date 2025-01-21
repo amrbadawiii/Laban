@@ -8,7 +8,7 @@
     @php
         $columns = [
             ['key' => 'product.name', 'type' => 'text'], // Product name
-            ['key' => 'total_stock', 'type' => 'number'], // Total stock
+            ['key' => 'stock.total_stock', 'type' => 'number'], // Total stock
         ];
     @endphp
     <thead>

@@ -1,18 +1,18 @@
 @extends('layouts.index')
 
-@section('title', __('Transactions for Product ID: ') . $productId . __(' in Warehouse ID: ') . $warehouseId)
+@section('title', __('stock.transactionsForProductID: ') . $productId . __('stock.inWarehouseID: ') . $warehouseId)
 
 @section('header_link', '#')
 
 @section('subContent')
     <thead>
         <tr class="bg-gray-200">
-            <x-table-header>{{ __('Transaction ID') }}</x-table-header>
-            <x-table-header>{{ __('Stock Type') }}</x-table-header>
-            <x-table-header>{{ __('Incoming') }}</x-table-header>
-            <x-table-header>{{ __('Outgoing') }}</x-table-header>
-            <x-table-header>{{ __('Reference') }}</x-table-header>
-            <x-table-header>{{ __('Date') }}</x-table-header>
+            <x-table-header>{{ __('stock.transactionID') }}</x-table-header>
+            <x-table-header>{{ __('stock.stockType') }}</x-table-header>
+            <x-table-header>{{ __('stock.incoming') }}</x-table-header>
+            <x-table-header>{{ __('stock.outgoing') }}</x-table-header>
+            <x-table-header>{{ __('stock.reference') }}</x-table-header>
+            <x-table-header>{{ __('stock.date') }}</x-table-header>
         </tr>
     </thead>
     <tbody>
