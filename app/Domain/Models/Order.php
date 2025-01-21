@@ -31,6 +31,7 @@ class Order extends Model
         'delivery_date',
         'order_status',
         'total_amount',
+        'tax_percent',
         'notes',
         'created_by',
         'updated_by',

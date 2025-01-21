@@ -14,6 +14,7 @@ class Order
     private ?string $deliveryDate;
     private string $orderStatus;
     private float $totalAmount;
+    private float $taxPercent;
     private ?string $notes;
     private ?int $createdBy;
     private ?User $createdByUser;
@@ -31,6 +32,7 @@ class Order
         ?string $deliveryDate,
         string $orderStatus,
         float $totalAmount,
+        float $taxPercent,
         ?string $notes,
         ?int $createdBy,
         ?User $createdByUser,
@@ -47,6 +49,7 @@ class Order
         $this->deliveryDate = $deliveryDate;
         $this->orderStatus = $orderStatus;
         $this->totalAmount = $totalAmount;
+        $this->taxPercent = $taxPercent;
         $this->notes = $notes;
         $this->createdBy = $createdBy;
         $this->createdByUser = $createdByUser;
@@ -94,6 +97,10 @@ class Order
     {
         return $this->totalAmount;
     }
+    public function getTaxPercent()
+    {
+        return $this->taxPercent;
+    }
     public function getNotes()
     {
         return $this->notes;
@@ -128,6 +135,7 @@ class Order
             'deliveryDate' => $this->deliveryDate,
             'orderStatus' => $this->orderStatus,
             'totalAmount' => $this->totalAmount,
+            'tax_percent' => $this->taxPercent,
             'notes' => $this->notes,
             'createdBy' => $this->createdBy,
             'createdByUser' => $this->createdByUser ? $this->createdByUser->toArray() : null,

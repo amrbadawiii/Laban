@@ -46,18 +46,11 @@ class OrderService implements IOrderService
                 'delivery_date' => $data['delivery_date'] ?? null,
                 'order_status' => $data['order_status'] ?? 'pending',
                 'total_amount' => $data['total_amount'] ?? 0,
+                'tax_percent' => $data['tax_percent'] ?? 0,
                 'notes' => $data['notes'] ?? null,
                 'created_by' => $data['created_by'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
-
-            // Create order items
-            if (isset($data['items']) && is_array($data['items'])) {
-                foreach ($data['items'] as $item) {
-                    $item['order_id'] = $order->id; // Add order_id to item data
-                }
-                $this->orderItemRepository->bulkCreate($data['items']);
-            }
 
             return $order;
         });
@@ -75,25 +68,10 @@ class OrderService implements IOrderService
                 'delivery_date' => $data['delivery_date'] ?? null,
                 'order_status' => $data['order_status'] ?? null,
                 'total_amount' => $data['total_amount'] ?? null,
+                'tax_percent' => $data['tax_percent'] ?? null,
                 'notes' => $data['notes'] ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
-
-            // Update or replace order items
-            if (isset($data['items']) && is_array($data['items'])) {
-                // Option 1: Delete old items and insert new ones
-                $this->orderItemRepository->bulkDelete(
-                    $this->orderItemRepository->allWoP(
-                        ['order_id' => $id],
-                        ['id']
-                    )->pluck('id')->toArray()
-                );
-
-                foreach ($data['items'] as $item) {
-                    $item['order_id'] = $id; // Add order_id to item data
-                }
-                $this->orderItemRepository->bulkCreate($data['items']);
-            }
 
             return $order;
         });

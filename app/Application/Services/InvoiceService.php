@@ -58,7 +58,6 @@ class InvoiceService implements IInvoiceService
 
     public function update(int $id, array $data): object
     {
-        dd($data);
         return \DB::transaction(function () use ($id, $data) {
             // Update the invoice
             $invoice = $this->invoiceRepository->update($id, [

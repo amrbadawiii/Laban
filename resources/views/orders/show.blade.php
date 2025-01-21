@@ -38,14 +38,15 @@
     </div>
 
     @php
-        // Define the columns with their type (text, image, link, or actions)
-        $columns = [
-            ['key' => 'id', 'type' => 'text'],
-            ['key' => 'product.name', 'type' => 'text'],
-            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-            ['key' => 'quantity', 'type' => 'text'],
-            ['key' => 'unit_price', 'type' => 'text'],
-        ];
+// Define the columns with their type (text, image, link, or actions)
+$columns = [
+    ['key' => 'id', 'type' => 'text'],
+    ['key' => 'product.name', 'type' => 'text'],
+    ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+    ['key' => 'quantity', 'type' => 'text'],
+    ['key' => 'unit_price', 'type' => 'text'],
+    ['key' => 'total_price', 'type' => 'text'],
+];
     @endphp
     <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
@@ -56,7 +57,7 @@
                 <x-table-header>{{ __('order_item.measurement_unit') }}</x-table-header>
                 <x-table-header>{{ __('order_item.quantity') }}</x-table-header>
                 <x-table-header>{{ __('order_item.unit_price') }}</x-table-header>
-
+                <x-table-header>{{ __('order_item.total_price') }}</x-table-header>
             </tr>
         </thead>
         <tbody>

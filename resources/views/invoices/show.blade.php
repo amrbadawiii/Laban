@@ -45,6 +45,7 @@ $columns = [
     ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
     ['key' => 'quantity', 'type' => 'text'],
     ['key' => 'unit_price', 'type' => 'text'],
+    ['key' => 'total_price', 'type' => 'text']
 ];
     @endphp
     <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
@@ -56,7 +57,7 @@ $columns = [
                 <x-table-header>{{ __('invoice_item.measurement_unit') }}</x-table-header>
                 <x-table-header>{{ __('invoice_item.quantity') }}</x-table-header>
                 <x-table-header>{{ __('invoice_item.unit_price') }}</x-table-header>
-
+                <x-table-header>{{ __('invoice_item.total_price') }}</x-table-header>
             </tr>
         </thead>
         <tbody>

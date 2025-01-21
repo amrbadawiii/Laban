@@ -12,7 +12,7 @@
             ['key' => 'order_id', 'type' => 'text'],
             ['key' => 'invoice_date', 'type' => 'date'],
             ['key' => 'customer.first_name', 'type' => 'text'],
-            ['key' => 'total_amount', 'type' => 'number'],
+            ['key' => 'total_price', 'type' => 'number'],
             ['key' => 'invoice_status', 'type' => 'text'],
             [
                 'key' => 'actions',
@@ -29,7 +29,7 @@
             <x-table-header>{{ __('invoice.orderId') }}</x-table-header>
             <x-table-header>{{ __('invoice.invoiceDate') }}</x-table-header>
             <x-table-header>{{ __('invoice.customerName') }}</x-table-header>
-            <x-table-header>{{ __('invoice.totalAmount') }}</x-table-header>
+            <x-table-header>{{ __('invoice.totalPrice') }}</x-table-header>
             <x-table-header>{{ __('invoice.invoiceStatus') }}</x-table-header>
             <x-table-header>{{ __('messages.actions') }}</x-table-header>
         </tr>
