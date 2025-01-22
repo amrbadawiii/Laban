@@ -45,17 +45,9 @@ class InboundService implements IInboundService
                 'received_date' => $data['received_date'],
                 'is_confirmed' => $data['is_confirmed'] ?? false,
                 'invoice_number' => $data['invoice_number'] ?? null,
-                'created_by' => $data['created_by'] ?? null,
+                'created_by' => session('user_id') ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
-
-            // Create inbound items
-            if (isset($data['items']) && is_array($data['items'])) {
-                foreach ($data['items'] as $item) {
-                    $item['inbound_id'] = $inbound->id;
-                }
-                $this->inboundItemRepository->bulkCreate($data['items']);
-            }
 
             return $inbound;
         });
@@ -71,20 +63,8 @@ class InboundService implements IInboundService
                 'received_date' => $data['received_date'] ?? null,
                 'is_confirmed' => $data['is_confirmed'] ?? false,
                 'invoice_number' => $data['invoice_number'] ?? null,
-                'updated_by' => $data['updated_by'] ?? null,
+                'updated_by' => session('user_id') ?? null,
             ]);
-
-            // Update inbound items
-            if (isset($data['items']) && is_array($data['items'])) {
-                $this->inboundItemRepository->bulkDelete(
-                    $this->inboundItemRepository->allWoP(['inbound_id' => $id], ['id'])->pluck('id')->toArray()
-                );
-
-                foreach ($data['items'] as $item) {
-                    $item['inbound_id'] = $id;
-                }
-                $this->inboundItemRepository->bulkCreate($data['items']);
-            }
 
             return $inbound;
         });

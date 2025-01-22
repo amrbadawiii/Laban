@@ -47,7 +47,7 @@ class QuotationService implements IQuotationService
                 'quotation_status' => $data['quotation_status'] ?? 'draft',
                 'total_amount' => $data['total_amount'] ?? 0,
                 'notes' => $data['notes'] ?? null,
-                'created_by' => $data['created_by'] ?? null,
+                'created_by' => session('user_id') ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
 
@@ -76,24 +76,8 @@ class QuotationService implements IQuotationService
                 'quotation_status' => $data['quotation_status'] ?? null,
                 'total_amount' => $data['total_amount'] ?? null,
                 'notes' => $data['notes'] ?? null,
-                'updated_by' => $data['updated_by'] ?? null,
+                'updated_by' => session('user_id') ?? null,
             ]);
-
-            // Update or replace quotation items
-            if (isset($data['items']) && is_array($data['items'])) {
-                // Option 1: Delete old items and insert new ones
-                $this->quotationItemRepository->bulkDelete(
-                    $this->quotationItemRepository->allWoP(
-                        ['quotation_id' => $id],
-                        ['id']
-                    )->pluck('id')->toArray()
-                );
-
-                foreach ($data['items'] as $item) {
-                    $item['quotation_id'] = $id; // Add quotation_id to item data
-                }
-                $this->quotationItemRepository->bulkCreate($data['items']);
-            }
 
             return $quotation;
         });

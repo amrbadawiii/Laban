@@ -7,7 +7,7 @@ return [
     'customer' => 'العميل',
     'warehouse' => 'المستودع',
     'order_status' => 'حالة الطلب',
-    'total_amount' => 'إجمالي المبلغ',
+    'total_amount' => 'إجمالي الكمية',
     'id' => 'الرقم',
     'name' => 'الاسم',
     'measurement_unit' => 'وحدة القياس',

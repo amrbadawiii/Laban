@@ -28,18 +28,19 @@
             <x-key-value label="{{ __('inbound.received_date') }}" :value="$inbound['received_date']" />
             <x-key-value label="{{ __('inbound.invoice_number') }}" :value="$inbound['invoice_number']" />
             <x-key-value label="{{ __('inbound.is_confirmed') }}" :value="$inbound['is_confirmed']" />
+            <x-key-value label="{{ __('messages.user') }}" :value="$inbound['created_by']['name']" />
         </div>
     </div>
 
     @php
-        // Define the columns with their type (text, image, link, or actions)
-        $columns = [
-            ['key' => 'id', 'type' => 'text'],
-            ['key' => 'product.name', 'type' => 'text'],
-            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-            ['key' => 'quantity', 'type' => 'text'],
-            ['key' => 'unit_price', 'type' => 'text'],
-        ];
+// Define the columns with their type (text, image, link, or actions)
+$columns = [
+    ['key' => 'id', 'type' => 'text'],
+    ['key' => 'product.name', 'type' => 'text'],
+    ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+    ['key' => 'quantity', 'type' => 'text'],
+    ['key' => 'unit_price', 'type' => 'text'],
+];
     @endphp
     <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">

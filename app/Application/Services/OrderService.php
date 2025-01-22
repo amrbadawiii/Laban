@@ -48,7 +48,7 @@ class OrderService implements IOrderService
                 'total_amount' => $data['total_amount'] ?? 0,
                 'tax_percent' => $data['tax_percent'] ?? 0,
                 'notes' => $data['notes'] ?? null,
-                'created_by' => $data['created_by'] ?? null,
+                'created_by' => session('user_id') ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
 
@@ -70,7 +70,7 @@ class OrderService implements IOrderService
                 'total_amount' => $data['total_amount'] ?? null,
                 'tax_percent' => $data['tax_percent'] ?? null,
                 'notes' => $data['notes'] ?? null,
-                'updated_by' => $data['updated_by'] ?? null,
+                'updated_by' => session('user_id') ?? null,
             ]);
 
             return $order;

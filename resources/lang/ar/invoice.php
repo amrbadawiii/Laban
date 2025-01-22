@@ -9,7 +9,7 @@ return [
     'customer' => 'العميل',
     'warehouse' => 'المستودع',
     'totalAmount' => 'إجمالي المبلغ',
-    'totalPrice' => 'إجمالي السعر',
+    'totalPrice' => 'إجمالي السعر بعد الخصم الضريبي',
     'invoiceStatus' => 'حالة الفاتورة',
     'unitPrice' => 'سعر الوحدة',
     'quantity' => 'الكمية',

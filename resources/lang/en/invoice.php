@@ -9,7 +9,7 @@ return [
     'customer' => 'Customer',
     'warehouse' => 'Warehouse',
     'totalAmount' => 'Total Amount',
-    'totalPrice' => 'Total Price',
+    'totalPrice' => 'Total Price After Tax Deduction',
     'invoiceStatus' => 'Invoice Status',
     'unitPrice' => 'Unit Price',
     'quantity' => 'Quantity',

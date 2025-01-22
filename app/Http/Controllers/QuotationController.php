@@ -59,7 +59,7 @@ class QuotationController extends Controller
 
     public function show(int $id)
     {
-        $quotation = $this->quotationService->getById($id, ['customer', 'warehouse', 'quotationItems', 'quotationItems.product', 'quotationItems.measurementUnit'])->toArray();
+        $quotation = $this->quotationService->getById($id, ['customer', 'warehouse', 'quotationItems', 'quotationItems.product', 'quotationItems.measurementUnit', 'createdBy'])->toArray();
         return view('quotations.show', compact('quotation'));
     }
 

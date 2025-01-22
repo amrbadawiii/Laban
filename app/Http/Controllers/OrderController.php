@@ -65,7 +65,7 @@ class OrderController extends Controller
 
     public function show(int $id)
     {
-        $order = $this->orderService->getById($id, ['customer', 'warehouse', 'orderItems', 'orderItems.product', 'orderItems.measurementUnit'])->toArray();
+        $order = $this->orderService->getById($id, ['customer', 'warehouse', 'orderItems', 'orderItems.product', 'orderItems.measurementUnit', 'createdBy'])->toArray();
         return view('orders.show', compact('order'));
     }
     public function createOrder(int $id)
@@ -137,7 +137,7 @@ class OrderController extends Controller
         $data['order_id'] = $order['id'];
         $data['invoice_number'] = 'INV-' . $order['order_number'];
         $data['invoice_date'] = now();
-        $data['tax_percent'] = $order['tax_percent'];
+        $data['tax_percent'] = $order['tax_percent'] / 100;
         $data['invoice_status'] = 'unpaid';
         $data['notes'] = $order['notes'];
 

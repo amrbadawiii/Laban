@@ -48,7 +48,7 @@ class InvoiceService implements IInvoiceService
                 'total_amount' => $data['total_amount'] ?? 0,
                 'total_price' => $data['total_price'] ?? 0,
                 'notes' => $data['notes'] ?? null,
-                'created_by' => $data['created_by'] ?? null,
+                'created_by' => session('user_id') ?? null,
                 'updated_by' => $data['updated_by'] ?? null,
             ]);
 
@@ -70,7 +70,7 @@ class InvoiceService implements IInvoiceService
                 'total_amount' => $data['total_amount'] ?? null,
                 'total_price' => $data['total_price'] ?? 0,
                 'notes' => $data['notes'] ?? null,
-                'updated_by' => $data['updated_by'] ?? null,
+                'updated_by' => session('user_id') ?? null,
             ]);
 
             return $invoice;

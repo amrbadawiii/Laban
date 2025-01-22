@@ -59,7 +59,7 @@ class InboundController extends Controller
 
     public function show(int $id)
     {
-        $inbound = $this->inboundService->getById($id, ['supplier', 'warehouse', 'inboundItems', 'inboundItems.product', 'inboundItems.measurementUnit'])->toArray();
+        $inbound = $this->inboundService->getById($id, ['supplier', 'warehouse', 'inboundItems', 'inboundItems.product', 'inboundItems.measurementUnit', 'createdBy'])->toArray();
         return view('inbounds.show', compact('inbound'));
     }
 

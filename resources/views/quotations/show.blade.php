@@ -34,18 +34,19 @@
             <x-key-value label="{{ __('quotation.quotation_status') }}" :value="$quotation['quotation_status']" />
             <x-key-value label="{{ __('quotation.total_amount') }}" :value="$quotation['total_amount']" />
             <x-key-value label="{{ __('quotation.expiry_date') }}" :value="$quotation['expiry_date']" />
+            <x-key-value label="{{ __('messages.user') }}" :value="$quotation['created_by']['name']" />
         </div>
     </div>
 
     @php
-        // Define the columns with their type (text, image, link, or actions)
-        $columns = [
-            ['key' => 'id', 'type' => 'text'],
-            ['key' => 'product.name', 'type' => 'text'],
-            ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
-            ['key' => 'quantity', 'type' => 'text'],
-            ['key' => 'unit_price', 'type' => 'text'],
-        ];
+// Define the columns with their type (text, image, link, or actions)
+$columns = [
+    ['key' => 'id', 'type' => 'text'],
+    ['key' => 'product.name', 'type' => 'text'],
+    ['key' => 'measurement_unit.abbreviation', 'type' => 'text'],
+    ['key' => 'quantity', 'type' => 'text'],
+    ['key' => 'unit_price', 'type' => 'text'],
+];
     @endphp
     <h3 class="text-lg font-bold mb-4">{{ __('quotation.quotation_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">

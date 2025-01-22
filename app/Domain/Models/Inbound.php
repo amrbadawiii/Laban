@@ -30,9 +30,24 @@ class Inbound extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function user()
+    /**
+     * Relationship: Order was created by a User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relationship: Order was updated by a User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function inboundItems()

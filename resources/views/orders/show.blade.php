@@ -34,6 +34,7 @@
             <x-key-value label="{{ __('order.warehouse') }}" :value="$order['warehouse']['name']" />
             <x-key-value label="{{ __('order.order_status') }}" :value="$order['order_status']" />
             <x-key-value label="{{ __('order.total_amount') }}" :value="$order['total_amount']" />
+            <x-key-value label="{{ __('messages.user') }}" :value="$order['created_by']['name']" />
         </div>
     </div>
 
