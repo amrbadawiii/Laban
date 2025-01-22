@@ -23,8 +23,9 @@ class OrderController extends Controller
     protected IProductService $productService;
     protected IMeasurementUnitService $measurementUnitService;
     protected IInvoiceService $invoiceService;
+    protected IStockService $stockService;
 
-    public function __construct(IOrderService $orderService, ICustomerService $customerService, IWarehouseService $warehouseService, IProductService $productService, IMeasurementUnitService $measurementUnitService, IInvoiceService $invoiceService)
+    public function __construct(IOrderService $orderService, ICustomerService $customerService, IWarehouseService $warehouseService, IProductService $productService, IMeasurementUnitService $measurementUnitService, IInvoiceService $invoiceService, IStockService $stockService)
     {
         $this->orderService = $orderService;
         $this->customerService = $customerService;
@@ -32,6 +33,7 @@ class OrderController extends Controller
         $this->productService = $productService;
         $this->measurementUnitService = $measurementUnitService;
         $this->invoiceService = $invoiceService;
+        $this->stockService = $stockService;
     }
 
     public function index(Request $request)
@@ -113,6 +115,11 @@ class OrderController extends Controller
 
     public function destroy(int $id)
     {
+        $order = $this->orderService->getById($id, ['invoices'])->toArray();
+        foreach ($order['invoices'] as $invoice) {
+            $this->invoiceService->delete($invoice['id']);
+        }
+        $this->stockService->delete($id);
         $this->orderService->delete($id);
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }

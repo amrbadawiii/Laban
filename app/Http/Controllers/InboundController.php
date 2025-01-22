@@ -106,6 +106,7 @@ class InboundController extends Controller
     public function destroy(int $id)
     {
         $this->inboundService->delete($id);
+        $this->stockService->delete($id);
         return redirect()->route('inbounds.index')->with('success', 'Inbound deleted successfully.');
     }
 

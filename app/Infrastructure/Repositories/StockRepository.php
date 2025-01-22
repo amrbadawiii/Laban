@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repositories;
 
 use App\Domain\Models\Stock;
 use App\Infrastructure\Interfaces\IStockRepository;
+use Override;
 
 class StockRepository extends BaseRepository implements IStockRepository
 {
@@ -95,5 +96,14 @@ class StockRepository extends BaseRepository implements IStockRepository
             ->where('warehouse_id', $warehouseId)
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    public function delete(int $id): bool
+    {
+        $records = $this->model->where('reference_id', $id)->get();
+        foreach ($records as $record) {
+            $record->delete();
+        }
+        return true;
     }
 }

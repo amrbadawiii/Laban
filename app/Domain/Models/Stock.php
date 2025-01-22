@@ -23,7 +23,8 @@ class Stock extends Model
         'incoming',
         'outgoing',
         'stock_type',
-        'reference',
+        'reference_type',
+        'reference_id',
     ];
 
     /**
