@@ -47,15 +47,15 @@
             ['key' => 'unit_price', 'type' => 'text'],
         ];
     @endphp
-    <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
+    <h3 class="text-lg font-bold mb-4">{{ __('quotation.quotation_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>
-                <x-table-header>{{ __('quotation_item.id') }}</x-table-header>
-                <x-table-header>{{ __('quotation_item.name') }}</x-table-header>
-                <x-table-header>{{ __('quotation_item.measurement_unit') }}</x-table-header>
-                <x-table-header>{{ __('quotation_item.quantity') }}</x-table-header>
-                <x-table-header>{{ __('quotation_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('quotation.id') }}</x-table-header>
+                <x-table-header>{{ __('quotation.name') }}</x-table-header>
+                <x-table-header>{{ __('quotation.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('quotation.quantity') }}</x-table-header>
+                <x-table-header>{{ __('quotation.unit_price') }}</x-table-header>
             </tr>
         </thead>
         <tbody>

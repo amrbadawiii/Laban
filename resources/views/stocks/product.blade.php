@@ -1,6 +1,6 @@
 @extends('layouts.index')
 
-@section('title', __('stock.stockOverviewforProductID: ') . $productId)
+@section('title', __('stock.stockOverviewforProductID') . $productId)
 
 @section('header_link', '#')
 

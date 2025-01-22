@@ -29,7 +29,7 @@ class ManufactureController extends Controller
      */
     public function index()
     {
-        $stages = [
+        $stagesEn = [
             0 => 'Milling',
             1 => 'Butter Production',
             2 => 'Ghee Production',
@@ -37,8 +37,16 @@ class ManufactureController extends Controller
             4 => 'Mozzarella Production',
             5 => 'Butter Mixture Production',
         ];
-        //dd($stages);
-        return view('manufacture.index', compact('stages'));
+        $stagesAr = [
+            0 => 'فرز',
+            1 => 'إنتاج الزبدة',
+            2 => 'إنتاج السمن',
+            3 => 'إنتاج التخثر',
+            4 => 'إنتاج الموزاريلا',
+            5 => 'إنتاج خليط الزبدة',
+        ];
+
+        return view('manufacture.index', compact('stagesEn', 'stagesAr'));
     }
 
     public function stage($id)
@@ -60,7 +68,8 @@ class ManufactureController extends Controller
     {
         $processes = [
             0 => [
-                'name' => 'Milling',
+                'nameEn' => 'Milling',
+                'nameAr' => 'فرز',
                 'manual_output' => true, // Manual output enabled for this stage
                 'inputs' => [
                     [
@@ -83,7 +92,8 @@ class ManufactureController extends Controller
                 ],
             ],
             1 => [
-                'name' => 'Butter Production',
+                'nameEn' => 'Butter Production',
+                'nameAr' => 'إنتاج الزبدة',
                 'manual_output' => false, // Manual output enabled for this stage
                 'inputs' => [
                     [
@@ -101,7 +111,8 @@ class ManufactureController extends Controller
                 ],
             ],
             2 => [
-                'name' => 'Ghee Production',
+                'nameEn' => 'Ghee Production',
+                'nameAr' => 'إنتاج السمن',
                 'manual_output' => false, // Manual output enabled for this stage
                 'inputs' => [
                     [
@@ -119,7 +130,8 @@ class ManufactureController extends Controller
                 ],
             ],
             3 => [
-                'name' => 'Thrombosis Production',
+                'nameEn' => 'Thrombosis Production',
+                'nameAr' => 'إنتاج التخثر',
                 'manual_output' => false, // Manual output enabled for this stage
                 'inputs' => [
                     [
@@ -137,7 +149,8 @@ class ManufactureController extends Controller
                 ],
             ],
             4 => [
-                'name' => 'Mozzarella Production',
+                'nameEn' => 'Mozzarella Production',
+                'nameAr' => 'إنتاج الموزاريلا',
                 'manual_output' => false, // Manual output enabled for this stage
                 'inputs' => [
                     [
@@ -155,7 +168,8 @@ class ManufactureController extends Controller
                 ],
             ],
             5 => [
-                'name' => 'Butter Mixture Production',
+                'nameEn' => 'Butter Mixture Production',
+                'nameAr' => 'إنتاج خليط الزبدة',
                 'manual_output' => false, // Manual output enabled for this stage
                 'inputs' => [
                     [

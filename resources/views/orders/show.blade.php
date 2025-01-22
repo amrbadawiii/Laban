@@ -48,7 +48,7 @@ $columns = [
     ['key' => 'total_price', 'type' => 'text'],
 ];
     @endphp
-    <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
+    <h3 class="text-lg font-bold mb-4">{{ __('order.order_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>

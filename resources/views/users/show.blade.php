@@ -17,7 +17,7 @@
 
         <!-- Warehouse Details -->
         <div class="bg-white p-4 shadow rounded-lg">
-            <h3 class="text-lg font-medium text-gray-700">{{ __('messages.details') }}:</h3>
+            <h3 class="text-lg font-medium text-gray-700">{{ __('messages.warehouse_details') }}:</h3>
 
             <x-key-value label="{{ __('warehouse.id') }}" :value="$user['warehouse']['id']" />
             <x-key-value label="{{ __('warehouse.name') }}" :value="$user['warehouse']['name']" />

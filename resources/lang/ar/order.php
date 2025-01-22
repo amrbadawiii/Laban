@@ -16,5 +16,5 @@ return [
     'total_price' => 'إجمالي السعر',
     'order_items' => 'عناصر الطلب',
     'order_details' => 'تفاصيل الطلب',
-    'inbound_items' => 'عناصر الإدخال',
+    'update_order' => 'تحديث الطلب',
 ];

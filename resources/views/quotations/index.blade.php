@@ -1,6 +1,6 @@
 @extends('layouts.index')
 
-@section('title', __('messages.quotation'))
+@section('title', __('messages.quotations'))
 @section('popup_action', route('quotations.store')) {{-- Used for popup form --}}
 @section('header_link', route('quotations.create')) {{-- Used if popup is disabled --}}
 

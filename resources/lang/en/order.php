@@ -17,5 +17,5 @@ return [
     'total_price' => 'Total Price',
     'order_items' => 'Order Items',
     'order_details' => 'Order Details',
-    'inbound_items' => 'Inbound Items',
+    'update_order' => 'Update Order'
 ];

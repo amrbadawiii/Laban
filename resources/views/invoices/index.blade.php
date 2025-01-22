@@ -17,7 +17,7 @@
             [
                 'key' => 'actions',
                 'type' => 'actions',
-                'route' => 'invoices.edit',
+                'route' => '#',
                 'delete_route' => 'invoices.destroy',
             ],
         ];

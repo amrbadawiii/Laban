@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id' => 'Id',
     'invoiceNumber' => 'Invoice Number',
     'orderId' => 'Order Id',
     'invoiceDate' => 'Invoice Date',
@@ -13,5 +14,8 @@ return [
     'unitPrice' => 'Unit Price',
     'quantity' => 'Quantity',
     'name' => 'Name',
-    'measurement_unit' => 'Measurement Unit'
+    'measurementUnit' => 'Measurement Unit',
+    'showInvoice' => 'Show Invoice',
+    'invoiceDetails' => 'Invoice Details',
+    'invoiceItems' => 'Invoice Items'
 ];

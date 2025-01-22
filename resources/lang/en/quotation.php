@@ -13,5 +13,7 @@ return [
     'measurement_unit' => 'Measurement Unit',
     'quantity' => 'Quantity',
     'unit_price' => 'Unit Price',
+    'quotation_items' => 'Quotation Items',
+    'update_quotation' => 'Update Quotation'
     // Add more translations as needed
 ];

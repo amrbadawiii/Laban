@@ -7,4 +7,5 @@ return [
     'warehouse' => 'Warehouse',
     'type' => 'type',
     'password' => 'Password',
+    'id' => 'Id'
 ];

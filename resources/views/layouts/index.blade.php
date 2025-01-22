@@ -39,11 +39,11 @@
                                     @if ($link['url'])
                                         <a href="{{ $link['url'] }}"
                                             class="px-4 py-2 {{ $link['active'] ? 'bg-blue-500 text-white' : 'bg-gray-200' }} rounded-md mx-1">
-                                            {{ $link['label'] }}
+                                            {!! $link['label'] !!} {{-- Use {!! !!} to render HTML entities like &raquo; properly --}}
                                         </a>
                                     @else
                                         <span class="px-4 py-2 bg-gray-100 rounded-md mx-1 text-gray-400">
-                                            {{ $link['label'] }}
+                                            {!! $link['label'] !!} {{-- Use {!! !!} here as well --}}
                                         </span>
                                     @endif
                                 @endforeach

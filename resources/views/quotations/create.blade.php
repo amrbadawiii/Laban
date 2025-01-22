@@ -1,6 +1,6 @@
 @extends('layouts.create')
 
-@section('title', __('messages.create_quotation'))
+@section('title', __('quotation.update_quotation'))
 
 @section('subContent')
     <!-- Quotation Details Section -->
@@ -33,7 +33,7 @@
             ],
         ];
     @endphp
-    <h3 class="text-lg font-bold mb-4">{{ __('messages.quotation_items') }}</h3>
+    <h3 class="text-lg font-bold mb-4">{{ __('quotation.quotation_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>

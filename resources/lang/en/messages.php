@@ -29,12 +29,18 @@ return [
     'stock_tracking' => 'Stock Tracking',
 
     'manufacture_management' => 'Manufacture Management',
-    'production_schedule' => 'Production Schedule',
+    'manufacture' => 'Manufacture',
+    'manufacturing_stage' => 'Manufacturing Stage: ',
     'machine_maintenance' => 'Machine Maintenance',
 
     'finance_management' => 'Finance Management',
     'expense_list' => 'Expense List',
-    'sales_orders' => 'Sales Orders',
+    'quotations' => 'Quotations',
+    'show_quotation' => 'Show Quotation',
+    'quotation_details' => 'Quotation Details',
+    'order' => 'Sales Orders',
+    'show_order' => 'Show Order',
+    'order_details' => 'Order Details',
     'invoice' => 'Invoices',
 
     'report' => 'Reports',
@@ -42,8 +48,11 @@ return [
     'expense_report' => 'Expense Report',
 
     'user' => 'Users',
+    'user_details' => 'User Details',
+    'warehouse_details' => 'Warehouse Details',
 
     'add_new' => 'Add New',
+    'confirm' => 'Confirm',
     'create' => 'Create',
     'update' => 'Update',
     'search' => 'Search',
@@ -51,6 +60,9 @@ return [
     'delete' => 'Delete',
     'actions' => 'Actions',
     'details' => 'Details',
-    'back' => 'Back'
+    'back' => 'Back',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'no_data_available' => 'No Data Available'
     // Add other translations here
 ];

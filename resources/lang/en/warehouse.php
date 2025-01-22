@@ -1,6 +1,7 @@
 <?php
 
 return [
-    'name' => "Name",
-    "location" => "Location",
+    'name' => 'Name',
+    'location' => 'Location',
+    'id' => 'Id'
 ];

@@ -10,8 +10,8 @@
 
             <!-- Define product values before passing to the component -->
             @php
-                $isSelling = $product['is_selling'] ? 'Yes' : 'No';
-                $isProduction = $product['is_production'] ? 'Yes' : 'No';
+                $isSelling = $product['is_selling'] ?  __('messages.yes')  :  __('messages.no') ;
+                $isProduction = $product['is_production'] ? __('messages.yes') : __('messages.no');
             @endphp
 
             <x-key-value label="{{ __('product.name') }}" :value="$product['name']" />

@@ -45,7 +45,7 @@
                 <x-sidebar-subitem href="#" icon="fas fa-money-check-alt" :text="__('messages.expense_list')" />
                 <x-sidebar-subitem href="{{ route('quotations.index') }}" icon="fas fa-file-contract"
                     :text="__('messages.quotations')" />
-                <x-sidebar-subitem href="{{ route('orders.index') }}" icon="fas fa-file-contract" :text="__('messages.sales_orders')" />
+                <x-sidebar-subitem href="{{ route('orders.index') }}" icon="fas fa-file-contract" :text="__('messages.order')" />
                 <x-sidebar-subitem href="{{ route('invoices.index') }}" icon="fas fa-chart-bar" :text="__('messages.invoice')" />
             </x-sidebar-section>
 
