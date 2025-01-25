@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Split the pathname into segments
     let pathSegments = url.pathname.split('/');
 
-    // Keep only the first part of the path (e.g., '/warehouses', '/inbounds', etc.)
+    // Keep only the first part of the path
     url.pathname = `/${pathSegments[1]}`;
 
     // Clear the query parameters
