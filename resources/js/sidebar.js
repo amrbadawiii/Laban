@@ -24,8 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Get the updated URL as a string
     let updatedUrl = url.toString();
-    console.log(updatedUrl);
+
     subItems.forEach((subItem) => {
+        console.log(subItem.href + '_-' + updatedUrl);
         if (subItem.href === updatedUrl) {
             subItem.classList.add("bg-cyan-200", "font-bold");
 
