@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let updatedUrl = url.toString();
 
     subItems.forEach((subItem) => {
+        console.log(subItem.href + '_-' + updatedUrl);
         if (subItem.href === updatedUrl) {
             subItem.classList.add("bg-cyan-200", "font-bold");
 
