@@ -44,11 +44,11 @@ Route::middleware(['auth', 'setlocale'])->group(function () {
     Route::resource('measurementUnits', MeasurementUnitController::class);
     Route::resource('products', ProductController::class);
     Route::resource('inbounds', InboundController::class);
-    Route::resource('manufacture', ManufactureController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('quotations', QuotationController::class);
     Route::resource('invoices', InvoiceController::class);
-    Route::get('manufacture/stage/{id}', [ManufactureController::class, 'stage'])->name('manufacture.stage');
+    Route::get('manufacture', [ManufactureController::class, 'index'])->name('manufacture.index');
+    Route::get('manufacture/{id}', [ManufactureController::class, 'stage'])->name('manufacture.stage');
     Route::post('/manufacture/process/{stage}', [ManufactureController::class, 'processStage'])->name('manufacture.process');
     Route::patch('/inbounds/{id}/confirm', [InboundController::class, 'confirm'])->name('inbounds.confirm');
     Route::post('/inbounds/store_items/{id}', [InboundController::class, 'storeItems'])->name('inbounds.storeItems');
