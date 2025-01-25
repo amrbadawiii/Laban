@@ -12,18 +12,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // Example: "/Laban/new/public/warehouses?page=2" -> "/Laban/new/public/warehouses"
     let pathSegments = url.pathname.split('/').filter(segment => segment); // Remove empty segments
 
-    if (pathSegments.length > 0) {
-        // Check if the last segment is a parameter (like ID or pagination) or query
+    if (pathSegments.length > 1) {
+        // Check if the last segment is a parameter (like ID or pagination)
         const lastSegment = pathSegments[pathSegments.length - 1];
 
-        // Regex to check if the last segment is numeric or contains query parameters
+        // Regex to check if the last segment is numeric or if a query exists
         if (/^\d+$/.test(lastSegment) || url.search) {
-            // Remove the last segment if it's a number or query exists
-            url.pathname = `/${pathSegments.slice(0, -1).join('/')}`;
+            // Remove the last segment if it's a number or a query exists
+            pathSegments.pop();
         }
+
+        // Reconstruct the pathname
+        url.pathname = `/${pathSegments.join('/')}`;
     }
 
-    // Clear the query parameters and fragments
+    // Ensure the query parameters and fragments are cleared
     url.search = ''; // Remove query parameters
     url.hash = '';   // Remove any hash fragments
 
@@ -32,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Highlight active sub-item and expand its section
     subItems.forEach((subItem) => {
-        console.log(subItem.href + '_-' + updatedUrl);
         if (subItem.href === updatedUrl) {
             subItem.classList.add("bg-cyan-200", "font-bold");
 
@@ -46,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Prevent collapsing parent section on sub-item click
-        subItem.addEventListener("click", (event) => {
+        subItem.addEventListener("click", () => {
             const parentSection = subItem.closest(".sidebar-section");
             if (parentSection) {
                 parentSection.querySelector(".section-toggle").checked = true;
