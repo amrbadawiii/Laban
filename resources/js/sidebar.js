@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Split the pathname into segments
     let pathSegments = url.pathname.split('/');
-    // For example, if URL is /Laban/new/public/warehouses, we will strip everything before 'warehouses'
-    if (pathSegments.length > 3) {
-        // Adjust path to keep only the last segment (e.g., 'warehouses')
-        url.pathname = `/${pathSegments[pathSegments.length - 1]}`;
+    // Remove everything after the last significant segment
+    if (pathSegments.length > 2) {
+        // Preserve the leading path, but strip everything after the last segment
+        url.pathname = `/${pathSegments.slice(1, 3).join('/')}`;
     } else {
         // If there are only two segments, just use the second part (e.g., '/warehouses')
         url.pathname = `/${pathSegments[1]}`;
@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let updatedUrl = url.toString();
 
     subItems.forEach((subItem) => {
-        console.log(subItem.href + '_-' + updatedUrl);
         if (subItem.href === updatedUrl) {
             subItem.classList.add("bg-cyan-200", "font-bold");
 
