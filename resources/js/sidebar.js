@@ -10,9 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Split the pathname into segments
     let pathSegments = url.pathname.split('/');
-
-    // Keep only the first part of the path
-    url.pathname = `/${pathSegments[pathSegments.length - 1]}`;
+    // For example, if URL is /Laban/new/public/warehouses, we will strip everything before 'warehouses'
+    if (pathSegments.length > 3) {
+        // Adjust path to keep only the last segment (e.g., 'warehouses')
+        url.pathname = `/${pathSegments[pathSegments.length - 1]}`;
+    } else {
+        // If there are only two segments, just use the second part (e.g., '/warehouses')
+        url.pathname = `/${pathSegments[1]}`;
+    }
 
     // Clear the query parameters
     url.search = '';
