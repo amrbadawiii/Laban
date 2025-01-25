@@ -12,14 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let pathSegments = url.pathname.split('/');
 
     // Keep only the first part of the path
-    url.pathname = `/${pathSegments[1]}`;
+    url.pathname = `/${pathSegments[pathSegments.length - 1]}`;
 
     // Clear the query parameters
     url.search = '';
 
     // Get the updated URL as a string
     let updatedUrl = url.toString();
-    console.log(subItems + '_' + updatedUrl);
+
     subItems.forEach((subItem) => {
         if (subItem.href === updatedUrl) {
             subItem.classList.add("bg-cyan-200", "font-bold");
