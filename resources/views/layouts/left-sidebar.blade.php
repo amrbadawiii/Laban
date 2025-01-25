@@ -1,6 +1,6 @@
 <!-- Desktop Sidebar -->
 
-<div id="sidebar" class="w-1/5 bg-white text-gray-900 min-h-screen p-3">
+<div id="sidebar" class="w-1/5 text-gray-900 min-h-screen p-3">
     <!-- Profile Section -->
     <div class="text-center mb-8">
         <img src="{{ asset('images/pp.jpg') }}" alt="Profile Picture" class="rounded-full w-20 mx-auto">

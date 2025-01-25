@@ -223,11 +223,13 @@ class ManufactureController extends Controller
 
             // Process outputs (add stock)
             foreach ($data['outputs'] as $outputIndex => $output) {
-                // If stage is not 0, calculate output quantity as (clearance_rate * input quantity)
-                $outputQuantity = $output['quantity'];
-                if ($stage !== 0) {
+                if ($stage === 0) {
+                    // If stage is not 0, calculate output quantity as (clearance_rate * input quantity)
+                    $outputQuantity = $output['quantity'];
+                } elseif ($stage !== 0) {
                     $inputQuantity = $data['inputs'][$outputIndex]['quantity'] ?? 0; // Match input and output by index
                     $outputQuantity = $data['clearance_rate'] * $inputQuantity;
+                    $output['measurement_unit_id'] = $input['measurement_unit_id'];
                 }
 
                 $this->stockService->create([

@@ -7,10 +7,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <link rel="icon" href="{{ asset('images/logo.jpg') }}" sizes="32x32" type="image/jpg">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/layout-styles.css'])
 </head>
 
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
@@ -21,7 +23,7 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col">
             <!-- Header -->
-            <header class="bg-white dark:bg-gray-800 p-2">
+            <header id="navbar" class="p-2">
                 @include('layouts.navigation')
             </header>
 
@@ -34,8 +36,9 @@
     </div>
     @include('layouts.mobile-sidebar')
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/sidebar.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+
 </body>
 
 </html>

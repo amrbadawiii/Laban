@@ -1,0 +1,35 @@
+/* Gradient background for the navigation bar */
+#navbar {
+    background: linear-gradient(135deg, #b3e5fc, #d0f2e3) !important;
+    /* Light blue to light green gradient */
+    color: #1a202c;
+    /* Neutral dark color for readability */
+    background-size: cover;
+    /* Ensure the gradient stretches */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Ensures the gradient remains consistent */
+}
+
+/* Gradient background for the left sidebar */
+#sidebar {
+    background: linear-gradient(135deg, #b3e5fc, #d0f2e3) !important;
+    /* Light blue to light green gradient */
+    color: #1a202c;
+    /* Neutral dark color for readability */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Ensures the gradient remains consistent */
+}
+
+/* Sidebar link styles */
+#sidebar a {
+    color: #1a202c;
+    transition: color 0.3s ease;
+}
+
+#sidebar a:hover {
+    color: #00796b;
+    /* Dark green for hover effect */
+}
