@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Remove everything after the last significant segment
     if (pathSegments.length > 2) {
         // Preserve the leading path, but strip everything after the last segment
-        url.pathname = `/${pathSegments.slice(1, 3).join('/')}`;
+        url.pathname = `/${pathSegments.slice(0, -1).join('/')}`;
     } else {
         // If there are only two segments, just use the second part (e.g., '/warehouses')
         url.pathname = `/${pathSegments[1]}`;
