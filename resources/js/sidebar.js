@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create a URL object from the current URL
     let url = new URL(currentUrl);
-    console.log(url);
+
     // Dynamically find the base path and resource path
     // Example: "/Laban/new/public/warehouses?page=2" -> "/Laban/new/public/warehouses"
     let pathSegments = url.pathname.split('/').filter(segment => segment); // Remove empty segments
