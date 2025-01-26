@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create a URL object from the current URL
     let url = new URL(currentUrl);
-
+    console.log(url);
     // Dynamically find the base path and resource path
     // Example: "/Laban/new/public/warehouses?page=2" -> "/Laban/new/public/warehouses"
     let pathSegments = url.pathname.split('/').filter(segment => segment); // Remove empty segments
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const lastSegment = pathSegments[pathSegments.length - 1];
 
         // Regex to check if the last segment is numeric or if a query exists
-        if (/^\d+$/.test(lastSegment) || url.search) {
+        if (/^\d+$/.test(lastSegment) || url.search || url.pathname != lastSegment) {
             // Remove the last segment if it's a number or a query exists
             pathSegments.pop();
         }
