@@ -2,8 +2,10 @@
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Enums\UserType;
 use App\Infrastructure\Interfaces\IBaseRepository;
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 abstract class BaseRepository implements IBaseRepository
 {

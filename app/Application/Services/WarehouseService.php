@@ -28,6 +28,9 @@ class WarehouseService implements IWarehouseService
 
     public function getAllWoP(array $conditions = [], array $columns = ['*'], array $relations = [])
     {
+        if (Session::get('role') !== UserType::Admin->value) {
+            $conditions[] = ['id', '=', Session::get('warehouse_id')];
+        }
         $warehouses = $this->repository->allWoP($conditions, $columns, $relations);
         return $warehouses;
     }

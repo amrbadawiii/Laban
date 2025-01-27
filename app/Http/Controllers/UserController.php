@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Application\Interfaces\IUserService;
 use App\Application\Interfaces\IWarehouseService;
-use App\Application\Services\UserService;
 use App\Domain\Enums\UserType;
 use Illuminate\Http\Request;
 
@@ -46,7 +45,10 @@ class UserController extends Controller
     public function create()
     {
         $warehouses = $this->warehouseService->getAllWoP()->toArray();
-        $userTypes = UserType::reverse_array();
+        foreach (UserType::cases() as $userType) {
+            $userTypes[$userType->value] = $userType->name;
+        }
+
         return view('users.create', compact('warehouses', 'userTypes'));
     }
 
@@ -63,7 +65,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
             'warehouse_id' => 'required|exists:warehouses,id',
-            'user_type' => 'required|in:0,1',
+            'user_type' => 'required|in:user,admin',
         ]);
 
         $data = $request->all();
@@ -82,7 +84,9 @@ class UserController extends Controller
     {
         $user = $this->userService->getById($id);
         $warehouses = $this->warehouseService->getAllWoP()->toArray();
-        $userTypes = UserType::reverse_array();
+        foreach (UserType::cases() as $userType) {
+            $userTypes[$userType->value] = $userType->name;
+        }
         return view('users.create', compact('user', 'warehouses', 'userTypes'));
     }
 
@@ -100,7 +104,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
             'warehouse_id' => 'required|exists:warehouses,id',
-            'user_type' => 'required|in:0,1',
+            'user_type' => 'required|in:user,admin',
         ]);
 
         $data = $request->except(['password_confirmation']);

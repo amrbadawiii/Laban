@@ -15,8 +15,8 @@
             [
                 'key' => 'actions',
                 'type' => 'actions',
-                'route' => 'users.edit',
-                'delete_route' => 'users.destroy',
+                'route' => Session::get('role') === 'admin' ? 'users.edit' : '#',
+                'delete_route' => Session::get('role') === 'admin' ? 'users.destroy' : '#',
             ],
         ];
     @endphp
