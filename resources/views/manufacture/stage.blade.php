@@ -36,7 +36,7 @@
             </div>
         @endforeach
     </div>
-
+{{--
     @if ($processData['manual_output'] == false)
         <!-- Clearance Rate Section -->
         <div class="grid grid-cols-1 gap-4 mt-6">
@@ -47,7 +47,7 @@
     @else
         <input type="hidden" name="clearance_rate" value="0">
     @endif
-
+--}}
 
     <!-- Outputs Section -->
     <div class="grid grid-cols-1 gap-4 mt-6">
@@ -57,15 +57,13 @@
                 <!-- Output Name -->
                 <label class="w-1/4 text-gray-700 font-medium">{{ $output['name'] }}</label>
 
-                @if ($processData['manual_output'] == true)
-                    <!-- Show fields for manual quantity and unit -->
-                    <x-text-input name="outputs[{{ $loop->index }}][quantity]" label="{{ __('manufacture.quantity') }}" type="number"
-                        required="true" class="flex-grow" />
+                <!-- Show fields for manual quantity and unit -->
+                <x-text-input name="outputs[{{ $loop->index }}][quantity]" label="{{ __('manufacture.quantity') }}" type="number"
+                    required="true" class="flex-grow" />
 
-                    <x-select-input name="outputs[{{ $loop->index }}][measurement_unit_id]" label="{{ __('manufacture.measurement_unit') }}"
-                        :options="collect($output['measurement_unit'])->pluck('abbreviation', 'id')" selected=""
-                        class="flex-grow" />
-                @endif
+                <x-select-input name="outputs[{{ $loop->index }}][measurement_unit_id]" label="{{ __('manufacture.measurement_unit') }}"
+                    :options="collect($output['measurement_unit'])->pluck('abbreviation', 'id')" selected=""
+                    class="flex-grow" />
 
                 <!-- Hidden Product ID -->
                 <input type="hidden" name="outputs[{{ $loop->index }}][product_id]" value="{{ $output['product_id'] }}">

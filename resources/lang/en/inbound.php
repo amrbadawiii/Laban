@@ -10,6 +10,7 @@ return [
     'is_confirmed' => 'Confirmed',
     'inbound_details' => 'Inbound Details',
     'show_inbound' => 'Show Inbound',
+    'create_inbound' => 'Create Inbound',
 
     // User responsible for the inbound creation
     'created_by' => 'Created By',

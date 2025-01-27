@@ -1,11 +1,11 @@
 @extends('layouts.create')
 
-@section('title', __('messages.create_inbound'))
+@section('title', __('inbound.create_inbound'))
 
 @section('subContent')
     <!-- Inbound Details Section -->
     <div class="mb-6 bg-white p-4 rounded shadow">
-        <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_details') }}</h3>
+        <h3 class="text-lg font-bold mb-4">{{ __('inbound.inbound_details') }}</h3>
         <div class="grid grid-cols-2 gap-4 text-sm">
             <x-key-value label="{{ __('inbound.reference_number') }}" :value="$inbound['reference_number']" />
             <x-key-value label="{{ __('inbound.supplier') }}" :value="$inbound['supplier']['name']" />
@@ -32,15 +32,15 @@
             ],
         ];
     @endphp
-    <h3 class="text-lg font-bold mb-4">{{ __('messages.inbound_items') }}</h3>
+    <h3 class="text-lg font-bold mb-4">{{ __('inbound.inbound_items') }}</h3>
     <table class="min-w-full bg-white dark:bg-gray-800 text-sm">
         <thead>
             <tr>
-                <x-table-header>{{ __('inbound_item.id') }}</x-table-header>
-                <x-table-header>{{ __('inbound_item.name') }}</x-table-header>
-                <x-table-header>{{ __('inbound_item.measurement_unit') }}</x-table-header>
-                <x-table-header>{{ __('inbound_item.quantity') }}</x-table-header>
-                <x-table-header>{{ __('inbound_item.unit_price') }}</x-table-header>
+                <x-table-header>{{ __('inbound.id') }}</x-table-header>
+                <x-table-header>{{ __('inbound.name') }}</x-table-header>
+                <x-table-header>{{ __('inbound.measurement_unit') }}</x-table-header>
+                <x-table-header>{{ __('inbound.quantity') }}</x-table-header>
+                <x-table-header>{{ __('inbound.unit_price') }}</x-table-header>
                 <x-table-header>{{ __('messages.actions') }}</x-table-header>
             </tr>
         </thead>

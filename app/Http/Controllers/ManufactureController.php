@@ -200,7 +200,7 @@ class ManufactureController extends Controller
     {
         $data = $request->validate([
             'warehouse_id' => 'required',
-            'clearance_rate' => 'required|numeric',
+            //'clearance_rate' => 'required|numeric',
             'inputs' => 'required|array', // Array of inputs: ['product_id', 'quantity', 'warehouse_id', etc.]
             'outputs' => 'required|array', // Array of outputs: ['product_id', 'quantity', 'warehouse_id', etc.]
         ]);
@@ -222,21 +222,21 @@ class ManufactureController extends Controller
             }
 
             // Process outputs (add stock)
-            foreach ($data['outputs'] as $outputIndex => $output) {
-                if ($stage === 0) {
-                    // If stage is not 0, calculate output quantity as (clearance_rate * input quantity)
-                    $outputQuantity = $output['quantity'];
-                } elseif ($stage !== 0) {
-                    $inputQuantity = $data['inputs'][$outputIndex]['quantity'] ?? 0; // Match input and output by index
-                    $outputQuantity = $data['clearance_rate'] * $inputQuantity;
-                    $output['measurement_unit_id'] = $input['measurement_unit_id'];
-                }
+            foreach ($data['outputs'] as $output) {
+                // if ($stage === 0) {
+                //     // If stage is not 0, calculate output quantity as (clearance_rate * input quantity)
+                //     $outputQuantity = $output['quantity'];
+                // } elseif ($stage !== 0) {
+                //     $inputQuantity = $data['inputs'][$outputIndex]['quantity'] ?? 0; // Match input and output by index
+                //     $outputQuantity = $data['clearance_rate'] * $inputQuantity;
+                //     $output['measurement_unit_id'] = $input['measurement_unit_id'];
+                // }
 
                 $this->stockService->create([
                     'product_id' => $output['product_id'],
                     'warehouse_id' => $data['warehouse_id'],
                     'measurement_unit_id' => $output['measurement_unit_id'],
-                    'incoming' => $outputQuantity, // Add calculated stock
+                    'incoming' => $output['quantity'], // Add calculated stock
                     'outgoing' => 0,
                     'stock_type' => StockTypeEnum::Production->value,
                     'reference_type' => 'Production',

@@ -10,6 +10,7 @@ return [
     'is_confirmed' => 'تم التأكيد',
     'inbound_details' => 'تفاصيل الواردات',
     'show_inbound' => 'عرض الواردات',
+    'create_inbound' => 'اضافة الواردات',
 
     // معلومات المستخدم
     'created_by' => 'تم الإنشاء بواسطة',
