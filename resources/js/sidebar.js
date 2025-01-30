@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pathSegments.length > 1) {
         // Check if the last segment is a parameter (like ID or pagination)
         const lastSegment = pathSegments[pathSegments.length - 1];
-
+        console.log(lastSegment, url);
         // Regex to check if the last segment is numeric or if a query exists
         if (/^\d+$/.test(lastSegment) || url.search || url.pathname != lastSegment) {
             // Remove the last segment if it's a number or a query exists
