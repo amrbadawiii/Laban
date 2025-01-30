@@ -5,22 +5,7 @@
 @section('header_link', route('inbounds.create')) {{-- Used if popup is disabled --}}
 
 @section('subContent')
-    @php
-        $columns = [
-            ['key' => 'reference_number', 'type' => 'text'], // Nested property for product name
-            ['key' => 'supplier.name', 'type' => 'text'], // Nested property for supplier name
-            ['key' => 'warehouse.name', 'type' => 'text'], // Nested property for warehouse name
-            ['key' => 'received_date', 'type' => 'date'], // Date formatting
-            ['key' => 'invoice_number', 'type' => 'text'], // Text formatting
-            ['key' => 'is_confirmed', 'type' => 'boolean'], // Boolean formatting
-            [
-                'key' => 'actions',
-                'type' => 'actions',
-                'route' => 'inbounds.createInbound', // Route for edit action
-                'delete_route' => 'inbounds.destroy', // Route for delete action
-            ],
-        ];
-    @endphp
+
 
     <thead>
         <tr>
@@ -35,9 +20,25 @@
     </thead>
     <tbody>
         @if (!empty($items['data']))
-            @foreach ($items['data'] as $inbound)
-                <x-table-row :data="$inbound" :columns="$columns" route="inbounds.show" />
-            @endforeach
+                    @foreach ($items['data'] as $inbound)
+                                @php
+                                    $columns = [
+                                        ['key' => 'reference_number', 'type' => 'text'], // Nested property for product name
+                                        ['key' => 'supplier.name', 'type' => 'text'], // Nested property for supplier name
+                                        ['key' => 'warehouse.name', 'type' => 'text'], // Nested property for warehouse name
+                                        ['key' => 'received_date', 'type' => 'date'], // Date formatting
+                                        ['key' => 'invoice_number', 'type' => 'text'], // Text formatting
+                                        ['key' => 'is_confirmed', 'type' => 'boolean'], // Boolean formatting
+                                        [
+                                            'key' => 'actions',
+                                            'type' => 'actions',
+                                            'route' => $inbound['is_confirmed'] == 1 ? '#' : 'inbounds.createInbound', // Route for edit action
+                                            'delete_route' => $inbound['is_confirmed'] == 1 ? '#' : 'inbounds.destroy', // Route for delete action
+                                        ],
+                                    ];
+                                @endphp
+                                    <x-table-row :data="$inbound" :columns="$columns" route="inbounds.show" />
+                    @endforeach
         @else
             <tr>
                 <td colspan="{{ count($columns) }}" class="text-center">No data available</td>
