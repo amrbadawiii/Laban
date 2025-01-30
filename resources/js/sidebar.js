@@ -13,12 +13,27 @@ document.addEventListener("DOMContentLoaded", () => {
     let pathSegments = url.pathname.split('/').filter(segment => segment); // Remove empty segments
 
     if (pathSegments.length > 1) {
+        if (pathSegments.indexOf('edit') > -1) {
+            const index = pathSegments.indexOf('edit');
+            pathSegments.splice(index, 1);
+        }
+        if (pathSegments.indexOf('create') > -1) {
+            const index = pathSegments.indexOf('create');
+            pathSegments.splice(index, 1);
+        }
+
         // Check if the last segment is a parameter (like ID or pagination)
         const lastSegment = pathSegments[pathSegments.length - 1];
-        console.log(lastSegment, url);
+
         // Regex to check if the last segment is numeric or if a query exists
-        if (/^\d+$/.test(lastSegment) || url.search || url.pathname != lastSegment) {
+        if (/^\d+$/.test(lastSegment) || url.search) {
             // Remove the last segment if it's a number or a query exists
+            pathSegments.pop();
+        }
+        const lastSegmentAfterPop = pathSegments[pathSegments.length - 1];
+
+        if (lastSegmentAfterPop.startsWith('edit') || lastSegmentAfterPop.startsWith('create')) {
+            // Remove the last segment if it's an action
             pathSegments.pop();
         }
 
