@@ -34,6 +34,12 @@ class OrderService implements IOrderService
         return $this->orderRepository->find($id, ['*'], $relations);
     }
 
+    public function getAllWithTrashed(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10, array $orderBy = ['created_at' => 'desc'])
+    {
+        return $this->orderRepository->getAllWithTrashed($conditions, $columns, $relations, $perPage, $orderBy);
+    }
+
+
     public function create(array $data): object
     {
         return \DB::transaction(function () use ($data) {
@@ -66,9 +72,9 @@ class OrderService implements IOrderService
                 'order_number' => $data['order_number'] ?? null,
                 'order_date' => $data['order_date'] ?? null,
                 'delivery_date' => $data['delivery_date'] ?? null,
-                'order_status' => $data['order_status'] ?? null,
-                'total_amount' => $data['total_amount'] ?? null,
-                'tax_percent' => $data['tax_percent'] ?? null,
+                'order_status' => $data['order_status'] ?? 'pending',
+                'total_amount' => $data['total_amount'] ?? 0,
+                'tax_percent' => $data['tax_percent'] ?? 0,
                 'notes' => $data['notes'] ?? null,
                 'updated_by' => session('user_id') ?? null,
             ]);

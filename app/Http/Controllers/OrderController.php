@@ -99,9 +99,32 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $id = $this->orderService->create($data);
-        return redirect()->route('orders.createOrder', ['id' => $id['id']])->with('success', 'Order created successfully.');
+
+        // Check if an order with the same order_number exists (including trashed records)
+        $existingOrder = $this->orderService->getAllWithTrashed([['order_number', '=', $data['order_number']]], ['id', 'deleted_at']);
+
+        if ($existingOrder->isNotEmpty()) {
+            $order = $existingOrder->first();
+
+            if ($order->deleted_at) {
+                // If the order is trashed, restore and update it
+                $order->restore();
+                $this->orderService->update($order->id, $data);
+                return redirect()->route('orders.createOrder', ['id' => $order->id])
+                    ->with('success', 'Order restored and updated successfully.');
+            }
+
+            // If the order exists and is not trashed, throw an exception
+            return redirect()->back()->with('error', 'An order with this order number already exists.');
+        }
+
+        // If no order exists, create a new one
+        $order = $this->orderService->create($data);
+
+        return redirect()->route('orders.createOrder', ['id' => $order['id']])
+            ->with('success', 'Order created successfully.');
     }
+
 
     public function storeItems(Request $request, int $id)
     {

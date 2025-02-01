@@ -33,6 +33,13 @@ abstract class BaseRepository implements IBaseRepository
         return $this->model->with($relations)->findOrFail($id, $columns);
     }
 
+    public function getAllWithTrashed(array $conditions = [], array $columns = ['*'], array $relations = [], int $perPage = 10, array $orderBy = ['created_at' => 'desc'])
+    {
+        $query = $this->buildQuery($conditions, $relations, $orderBy)->withTrashed();
+        return $query->paginate($perPage, $columns);
+    }
+
+
     public function create(array $data)
     {
         return $this->model->create($data);
@@ -79,12 +86,14 @@ abstract class BaseRepository implements IBaseRepository
 
         // Apply conditions dynamically
         foreach ($conditions as $condition) {
+
             if (is_array($condition) && count($condition) === 3) {
                 [$column, $operator, $value] = $condition;
                 $query->where($column, $operator, $value);
             } elseif (is_array($condition) && count($condition) === 2) {
                 [$column, $value] = $condition;
                 $query->where($column, '=', $value);
+                dd($value, $query->toSql(), $query->getBindings());
             }
         }
 
@@ -92,7 +101,6 @@ abstract class BaseRepository implements IBaseRepository
         foreach ($orderBy as $column => $direction) {
             $query->orderBy($column, $direction);
         }
-
         return $query;
     }
 

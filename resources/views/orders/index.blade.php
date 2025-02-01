@@ -6,24 +6,6 @@
 
 @section('subContent')
 
-    @php
-        $columns = [
-            ['key' => 'order_number', 'type' => 'text'], // Nested property for product name
-            ['key' => 'order_date', 'type' => 'date'], // Nested property for supplier name
-            ['key' => 'delivery_date', 'type' => 'date'], // Nested property for warehouse name
-            ['key' => 'customer.first_name', 'type' => 'text'], // Date formatting
-            ['key' => 'warehouse.name', 'type' => 'text'], // Text formatting
-            ['key' => 'order_status', 'type' => 'text'], // Text formatting
-            ['key' => 'total_amount', 'type' => 'text'], // Text formatting
-            [
-                'key' => 'actions',
-                'type' => 'actions',
-                'route' => 'orders.createOrder', // Route for edit action
-                'delete_route' => 'orders.destroy', // Route for delete action
-            ],
-        ];
-    @endphp
-
     <thead>
         <tr>
             <x-table-header>{{ __('order.order_number') }}</x-table-header>
@@ -39,7 +21,24 @@
     <tbody>
         @if (!empty($items['data']))
             @foreach ($items['data'] as $order)
-                <x-table-row :data="$order" :columns="$columns" route="orders.show" />
+                @php
+                    $columns = [
+                        ['key' => 'order_number', 'type' => 'text'], // Nested property for product name
+                        ['key' => 'order_date', 'type' => 'date'], // Nested property for supplier name
+                        ['key' => 'delivery_date', 'type' => 'date'], // Nested property for warehouse name
+                        ['key' => 'customer.first_name', 'type' => 'text'], // Date formatting
+                        ['key' => 'warehouse.name', 'type' => 'text'], // Text formatting
+                        ['key' => 'order_status', 'type' => 'text'], // Text formatting
+                        ['key' => 'total_amount', 'type' => 'text'], // Text formatting
+                        [
+                            'key' => 'actions',
+                            'type' => 'actions',
+                            'route' => ($order['order_status'] == 'completed' || $order['order_status'] == 'cancelled') && Session::get('role') !== 'admin'? '#' : 'orders.createOrder', // Route for edit action
+                            'delete_route' => ($order['order_status'] == 'completed' || $order['order_status'] == 'cancelled') && Session::get('role') !== 'admin' ? '#' : 'orders.destroy', // Route for delete action
+                        ],
+                    ];
+                @endphp
+                    <x-table-row :data="$order" :columns="$columns" route="orders.show" />
             @endforeach
         @else
             <tr>
